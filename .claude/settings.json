@@ -1,0 +1,52 @@
+{
+  "enabledPlugins": {
+    "jdtls-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -e '(.tool_input.skill // \"\") | startswith(\"wf/\")' > /dev/null 2>&1 && touch /tmp/.claude-wf-flag; exit 0"
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $d=$input|ConvertFrom-Json; if($d.tool_input.skill -like 'wf/*'){New-Item -Path \\\"$env:TEMP\\.claude-wf-flag\\\" -ItemType File -Force|Out-Null}; exit 0\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r 'if (.tool_input.skill // \"\" | startswith(\"wf/\")) then \"\\(.tool_input.args // \"unknown\") \\(.tool_input.skill | split(\"/\")[1]) 워크플로우 종료\" else empty end'"
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $d=$input|ConvertFrom-Json; if($d.tool_input.skill -like 'wf/*'){$a=if($d.tool_input.args){$d.tool_input.args}else{'unknown'}; $s=($d.tool_input.skill -split '/')[1]; Write-Output \\\"$a $s 워크플로우 종료\\\"}\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f /tmp/.claude-wf-flag ]; then rm -f /tmp/.claude-wf-flag; else echo '{\"systemMessage\": \"요청완료\"}'; fi"
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; if(Test-Path \\\"$env:TEMP\\.claude-wf-flag\\\"){Remove-Item \\\"$env:TEMP\\.claude-wf-flag\\\" -Force}else{Write-Output '{\\\"systemMessage\\\": \\\"요청완료\\\"}'}\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "enableAllProjectMcpServers": false,
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "context7": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "supabase": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only",
+        "--project-ref=ojqnjjzjfwytnymxamzw",
+        "--access-token=sbp_0d964d692332b36db8a4970782b76f83ae9853ac"
+      ]
+    }
+  },
+  "enabledPlugins": {
+    "sentry@claude-plugins-official": true
+  }
+}

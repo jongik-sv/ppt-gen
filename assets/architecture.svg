@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <style>
+    .title { font: bold 18px 'Segoe UI', sans-serif; fill: #333; }
+    .box-title { font: bold 14px 'Segoe UI', sans-serif; fill: #333; }
+    .box-subtitle { font: 12px 'Segoe UI', sans-serif; fill: #666; }
+    .item { font: 13px 'Consolas', monospace; fill: #444; }
+    .arrow-text { font: 12px 'Segoe UI', sans-serif; fill: #666; }
+  </style>
+  
+  <!-- Main Container -->
+  <rect x="20" y="20" width="760" height="560" rx="8" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
+  
+  <!-- Title Bar -->
+  <rect x="20" y="20" width="760" height="40" rx="8" fill="#e9ecef" stroke="#dee2e6" stroke-width="2"/>
+  <rect x="20" y="52" width="760" height="8" fill="#e9ecef"/>
+  <text x="400" y="47" text-anchor="middle" class="title">PPT Skills Suite (2개 스킬 + 1 앱)</text>
+  
+  <!-- ppt-extract Box -->
+  <rect x="50" y="80" width="700" height="130" rx="6" fill="#fff" stroke="#4dabf7" stroke-width="2"/>
+  <text x="70" y="105" class="box-title">ppt-extract (추출 스킬) - 파이프라인 외부</text>
+  <line x1="70" y1="115" x2="350" y2="115" stroke="#4dabf7" stroke-width="2"/>
+  <text x="70" y="140" class="item">• document-extract : 문서 양식 추출 (슬라이드 마스터, 로고)</text>
+  <text x="70" y="160" class="item">• style-extract    : 테마 추출</text>
+  <text x="70" y="180" class="item">• content-extract  : 콘텐츠 디자인 추출 (PPTX, 이미지)</text>
+  <text x="70" y="200" class="item">• object-extract   : 복잡한 오브젝트 추출</text>
+  
+  <!-- Arrow -->
+  <line x1="400" y1="210" x2="400" y2="250" stroke="#868e96" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="410" y="235" class="arrow-text">템플릿/에셋 등록</text>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#868e96"/>
+    </marker>
+  </defs>
+  
+  <!-- ppt-gen Box -->
+  <rect x="50" y="260" width="700" height="120" rx="6" fill="#fff" stroke="#69db7c" stroke-width="2"/>
+  <text x="70" y="285" class="box-title">ppt-gen (생성 스킬) - 5단계 파이프라인</text>
+  <line x1="70" y1="295" x2="350" y2="295" stroke="#69db7c" stroke-width="2"/>
+  <text x="70" y="320" class="item">• html2pptx : 새 PPT 생성 (5단계 파이프라인 실행)</text>
+  <text x="70" y="340" class="item">• template  : 템플릿 기반 생성</text>
+  <text x="70" y="360" class="item">• ooxml     : 기존 PPT 수정</text>
+  <text x="70" y="375" class="item">• analysis  : PPT 분석</text>
+  
+  <!-- ppt-manager Box -->
+  <rect x="50" y="400" width="700" height="130" rx="6" fill="#fff" stroke="#fab005" stroke-width="2"/>
+  <text x="70" y="425" class="box-title">ppt-manager (Electron 앱) - 관리 기능</text>
+  <line x1="70" y1="435" x2="320" y2="435" stroke="#fab005" stroke-width="2"/>
+  <text x="70" y="460" class="item">• 템플릿 관리 (목록/아카이브/삭제)</text>
+  <text x="70" y="480" class="item">• 에셋 관리 (추가/검색/삭제)</text>
+  <text x="70" y="500" class="item">• 디자인 레퍼런스 검색</text>
+  <text x="70" y="520" class="item">• 썸네일 생성/미리보기</text>
+</svg>
