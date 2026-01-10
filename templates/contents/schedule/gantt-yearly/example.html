@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>프로젝트 로드맵 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .slide {
+            width: 1920px;
+            height: 1080px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            padding: 50px 60px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .title {
+            font-size: 44px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #94a3b8;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .legend-milestone {
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            transform: rotate(45deg);
+        }
+
+        .gantt-wrapper {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+        }
+
+        /* 월 헤더 */
+        .months {
+            display: flex;
+            margin-bottom: 15px;
+            padding-left: 180px;
+        }
+
+        .month {
+            width: 130px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* 태스크 행 */
+        .task-row {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            margin-bottom: 6px;
+        }
+
+        .task-name {
+            width: 180px;
+            color: #e2e8f0;
+            font-size: 13px;
+            padding-right: 16px;
+            text-align: right;
+        }
+
+        .task-bar-container {
+            flex: 1;
+            height: 26px;
+            position: relative;
+        }
+
+        .task-bar {
+            position: absolute;
+            height: 26px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Phase 색상 */
+        .phase1 {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .phase2 {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .phase3 {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .phase4 {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        /* 진행률 표시 */
+        .progress-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px 0 0 5px;
+        }
+
+        /* 마일스톤 */
+        .milestone {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            transform: rotate(45deg) translateY(-50%);
+            top: 50%;
+            margin-top: -4px;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+            z-index: 10;
+        }
+
+        .milestone-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ef4444;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* 마일스톤 세로선 */
+        .milestone-line {
+            position: absolute;
+            width: 2px;
+            background: rgba(239, 68, 68, 0.3);
+            top: 0;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* 월 구분 수직 점선 */
+        .month-grid-line {
+            position: absolute;
+            border-left: 1px dashed rgba(148, 163, 184, 0.25);
+            top: 50px;
+            height: calc(100% - 50px);
+            z-index: 0;
+        }
+
+        /* 구분선 */
+        .phase-divider {
+            height: 1px;
+            background: #334155;
+            margin: 10px 0 10px 180px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide">
+        <div class="header">
+            <div>
+                <h1 class="title">2026 프로젝트 로드맵</h1>
+                <p class="subtitle">스마트 물류 시스템 구축 프로젝트 (12개월)</p>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3b82f6;"></div>
+                    <span>Phase 1: 기획</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>Phase 2: 개발</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f59e0b;"></div>
+                    <span>Phase 3: 테스트</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8b5cf6;"></div>
+                    <span>Phase 4: 배포</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-milestone"></div>
+                    <span>마일스톤</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gantt-wrapper">
+            <!-- 마일스톤 세로선 -->
+            <div class="milestone-line" style="left: calc(180px + 260px);"></div>
+            <div class="milestone-line" style="left: calc(180px + 845px);"></div>
+            <div class="milestone-line" style="left: calc(180px + 1300px);"></div>
+            <div class="milestone-line" style="left: calc(180px + 1560px);"></div>
+
+            <!-- 월 구분 수직 점선 -->
+            <div class="month-grid-line" style="left: calc(180px + 130px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 260px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 390px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 520px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 650px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 780px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 910px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 1040px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 1170px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 1300px);"></div>
+            <div class="month-grid-line" style="left: calc(180px + 1430px);"></div>
+
+            <!-- 월 헤더 -->
+            <div class="months">
+                <div class="month">1월</div>
+                <div class="month">2월</div>
+                <div class="month">3월</div>
+                <div class="month">4월</div>
+                <div class="month">5월</div>
+                <div class="month">6월</div>
+                <div class="month">7월</div>
+                <div class="month">8월</div>
+                <div class="month">9월</div>
+                <div class="month">10월</div>
+                <div class="month">11월</div>
+                <div class="month">12월</div>
+            </div>
+
+            <!-- Phase 1: 기획/설계 (파란색) -->
+            <div class="task-row">
+                <div class="task-name">요구사항 분석</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase1" style="left: 0; width: 130px;">
+                        <div class="progress-bar" style="width: 100%;"></div>
+                        100%
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-row">
+                <div class="task-name">시스템 설계</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase1" style="left: 130px; width: 130px;">
+                        <div class="progress-bar" style="width: 100%;"></div>
+                        100%
+                    </div>
+                    <!-- 마일스톤: 설계 완료 -->
+                    <div class="milestone" style="left: 252px;">
+                        <div class="milestone-label"
+                            style="transform: rotate(-45deg) translateX(20px) translateY(-12px);">설계 완료</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-row">
+                <div class="task-name">UI/UX 설계</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase1" style="left: 195px; width: 130px;">
+                        <div class="progress-bar" style="width: 80%;"></div>
+                        80%
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-divider"></div>
+
+            <!-- Phase 2: 개발 (초록색) -->
+            <div class="task-row">
+                <div class="task-name">백엔드 개발</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase2" style="left: 260px; width: 520px;">
+                        <div class="progress-bar" style="width: 60%;"></div>
+                        60%
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-row">
+                <div class="task-name">프론트엔드 개발</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase2" style="left: 325px; width: 520px;">
+                        <div class="progress-bar" style="width: 40%;"></div>
+                        40%
+                    </div>
+                    <!-- 마일스톤: 개발 완료 -->
+                    <div class="milestone" style="left: 837px;">
+                        <div class="milestone-label"
+                            style="transform: rotate(-45deg) translateX(20px) translateY(-12px);">개발 완료</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-row">
+                <div class="task-name">API 연동</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase2" style="left: 520px; width: 390px;">
+                        <div class="progress-bar" style="width: 20%;"></div>
+                        20%
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-divider"></div>
+
+            <!-- Phase 3: 테스트 (주황색) -->
+            <div class="task-row">
+                <div class="task-name">단위 테스트</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase3" style="left: 780px; width: 260px;">
+                        0%
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-row">
+                <div class="task-name">통합 테스트</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase3" style="left: 975px; width: 195px;">
+                        0%
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-row">
+                <div class="task-name">UAT</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase3" style="left: 1170px; width: 130px;">
+                        0%
+                    </div>
+                    <!-- 마일스톤: 테스트 완료 -->
+                    <div class="milestone" style="left: 1292px;">
+                        <div class="milestone-label"
+                            style="transform: rotate(-45deg) translateX(20px) translateY(-12px);">테스트 완료</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-divider"></div>
+
+            <!-- Phase 4: 배포 (보라색) -->
+            <div class="task-row">
+                <div class="task-name">스테이징 배포</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase4" style="left: 1300px; width: 65px;">
+                        0%
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-row">
+                <div class="task-name">프로덕션 배포</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase4" style="left: 1365px; width: 65px;">
+                        0%
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-row">
+                <div class="task-name">안정화/모니터링</div>
+                <div class="task-bar-container">
+                    <div class="task-bar phase4" style="left: 1430px; width: 130px;">
+                        0%
+                    </div>
+                    <!-- 마일스톤: 프로젝트 완료 -->
+                    <div class="milestone" style="left: 1552px;">
+                        <div class="milestone-label"
+                            style="transform: rotate(-45deg) translateX(20px) translateY(-12px);">🎉 런칭</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

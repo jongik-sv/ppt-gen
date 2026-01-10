@@ -14,9 +14,6 @@
 - [3. 스킬 정의](#3-스킬-정의)
   - [3.1 ppt-extract 스킬](#31-ppt-extract-스킬-추출)
   - [3.2 ppt-gen 스킬](#32-ppt-gen-스킬-생성)
-    - [5단계 파이프라인](#5단계-파이프라인)
-    - [디자인 평가 루프](#디자인-평가-루프)
-    - [디자인 가이드라인](#디자인-가이드라인)
 - [4. ppt-manager (Electron 앱)](#4-ppt-manager-electron-앱)
 
 **Part B: 데이터 아키텍처**
@@ -26,7 +23,12 @@
 - [8. 문서 종류](#8-문서-종류)
 - [9. 사용 시나리오](#9-사용-시나리오)
 - [10. 구현 현황 및 로드맵](#10-구현-현황-및-로드맵)
-- [부록](#부록)
+
+**부록**
+- [A. 콘텐츠 템플릿 카테고리](#a-콘텐츠-템플릿-카테고리-동적-확장)
+- [B. 아이콘 시스템](#b-아이콘-시스템-동적-확장)
+- [C. 영역 감지 코드](#c-영역-감지-코드)
+- [상세 스키마/코드 → 부록 파일](./PRD_PPT_Skills_Suite_Appendix.md)
 
 ---
 
@@ -148,37 +150,52 @@ Claude Code 환경에서 **전문 디자이너 수준의 PPT**를 자동 생성�
 | **추출 내용** | 추출한 문서에서 콘텐츠 영역의 디자인 |
 | **추출 목적** | 데이터베이스로 저장하여 신규 슬라이드 생성 시 디자인의 재료로 사용 |
 
-**4. 오브젝트 (object-extract)**
+**오브젝트 자동 추출:**
 
-| 항목 | 설명 |
-|------|------|
-| **추출 내용** | 추출한 문서에서 복잡한 영역만 따로 오브젝트로 추출 |
-| **추출 목적** | 재사용 가능한 도형/다이어그램 라이브러리 구축 |
+> content-extract 중 **LLM이 복잡한 도형을 자동 감지**하여 오브젝트로 분리 저장합니다.
+
+| 판단 기준 | 예시 | 저장 위치 |
+|----------|------|----------|
+| 복잡한 다이어그램 | 순환도, 벤다이어그램 | `objects/diagram/` |
+| 다단계 프로세스 도형 | 허니콤, 플로우 | `objects/process/` |
+| 데이터 시각화 | 차트, 그래프 | `objects/chart/` |
+
+```
+content-extract 실행
+    │
+    ▼ LLM 분석
+    │
+    ├── 일반 레이아웃 ──────────→ contents/{category}/ 저장
+    │
+    └── 복잡한 도형 감지 ────────→ objects/{category}/ 저장 (자동)
+        (순환도, 다이어그램 등)
+```
 
 #### 패턴 통합 (Pattern Consolidation)
 
 > 유사한 슬라이드를 **하나의 유연한 템플릿**으로 통합하여 템플릿 수를 최소화합니다.
+> 
+> ⚠️ **통합 범위**: 같은 문서 템플릿(출처) 내에서만 통합합니다. 서로 다른 문서 템플릿 간에는 패턴 시그니처가 유사해도 별도로 저장합니다.
 
 **통합 워크플로우:**
 ```
-원본 PPT 슬라이드들
+동국시스템즈.pptx 추출:
     │
     ▼ 패턴 시그니처 추출 (LLM)
     │
-    ├── 슬라이드 3: 아이콘 카드 3개
-    ├── 슬라이드 7: 아이콘 카드 4개  
-    ├── 슬라이드 12: 아이콘 카드 2개
-    │
-    ▼ 유사도 80% 이상 → 같은 패턴
-    │
-    └── 통합 결과:
-        grid-icon-cards (2~6개 지원)
+    ├── 슬라이드 3: 아이콘 카드 3개 ─┬→ 동국시스템즈/grid-icon-cards (통합)
+    ├── 슬라이드 7: 아이콘 카드 4개 ─┘   (2~6개 지원)
+    └── 슬라이드 12: 타임라인 ──────→ 동국시스템즈/timeline (별도)
+
+A회사.pptx 추출 (별도):
+    └── 아이콘 카드 ─────────────→ A회사/grid-icon-cards (별도 저장!)
 ```
 
 **패턴 시그니처 비교 기준:**
 
 | 구분 | 동일해야 함 | 달라도 됨 |
 |------|------------|----------|
+| **출처** | 같은 문서 템플릿에서 추출 | - |
 | **레이아웃** | 구조 유형 (grid, list, etc.) | 개수 (2~6) |
 | **카드 구조** | 요소 구성 (icon+title+desc) | - |
 | **스타일** | border-radius, shadow 유무 | 간격 (gap) |
@@ -190,9 +207,247 @@ Claude Code 환경에서 **전문 디자이너 수준의 PPT**를 자동 생성�
 | 워크플로우 | 트리거 | 입력 | 출력 |
 |-----------|--------|------|------|
 | `document-extract` | "이 PPT를 양식으로 등록해줘" | PPTX | 문서 템플릿 YAML, OOXML, 에셋 |
+| `document-update` | "양식 업데이트해줘" | PPTX | 기존 문서 덮어쓰기 |
+| `document-delete` | "양식 지워줘" | 문서 ID | 문서 + 연관 콘텐츠 삭제 |
 | `style-extract` | "이 이미지 스타일로" | 이미지 | 테마 YAML |
-| `content-extract` | "이 슬라이드 저장해줘" | PPTX, 이미지 | 콘텐츠 YAML |
-| `object-extract` | "이 도형 저장해줘" | PPTX | 오브젝트 YAML |
+| `content-extract` | "이 슬라이드 저장해줘" | PPTX | YAML + HTML + OOXML + 오브젝트(자동) |
+| `content-extract` | "이 디자인 저장해줘" | 이미지 | YAML + HTML |
+| **`content-create`** | "간트차트 템플릿 만들어줘" | **라이브러리/코드** | 직접 생성된 템플릿 |
+
+#### 차트 라이브러리 콘텐츠 (content-create)
+
+> 추출할 원본이 없는 **동적 차트/시각화 템플릿**을 직접 생성하여 등록합니다.
+
+**지원 라이브러리:**
+
+| 라이브러리 | 용도 | 크기 | PPT 적합성 |
+|-----------|------|------|-----------|
+| **Frappe Gantt** | 프로젝트 일정 | 40KB | ⭐⭐⭐ |
+| **Mermaid** | 다이어그램, 간트 | 200KB | ⭐⭐⭐ |
+| **Chart.js** | 막대/선/파이 차트 | 70KB | ⭐⭐ |
+| **Plotly** | 고급 차트, 3D | 3MB | ⭐ |
+| **D3.js** | 커스텀 SVG | 280KB | ⭐⭐ |
+
+**렌더링 방식:**
+```
+HTML + 라이브러리 → Playwright 스크린샷 → 이미지로 PPTX 삽입
+```
+
+**제약 사항:**
+
+| 항목 | 규격 | 이유 |
+|------|------|------|
+| 슬라이드 크기 | 1920 x 1080px | PPT 표준 해상도 |
+| 콘텐츠 영역 | ~1800 x 800px | 여백/헤더 제외 |
+| 렌더링 대기 | 3~5초 | ESM 로딩 + 차트 생성 |
+| 최대 데이터 | 8~12개 | 가독성 유지 |
+
+**데이터 갯수 권장:**
+
+| 차트 유형 | 최대 권장 | 이유 |
+|----------|----------|------|
+| 간트 차트 | 10~12개 태스크 | 가독성 유지 |
+| 파이 차트 | 6개 조각 | 라벨 겹침 방지 |
+| 막대 차트 | 10개 막대 | 슬라이드 폭 제한 |
+
+**template.yaml 추가 필드:**
+
+```yaml
+chart_config:
+  library: "frappe-gantt"
+  esm_url: "https://cdn.jsdelivr.net/npm/frappe-gantt/+esm"
+  css_url: "https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.css"
+  render_wait_ms: 3000
+  max_items: 12
+```
+
+**샘플:**
+- `templates/contents/schedule/gantt-01/` - 주간 뷰 (6개 태스크)
+- `templates/contents/schedule/gantt-yearly/` - 1년 로드맵 (12개 태스크, 4단계 색상)
+
+#### SVG → PPTX 변환 (편집 가능)
+
+> 일부 차트 라이브러리의 SVG 출력을 **편집 가능한 PPTX 도형으로 변환**할 수 있습니다.
+
+**변환 방법:**
+
+| 방법 | 도구 | 편집 가능 | 적합 대상 |
+|------|------|----------|----------|
+| **SVG → OOXML** | svg-to-pptx, 직접 구현 | ✅ 완전 | 단순 도형 (막대, 원, 선) |
+| **SVG → EMF** | Inkscape CLI, cairosvg | ✅ 부분적 | 중간 복잡도 |
+| **스크린샷** | Playwright | ❌ 불가 | 복잡한 시각화 |
+
+**변환 가능 여부:**
+
+| 차트 유형 | SVG 출력 | 편집 가능 변환 |
+|----------|----------|---------------|
+| 막대 차트 | `<rect>` | ✅ 가능 |
+| 선 차트 | `<path>`, `<line>` | ✅ 가능 |
+| 파이 차트 | `<path>` (arc) | ⚠️ 부분적 |
+| 간트 차트 | 복잡한 `<g>` 그룹 | ❌ 이미지 권장 |
+| 복잡한 다이어그램 | 그라데이션, 필터 | ❌ 이미지 권장 |
+
+**처리 정책:**
+- 라이브러리 기반 차트 → **이미지로 삽입** (편집 불가)
+- 수정 필요 시 → **데이터 변경 후 재생성**
+
+**오브젝트 자동 추출 판단 조건:**
+
+> content-extract 중 LLM이 아래 조건에 해당하면 **오브젝트로 분리 저장**합니다.
+
+| 조건 | 설명 | 예시 |
+|------|------|------|
+| **도형 그룹 5개 이상** | 연결된 도형이 5개 이상 | 순환도 6단계, 허니콤 7개 |
+| **비선형 배치** | 원형, 방사형, 지그재그 등 | 순환 다이어그램, 마인드맵 |
+| **커넥터 포함** | 화살표, 선으로 연결된 도형 | 플로우차트, 프로세스 |
+| **수치 데이터 시각화** | 축/범례가 있는 차트 | 막대, 선, 파이 차트 |
+| **벤다이어그램/매트릭스** | 겹침/그리드 구조 | 2x2 매트릭스, 3원 벤 |
+
+**저장 분기:**
+```
+LLM 분석 결과
+    │
+    ├── 조건 미충족 → contents/{category}/ (일반 콘텐츠)
+    │
+    └── 조건 충족 → objects/{category}/ (오브젝트)
+                    + contents/{category}/ (플레이스홀더 참조)
+```
+
+#### 문서 템플릿 업데이트 정책 (document-update)
+
+> 문서 템플릿 파일이 업데이트되어 재배포된 경우, **같은 파일명으로 등록된 콘텐츠를 삭제 후 재등록**합니다.
+
+**동작 원리:**
+
+
+```
+> "동국시스템즈_양식_v2.pptx를 양식으로 등록해줘"
+
+1. registry.yaml에서 source_file == "동국시스템즈_양식_v2.pptx" 검색
+2. 해당 파일로 추출된 기존 콘텐츠 모두 삭제
+3. 새 파일에서 콘텐츠 추출 및 등록
+```
+
+**식별 방식:**
+
+| 방식 | 예시 | 설명 |
+|------|------|------|
+| **파일명 기반** (기본) | `source_file` 일치 | 정확한 파일명으로 매칭 |
+| **ID 직접 지정** | `--id dongkuk` | source_document ID로 매칭 |
+
+**등록 시 확인:**
+
+```
+> "동국시스템즈_양식_v2.pptx를 양식으로 등록해줘"
+
+[시스템] 동일 파일로 등록된 콘텐츠가 이미 존재합니다.
+
+  📁 문서 양식: 1개
+  📄 콘텐츠: 12개 (source_file 일치)
+
+  → 기존 콘텐츠 삭제 후 새로 등록합니다.
+  
+  계속하시겠습니까? [Y/n]
+```
+
+**덮어쓰기 시 메타데이터:**
+
+```yaml
+document:
+  id: "dongkuk-systems"
+  name: "동국시스템즈 양식"
+  source_file: "동국시스템즈_양식_v2.pptx"
+  version: 2
+  extracted_at: "2026-06-15"
+  previous_versions:
+    - version: 1
+      source_file: "동국시스템즈_양식_v1.pptx"
+      extracted_at: "2026-01-10"
+```
+
+| 옵션 | 동작 |
+|------|------|
+| 기본 | 확인 프롬프트 후 삭제/재등록 |
+| `--force` | 확인 없이 삭제/재등록 |
+| `--new` | 새 문서로 등록 (기존 유지) |
+
+#### 문서 템플릿 삭제 정책 (document-delete)
+
+> 문서 템플릿 삭제 시 **연관 콘텐츠도 함께 삭제** 옵션을 제공합니다.
+
+**삭제 범위:**
+```
+"동국시스템즈 양식을 지워줘"
+    │
+    ▼
+삭제 대상:
+├── documents/dongkuk-systems/          # 문서 양식
+├── contents/*/dongkuk-*                # 연관 콘텐츠 (접두사 매칭)
+└── thumbnails/... (연관 항목)          # 썸네일
+```
+
+**삭제 확인 프롬프트:**
+```
+> "동국시스템즈 양식을 지워줘"
+
+[시스템] "동국시스템즈" 문서 템플릿 삭제 확인:
+
+  📁 문서 양식: 1개
+  📄 연관 콘텐츠: 12개
+  🖼️ 썸네일: 13개
+
+  ⚠️ 이 작업은 되돌릴 수 없습니다.
+  
+  1. 전체 삭제 (문서 + 콘텐츠)
+  2. 문서 양식만 삭제 (콘텐츠 유지)
+  3. 취소
+
+> 선택: 
+```
+
+**삭제 옵션:**
+
+| 옵션 | 동작 |
+|------|------|
+| 기본 | 확인 프롬프트 표시 |
+| `--cascade` | 연관 콘텐츠 모두 삭제 |
+| `--keep-contents` | 문서 양식만 삭제 |
+| `--force` | 확인 없이 삭제 |
+| `--dry-run` | 삭제 대상만 표시 (실제 삭제 안 함) |
+
+#### LLM 플레이스홀더 판단 (content-extract)
+
+> 추출 과정에서 **LLM이 1회 개입**하여 텍스트 그룹핑과 플레이스홀더를 결정합니다.
+
+**문제 상황:**
+```
+원본 PPT (개별 텍스트박스)
+┌─────────────────────────────────────┐
+│ [텍스트1] WMS 시스템                 │  ← shape 1
+│ [텍스트2] 실시간 재고 관리            │  ← shape 2
+│ [텍스트3] AI 기반 예측               │  ← shape 3
+└─────────────────────────────────────┘
+
+스크립트만으로는 → {{본문1}}, {{본문2}}, {{본문3}} (잘못됨)
+원하는 결과 → {{#each items}}{{this.text}}{{/each}} (올바름)
+```
+
+**해결: 하이브리드 탐지**
+
+| 단계 | 처리 주체 | 작업 내용 |
+|------|----------|----------|
+| 1. 후보 탐지 | 스크립트 | 위치/스타일 기반 그룹 후보 찾기 |
+| 2. 시맨틱 확인 | **LLM** | "이 4개가 리스트인가?" 판단 |
+| 3. 이름 부여 | **LLM** | 플레이스홀더 이름 결정 (title, items 등) |
+| 4. 포맷 적용 | 스크립트 | YAML/HTML/OOXML 모두에 치환 적용 |
+
+**LLM 입출력 예시:**
+
+| 입력 | 출력 |
+|------|------|
+| 텍스트박스 그룹 후보 (위치, 스타일 정보) | 플레이스홀더 정의 JSON |
+
+> 상세 예시 및 처리 코드: [부록 H 참조](./PRD_PPT_Skills_Suite_Appendix.md#부록-h-플레이스홀더-처리-로직)
 
 #### 저장 내용
 
@@ -271,14 +526,110 @@ Claude Code 환경에서 **전문 디자이너 수준의 PPT**를 자동 생성�
 | 스타일 힌트 | 둥근 모서리, 그림자 등 |
 | **썸네일** | 색상 팔레트 시각화 이미지 |
 
-**3. 콘텐츠 (contents/) - 하이브리드 방식**
-> **HTML+CSS 통합 템플릿 + 메타데이터 통합**
+**3. 콘텐츠 (contents/) - 멀티 포맷 추출**
+> **3가지 포맷 동시 추출**: YAML(메타데이터) + HTML(테마 변경용) + OOXML(원본 재현용)
 
 | 저장 항목 | 파일 | 설명 |
 |----------|------|------|
-| **템플릿** | `template.html` | HTML 구조 + CSS 스타일 (Handlebars 문법) |
 | **메타데이터** | `template.yaml` | 슬롯 정보 + 시맨틱 설명 + 가변 옵션 |
+| **HTML 템플릿** | `template.html` | HTML + CSS (Handlebars), 테마 변경 가능 |
+| **OOXML 템플릿** | `template.ooxml` | 원본 XML, 100% 재현용 |
 | **썸네일** | `thumbnail.png` | 시각적 참조 및 검색용 |
+
+**추출 파이프라인:**
+
+```
+원본 PPTX 슬라이드
+    │
+    ▼
+┌─────────────────────────────────────────────────┐
+│ 1. 스크립트: 기본 추출                            │
+│    • 도형 파싱 (위치, 크기, 스타일)               │
+│    • 텍스트 그룹 후보 탐지 (위치/스타일 기반)      │
+└─────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────┐
+│ 2. LLM: 플레이스홀더 판단 (1회)                   │
+│    • 텍스트 그룹핑 확인 ("이 4개는 리스트인가?")  │
+│    • 플레이스홀더 이름 부여 (title, items 등)     │
+│    • 시맨틱 설명 작성                            │
+└─────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────┐
+│ 3. 스크립트: 3가지 포맷 생성                      │
+│    • YAML: 슬롯 정의 + 시맨틱 설명               │
+│    • HTML: 텍스트 → {{placeholder}} 치환        │
+│    • OOXML: 텍스트 → {{placeholder}} 치환       │
+└─────────────────────────────────────────────────┘
+```
+
+**추출 모드 (extraction_mode):**
+
+> 슬라이드 유형에 따라 추출 범위를 결정합니다.
+
+| 모드 | 추출 범위 | 용도 |
+|------|----------|------|
+| `full` | 전체 슬라이드 | 표지, 목차, 섹션, 클로징 |
+| `content_only` | 콘텐츠 영역만 | 일반 내지 (헤더/푸터 제외) |
+
+**영역 구분:**
+```
+┌──────────────────────────────────────┐
+│ TITLE ZONE (상단 ~22%)                │ ← full만 추출
+├──────────────────────────────────────┤
+│                                      │
+│        CONTENT ZONE (22% ~ 90%)      │ ← 항상 추출
+│                                      │
+├──────────────────────────────────────┤
+│ FOOTER ZONE (하단 ~8%)                │ ← full만 추출
+└──────────────────────────────────────┘
+```
+
+**동적 영역 감지:**
+- Title Zone: 플레이스홀더 타입(TITLE, CENTER_TITLE) 또는 이름에 "title" 포함
+- Footer Zone: 플레이스홀더 타입(FOOTER, SLIDE_NUMBER) 또는 하단 10% 위치
+- Content Zone: Title 하단 + 2% ~ Footer 상단 - 2%
+
+> 구현 코드는 [부록 C. 영역 감지 코드](#c-영역-감지-코드) 참조
+
+**좌표 시스템 규칙:**
+
+> 도형의 위치/크기는 **vmin 기준**으로 저장하여 비율 왜곡을 방지합니다.
+
+```
+vmin = min(slide_width, slide_height)
+
+16:9 (1920x1080) → vmin = 1080
+4:3  (1024x768)  → vmin = 768
+```
+
+| 항목 | 단위 | 설명 |
+|------|------|------|
+| x, y | vmin | 위치 (상하좌우 동일 비율) |
+| cx, cy | vmin | 크기 (원형/정사각형 유지) |
+| emu | EMU | 원본 백업 (OOXML 재현용) |
+
+**저장 예시:**
+```yaml
+geometry:
+  x: "10vmin"
+  y: "10vmin"
+  cx: "20vmin"
+  cy: "20vmin"
+  emu: { x: 914400, y: 914400, cx: 1828800, cy: 1828800 }
+```
+
+**효과:** 슬라이드 비율이 변경되어도 원은 원, 정사각형은 정사각형 유지 ✅
+
+**생성 시 품질 옵션에 따른 포맷 선택:**
+
+| 품질 옵션 | 사용 포맷 | 특징 |
+|----------|----------|------|
+| **high** | OOXML | 100% 재현, 원본 테마 유지 |
+| **medium** | HTML | 테마 변경 가능, 높은 재현율 |
+| **low** | 시맨틱만 | LLM이 HTML 생성, 유연함 |
 
 **template.yaml 스키마** → [6.3 콘텐츠 템플릿 스키마](#63-콘텐츠-템플릿-스키마-contentstemplateyaml) 참조
 
@@ -294,7 +645,7 @@ Claude Code 환경에서 **전문 디자이너 수준의 PPT**를 자동 생성�
 
 #### 저장 구조
 
-> 전체 폴더 구조는 **2.3 저장소 구조** 참조
+> 전체 폴더 구조는 [5. 저장소 구조](#5-저장소-구조) 참조
 
 ### 3.2 ppt-gen 스킬 (생성)
 
@@ -307,38 +658,183 @@ Claude Code 환경에서 **전문 디자이너 수준의 PPT**를 자동 생성�
 | `ooxml` | "이 PPT 수정해줘" | OOXML 직접 편집 |
 | `analysis` | "PPT 분석해줘" | PPT 구조/내용 분석 |
 
-#### 하이브리드 템플릿 활용 (방식 2+4)
+#### 품질 기반 템플릿 활용
 
-> 추출된 템플릿을 **정확한 재현(방식 4)** 또는 **유연한 생성(방식 2)**으로 활용합니다.
+> 생성 시 **품질 옵션**에 따라 사용할 포맷을 선택합니다.
+
+**품질 옵션:**
+
+| 옵션 | 사용 포맷 | 재현율 | 테마 변경 | 생성 속도 |
+|------|----------|--------|----------|----------|
+| **high** | OOXML | 100% | ❌ 원본 유지 | 빠름 |
+| **medium** | HTML | 85~95% | ✅ 가능 | 보통 |
+| **low** | 시맨틱 | 70~85% | ✅ 가능 | 느림 |
+
+#### HTML → PPTX 변환 규칙
+
+> **DOM 파싱 → 편집 가능한 도형으로 변환**합니다. 스크린샷 이미지 방식은 사용하지 않습니다.
+
+**변환 매핑:**
+
+| HTML 요소 | PPTX 변환 | python-pptx API |
+|----------|----------|-----------------|
+| `<h1>`, `<p>`, `<span>` | 텍스트박스 | `slide.shapes.add_textbox()` |
+| `<div>` + 배경색 | 사각형 도형 | `slide.shapes.add_shape(RECTANGLE)` |
+| `<img src="">` | 이미지 (원본 파일) | `slide.shapes.add_picture()` |
+| `<table>` | 테이블 | `slide.shapes.add_table()` |
+| CSS `border-radius` | 둥근 모서리 | `shape.adjustments` |
+| CSS `box-shadow` | 그림자 효과 | `shape.shadow` |
+| CSS `background: linear-gradient` | 그라데이션 | `shape.fill.gradient()` |
+
+**금지 사항:**
+- ❌ 전체 슬라이드 스크린샷으로 이미지 삽입
+- ❌ 복잡한 레이아웃을 이미지로 대체
+- ❌ 텍스트를 이미지로 변환
+
+**허용 이미지:**
+- ✅ 명시적인 `<img>` 태그의 에셋 이미지 (아이콘, 로고, 사진)
+- ✅ 차트/다이어그램의 SVG → EMF 변환
+
+#### Stage 1 질문 흐름
+
+> 사용자에게 순차적으로 질문하여 생성 설정을 수집합니다.
+
+**질문 1: 문서 종류**
+```
+[시스템] 어떤 종류의 문서를 만들까요?
+
+문서 종류에 저장된 항목을 보여줌.
+
+> 선택 (기본: 1): 
+```
+
+**질문 2: 문서 양식**
+```
+[시스템] 사용할 문서 양식을 선택해 주세요:
+
+문서 양식에 저장된 항목을 보여줌.
+  
+> 선택: 
+```
+→ 양식 선택 시 테마 자동 상속, 슬라이드 크기 상속
+
+**질문 3: 슬라이드 크기** (양식 없음 선택 시만)
+```
+[시스템] 슬라이드 크기를 선택해 주세요:
+
+  1. 16:9 (1920x1080) - 현대적, 와이드스크린 ← 권장
+  2. 4:3  (1024x768)  - 레거시, 호환성
+  3. 16:10 (1920x1200) - Mac 디스플레이
+
+> 선택 (기본: 1): 
+```
+
+**질문 4: 청중 대상**
+```
+[시스템] 발표 대상은 누구인가요?
+
+  1. 경영진/임원
+  2. 실무자/팀원
+  3. 고객/파트너
+  4. 투자자
+  5. 일반 대중
+  6. 직접 입력
+
+> 선택: 
+```
+
+**질문 5: 발표 시간/슬라이드 수**
+```
+[시스템] 발표 시간 또는 슬라이드 수를 알려주세요:
+
+  1. 5분 (5~7장)
+  2. 10분 (8~12장)
+  3. 20분 (15~20장)
+  4. 30분 이상 (20장+)
+  5. 직접 입력 (예: 15장)
+
+> 선택 (기본: 2): 
+```
+
+**질문 6: 톤 & 스타일**
+```
+[시스템] 발표 톤을 선택해 주세요:
+
+  1. 공식적 (Formal) - 격식 있는 비즈니스
+  2. 캐주얼 (Casual) - 친근한 설명
+  3. 학술적 (Academic) - 연구/분석 중심
+  4. 데이터 중심 (Data-driven) - 차트/수치 강조
+
+> 선택 (기본: 1): 
+```
+
+**질문 7: 디자인 품질**
+```
+[시스템] 생성 품질을 선택해 주세요:
+
+  1. high   - 원본 100% 재현 (테마 변경 불가)
+  2. medium - 85~95% 재현 + 테마 변경 가능 ← 권장
+  3. low    - 빠른 생성 (품질 다소 낮음)
+
+> 선택 (기본: 2): 
+```
+
+**질문 8: 차트 렌더링 방식**
+```
+[시스템] 차트/다이어그램 렌더링 방식을 선택해 주세요:
+
+  1. 편집 가능 (네이티브) - PPT 내장 차트, 표 기반 간트
+     → 생성 후 수정 가능, 단순한 표현
+     
+  2. 라이브러리 기반 (이미지) - Frappe Gantt, Chart.js 등
+     → 정교한 시각화, 편집 불가 (이미지)
+
+> 선택 (기본: 1): 
+```
+
+**조건부 로직:**
+
+| 조건 | 동작 |
+|------|------|
+| 문서 양식 선택됨 | 질문 3 (슬라이드 크기) 스킵 |
+| 양식 선택 + 테마 미지정 | 품질 `high` 권장 |
+| 양식 없음 + 테마 지정 | 품질 `medium` 권장 |
+| 차트 포함 콘텐츠 없음 | 질문 8 스킵 |
 
 **생성 워크플로우:**
 ```
-1. 콘텐츠 요구사항 분석
+1. 콘텐츠 요구사항 분석 + 품질 옵션 확인
      │
      ▼
 2. 템플릿 매칭 (registry.yaml 검색)
      │
-     ├── 매칭 성공 → 방식 4: HTML 템플릿 사용
-     │   ├── template.html 로드
-     │   ├── 테마 CSS 변수 주입
-     │   └── 데이터 바인딩 (Handlebars)
+     ├── 매칭 성공 + quality: high
+     │   └── OOXML 템플릿 사용 → 100% 재현, 원본 테마
+     │       ├── template.ooxml 로드
+     │       └── 플레이스홀더 데이터 치환 (Handlebars)
      │
-     └── 매칭 실패 → 방식 2: 시맨틱 기반 생성
-         ├── 유사 템플릿의 semantic_description 참조
-         └── LLM이 새 HTML 생성
+     ├── 매칭 성공 + quality: medium
+     │   └── HTML 템플릿 사용 → 테마 변경 가능
+     │       ├── template.html 로드
+     │       ├── 테마 CSS 변수 주입
+     │       └── 데이터 바인딩 (Handlebars)
      │
-     ▼
-3. 테마 변수 주입
-     :root {
-       --primary: {theme.colors.primary};
-       --font-heading: {theme.fonts.major};
-     }
-     │
-     ▼
-4. Playwright 렌더링 → 이미지
+     └── 매칭 실패 또는 quality: low
+         └── 시맨틱 기반 생성
+             ├── 유사 템플릿의 semantic_description 참조
+             └── LLM이 새 HTML 생성
      │
      ▼
-5. 이미지 → PPTX 변환
+3. 렌더링/변환
+     ├── OOXML: python-pptx로 직접 PPTX 생성
+     └── HTML: Playwright 렌더링 → 이미지 → PPTX
+```
+
+**사용 예시:**
+```
+"동국제강 양식 그대로 PPT 만들어줘" → quality: high (OOXML)
+"딥그린 테마로 PPT 만들어줘" → quality: medium (HTML)
+"빠르게 PPT 만들어줘" → quality: low (시맨틱)
 ```
 
 **가변 템플릿 처리:**
@@ -347,7 +843,8 @@ Claude Code 환경에서 **전문 디자이너 수준의 PPT**를 자동 생성�
 템플릿: grid-icon-cards (element_count: "2-6")
 매칭된 variant: count: 4, layout: { columns: 4, gap: 3% }
 
-# HTML 렌더링 시 4개 카드로 자동 조정
+# OOXML: 도형 복제 + 위치 계산
+# HTML: {{#each items}} 루프로 자동 렌더링
 ```
 
 > 템플릿 파일 구조 상세는 **3.1 ppt-extract → 저장 내용 → 3. 콘텐츠** 참조
@@ -413,6 +910,50 @@ Stage 4에서 HTML 슬라이드 생성 후 LLM이 디자인 품질을 평가하�
 
 **합격 기준**: 85점 이상 또는 3회 시도 후 최고 점수 선택
 
+#### 세션 컨텍스트 관리
+
+> Stage 1은 전체 설정, Stage 2부터는 **슬라이드별로 모든 정보**를 통합 관리합니다.
+
+**세션 폴더 구조:**
+```
+working/{session_id}/
+├── session.yaml
+└── output/
+    ├── slide-01.html                 # 표지 (첫 시도 합격)
+    ├── slide-02.html                 # 목차 (첫 시도 합격)
+    ├── slide-03-v1.html              # 콘텐츠 1차 (실패 → 리네이밍)
+    ├── slide-03-v2.html              # 콘텐츠 2차 (실패)
+    ├── slide-03-v3.html              # 콘텐츠 3차 (합격, final_attempt: 3)
+    └── presentation.pptx
+```
+
+**session.yaml 구조 요약:**
+
+| 섹션 | 내용 |
+|------|------|
+| `session` | 세션 ID, 생성 시간, 상태 |
+| `settings` | Stage 1 설정 (문서 종류, 양식, 청중, 톤, 품질) |
+| `slides[]` | 슬라이드별 아웃라인, 템플릿 매칭, 콘텐츠, 평가 |
+| `output` | 최종 파일 경로 |
+
+> 상세 스키마: [부록 A 참조](./PRD_PPT_Skills_Suite_Appendix.md#부록-a-세션-스키마-sessionyaml)
+
+**슬라이드 상태 흐름:**
+
+```
+"pending" → "outlined" → "matched" → "generated" → "evaluating" → "completed"
+```
+
+**파일 명명 규칙:**
+
+| 상황 | 파일명 | 설명 |
+|------|--------|------|
+| 첫 시도 합격 | `slide-03.html` | 버전 없음 = 첫 시도 성공 |
+| 재시도 필요 | `slide-03-v1.html` | 첫 시도 → v1으로 리네이밍 |
+| 3차 시도 합격 | `slide-03-v3.html` | final_attempt: 3 |
+
+> 최종 파일 결정 로직: [부록 A.2 참조](./PRD_PPT_Skills_Suite_Appendix.md#a2-최종-파일-결정-로직)
+
 #### 디자인 가이드라인
 
 디자인 평가 루프에서 적용되는 세부 체크리스트입니다.
@@ -459,6 +1000,60 @@ Stage 4에서 HTML 슬라이드 생성 후 LLM이 디자인 품질을 평가하�
 - 시각적 무게 균형: 큰 이미지 ↔ 텍스트 블록 대칭
 - 요소 크기 비율: 조화로운 비율 (1:1.5:2, 황금비 1:1.618)
 - 정렬 기준선: 모든 요소가 보이지 않는 기준선에 정렬
+
+#### 에러 처리 및 Fallback 정책
+
+> 생성 과정에서 발생할 수 있는 오류 상황과 대응 방법을 정의합니다.
+
+**1. 템플릿 매칭 실패**
+
+| 상황 | 대응 |
+|------|------|
+| 조건에 맞는 템플릿 없음 | LLM이 semantic_description 기반으로 새 HTML 생성 |
+| 카테고리 없음 | 유사 카테고리 제안 후 사용자 확인 |
+
+```
+[시스템] 요청과 일치하는 템플릿을 찾지 못했습니다.
+         비슷한 레이아웃을 새로 생성합니다...
+```
+
+**2. HTML 렌더링 실패**
+
+| 상황 | 대응 |
+|------|------|
+| Playwright 오류 | 시맨틱 기반으로 재생성 시도 |
+| CSS 파싱 오류 | 기본 스타일로 대체 |
+| 3회 실패 | 사용자에게 보고 + 가장 나은 결과 제시 |
+
+```
+[시스템] 렌더링 중 오류가 발생하여 대체 디자인으로 생성했습니다.
+         결과를 확인해 주세요.
+```
+
+**3. 이미지 관련 실패**
+
+| 유형 | 상황 | 대응 |
+|------|------|------|
+| **AI 이미지 생성** | API 오류, 타임아웃 | 플레이스홀더 이미지 삽입 + 사용자 알림 |
+| **아이콘 검색** | 매칭 아이콘 없음 | 유사 키워드로 재검색 → 기본 아이콘 대체 |
+| **차트/다이어그램** | SVG 생성 실패 | 표(table) 형식으로 대체 |
+| **사용자 이미지** | 파일 없음, 포맷 오류 | 에러 메시지 + 해당 슬라이드 건너뜀 |
+
+```
+[시스템] 이미지 생성에 실패했습니다.
+         - 슬라이드 5: 플레이스홀더로 대체됨
+         - 슬라이드 8: 차트 → 표로 대체됨
+         
+         수동으로 이미지를 추가해 주세요.
+```
+
+**4. 기타 오류**
+
+| 상황 | 대응 |
+|------|------|
+| 테마 파일 없음 | 기본 테마(default) 적용 |
+| 문서 양식 없음 | 표준 16:9 빈 슬라이드 마스터 사용 |
+| 저장소 쓰기 실패 | 임시 폴더에 저장 + 경로 안내 |
 
 ---
 
@@ -529,8 +1124,10 @@ templates/
 ├── contents/                       # 콘텐츠 템플릿
 │   ├── registry.yaml
 │   └── {category}/{template_id}/
+│       ├── template.yaml           # 슬롯 + 시맨틱
 │       ├── template.html           # HTML + CSS (Handlebars)
-│       └── template.yaml           # 슬롯 + 시맨틱
+│       ├── template.ooxml          # 원본 XML (100% 재현용)
+│       └── thumbnail.png           # 미리보기
 │
 ├── objects/                        # 오브젝트
 │   ├── registry.yaml
@@ -556,143 +1153,184 @@ templates/
 - 썸네일 경로: `templates/thumbnails/{type}/.../{id}.png`
 - 예: `contents/grid/grid-icon-cards/` → `thumbnails/contents/grid/grid-icon-cards.png`
 
+### 5.3 썸네일 생성 규칙
+
+> **추출 시 원본 PPTX에서 생성**합니다.
+
+**생성 시점:**
+```
+content-extract 실행
+    │
+    ▼
+1. 슬라이드 파싱 (python-pptx)
+2. 원본 슬라이드 → 이미지 캡처
+3. thumbnail.png 저장
+4. template.yaml, template.html, template.ooxml 저장
+```
+
+**썸네일 크기:**
+
+| 용도 | 크기 | 비고 |
+|------|------|------|
+| 콘텐츠 썸네일 | **960 x 540 px** | 16:9 비율, 세부 확인 가능 |
+| 문서 레이아웃 | 480 x 270 px | 목록 표시용 |
+| 테마 미리보기 | 320 x 180 px | 색상 팔레트 확인용 |
+
 ---
 
 ## 6. 데이터 스키마
 
 > ppt-extract, ppt-gen, ppt-manager 모두 동일한 스키마를 사용합니다.
 
+### 6.0 레지스트리 스키마 (카테고리별)
+
+> **카테고리별 registry.yaml** 방식을 사용합니다.
+
+**폴더 구조:**
+```
+templates/contents/
+├── grid/
+│   ├── registry.yaml              ← 카테고리별 레지스트리
+│   ├── dongkuk-grid-cards-01/
+│   └── tipgreen-grid-cards-01/
+├── process/
+│   ├── registry.yaml              ← 카테고리별 레지스트리
+│   └── timeline-01/
+└── chart/
+    ├── registry.yaml
+    └── bar-chart-01/
+```
+
+**레지스트리 필드 요약:**
+
+| 필드 | 설명 |
+|------|------|
+| `id`, `name`, `category` | 기본 정보 |
+| `source_document`, `source_file` | 출처 추적 |
+| `visual`, `colors`, `style` | LLM 매칭용 시각적 특성 |
+| `recommended_for` | 적합 용도 (산업, 청중, 목적) |
+| `semantic_description` | 자연어 설명 |
+| `tags` | 검색 키워드 |
+
+> 상세 스키마: [부록 C.1 참조](./PRD_PPT_Skills_Suite_Appendix.md#c1-콘텐츠-레지스트리-contentsregistryyaml)
+
+**템플릿 매칭 알고리즘:** [research/템플릿_매칭_알고리즘.md](research/템플릿_매칭_알고리즘.md) 참조
+
+**삭제/업데이트 시 활용:**
+
+| 시나리오 | 삭제 기준 | 설명 |
+|---------|----------|------|
+| **문서 전체 삭제** | `source_document` | 해당 문서 ID로 등록된 모든 콘텐츠 삭제 |
+| **파일 재등록** | `source_file` | 같은 파일명으로 추출된 콘텐츠만 삭제 후 재등록 |
+
+> 삭제 로직: [부록 E.2 참조](./PRD_PPT_Skills_Suite_Appendix.md#e2-삭제업데이트-처리-로직)
+
 ### 6.1 문서 양식 스키마 (documents/*.yaml)
 
-```yaml
-document:
-  id: "dongkuk-standard"
-  name: "동국그룹 기본양식"
-  group: "동국그룹"
-  source_file: "원본.pptx"
-  extracted_at: "2026-01-10"
+**구조 요약:**
 
-layouts:
-  - index: 0
-    name: "표지"
-    type: cover
-    ooxml_file: "ooxml/slideLayout1.xml"
-    thumbnail: "thumbnails/layout-0.png"
-    placeholders:
-      - id: "title"
-        type: ctrTitle
-        position: { x: 5%, y: 35%, width: 90%, height: 15% }
-      - id: "subtitle"
-        type: subTitle
-        position: { x: 5%, y: 52%, width: 90%, height: 8% }
+| 섹션 | 내용 |
+|------|------|
+| `document` | ID, 이름, 그룹, 출처 파일 |
+| `layouts[]` | 레이아웃별 OOXML, 썸네일, 플레이스홀더, content_zone |
+| `master` | 슬라이드 마스터 OOXML, 공통 요소 (로고) |
+| `theme` | 테마 색상, 폰트 |
 
-  - index: 3
-    name: "내지 (제목+액션타이틀)"
-    type: body
-    variant: "title-action"
-    ooxml_file: "ooxml/slideLayout4.xml"
-    content_zone:
-      position: { x: 3%, y: 24%, width: 94%, height: 72% }
-
-master:
-  ooxml_file: "ooxml/slideMaster1.xml"
-  common_elements:
-    - id: "logo"
-      file: "assets/media/logo.png"
-      position: { x: 90%, y: 2%, width: 8%, height: 6% }
-
-theme:
-  ooxml_file: "ooxml/theme1.xml"
-  colors:
-    dk2: "#002452"
-    accent1: "#C51F2A"
-  fonts:
-    major: "맑은 고딕"
-    minor: "맑은 고딕"
-```
+> 상세 스키마: [부록 C.2 참조](./PRD_PPT_Skills_Suite_Appendix.md#c2-문서-양식-스키마-documentsyaml)
 
 ### 6.2 테마 스키마 (themes/*.yaml)
 
-```yaml
-id: deepgreen
-name: "딥그린 테마"
-colors:
-  primary: "#1a5f4a"
-  secondary: "#2d7a5e"
-  accent: "#4a9d7f"
-  background: "#f5f9f7"
-  surface: "#ffffff"
-  text: "#1a1a1a"
-  muted: "#6b7c74"
-fonts:
-  major: "Pretendard"
-  minor: "Pretendard"
-style_hints:
-  border_radius: "16px"
-  shadow: "0 4px 12px rgba(0,0,0,0.08)"
+**구조 요약:**
+
+| 필드 | 설명 |
+|------|------|
+| `id`, `name` | 테마 식별자 |
+| `colors` | primary, secondary, accent, background, text |
+| `fonts` | major, minor 폰트 |
+| `style_hints` | border_radius, shadow |
+
+> 상세 스키마: [부록 C.3 참조](./PRD_PPT_Skills_Suite_Appendix.md#c3-테마-스키마-themesyaml)
+
+### 6.2.1 폰트 처리 정책
+
+> **다운로드 시도 → 실패 시 대체 폰트** 순서로 처리합니다.
+
+**처리 순서:**
 ```
+시스템 확인 → 없으면 다운로드 시도 → 실패 시 대체 폰트 매핑
+```
+
+> 상세 매핑 및 알림: [부록 E.1 참조](./PRD_PPT_Skills_Suite_Appendix.md#e1-폰트-fallback-매핑)
 
 ### 6.3 콘텐츠 템플릿 스키마 (contents/*/template.yaml)
 
-```yaml
-# === 기본 정보 ===
-id: grid-icon-cards
-category: grid
-element_count: "2-6"
-description: "아이콘 카드 그리드 (2~6개)"
+**템플릿 ID 명명 규칙:**
 
-# === 가변 레이아웃 ===
-variants:
-  - count: 2
-    layout: { columns: 2, gap: 8% }
-  - count: 3
-    layout: { columns: 3, gap: 4% }
-  - count: 4
-    layout: { columns: 4, gap: 3% }
+| 유형 | ID 형식 | 예시 |
+|------|---------|------|
+| 양식 전용 | `{양식명}-{패턴}-{번호}` | `dongkuk-grid-cards-01` |
+| 범용 | `{패턴}-{번호}` | `grid-cards-01` |
 
-# === 슬롯 정의 (Handlebars 바인딩용) ===
-slots:
-  - name: title
-    type: text
-    required: true
-    example: "핵심 서비스"
-  - name: items
-    type: array
-    min: 2
-    max: 6
-    item_schema:
-      - { name: icon, type: image }
-      - { name: title, type: text, max_length: 20 }
-      - { name: description, type: text, max_length: 80 }
+**구조 요약:**
 
-# === 시맨틱 설명 (LLM 재현용) ===
-semantic_description: |
-  슬라이드 상단에 왼쪽 정렬된 큰 제목(48px, bold)이 있습니다.
-  그 아래 2~6개의 동일한 크기의 카드가 가로로 균등 배치됩니다.
-  각 카드는 둥근 모서리(16px)와 그림자가 있는 흰색 배경입니다.
+| 필드 | 설명 |
+|------|------|
+| `id`, `category`, `pattern` | 기본 정보, 검색용 |
+| `document_style`, `has_ooxml` | 양식 연결 및 OOXML 포함 여부 |
+| `variants[]` | 가변 레이아웃 (개수별 컬럼/간격) |
+| `slots[]` | Handlebars 바인딩용 슬롯 정의 |
+| `semantic_description` | LLM 재현용 자연어 설명 |
+| `match_keywords` | 검색 키워드 |
 
-# === 검색 키워드 ===
-match_keywords: [그리드, 카드, 아이콘, 서비스]
+> 상세 스키마: [부록 D 참조](./PRD_PPT_Skills_Suite_Appendix.md#부록-d-콘텐츠-템플릿-스키마-상세)
+
+**템플릿 매칭 로직:**
+
 ```
+요청: "동국 양식으로 3열 카드 만들어줘"
+→ 1. document_style: dongkuk 필터
+→ 2. pattern: grid-* 필터
+→ 3. element_count: 3 포함
+→ 결과: dongkuk-grid-cards-01 (OOXML, high quality)
+```
+
+### 6.3.1 template.html 구조
+
+> **HTML + CSS 변수 + Handlebars** 방식을 사용합니다.
+
+| 요소 | 설명 |
+|------|------|
+| `:root` CSS 변수 | `{{theme.primary}}` 등 테마 색상 바인딩 |
+| Handlebars 반복 | `{{#each items}}...{{/each}}` |
+| 슬라이드 크기 | 1920x1080px 고정 |
+
+> 상세 예시: [부록 B.1 참조](./PRD_PPT_Skills_Suite_Appendix.md#b1-templatehtml-구조)
+
+### 6.3.2 template.ooxml 플레이스홀더 규칙
+
+> **네이티브 플레이스홀더 + 커스텀 마커 혼합** 방식을 사용합니다.
+
+| 유형 | 마커 형식 | 처리 방식 |
+|------|----------|----------|
+| **단순 텍스트** | 네이티브 `<p:ph type="title"/>` | python-pptx `shape.text = value` |
+| **배열 항목** | `__SLOT_items[0].title__` | 정규식 치환 |
+| **배열 루프** | 첫 도형을 템플릿으로 복제 | 도형 복제 + 위치 계산 |
+
+> 상세 예시 및 처리 로직: [부록 B.2~B.3 참조](./PRD_PPT_Skills_Suite_Appendix.md#b2-templateooxml-플레이스홀더)
 
 > **Handlebars**: 데이터 바인딩에 [Handlebars.js](https://handlebarsjs.com/) 사용. `{{title}}`, `{{#each items}}` 등.
 
 ### 6.4 오브젝트 스키마 (objects/*/metadata.yaml)
 
-```yaml
-id: cycle-6segment
-category: diagram
-name: "6단계 순환도"
-description: "6개 단계가 순환하는 원형 다이어그램"
-text_overlays:
-  - id: "center"
-    position: { x: 50%, y: 50% }
-    text: "핵심 가치"
-  - id: "segment1"
-    position: { x: 50%, y: 15% }
-    text: "1단계"
-keywords: [순환, 사이클, 프로세스, 6단계]
-```
+복잡한 도형 (순환도, 다이어그램 등)의 메타데이터입니다.
+
+| 필드 | 설명 |
+|------|------|
+| `id`, `category`, `name` | 기본 정보 |
+| `text_overlays[]` | 텍스트 오버레이 위치 |
+| `keywords` | 검색 키워드 |
+
+> 상세 스키마: [부록 F 참조](./PRD_PPT_Skills_Suite_Appendix.md#부록-f-오브젝트-스키마-objectsmetadatayaml)
 
 ---
 
@@ -825,15 +1463,84 @@ keywords: [순환, 사이클, 프로세스, 6단계]
 
 ## 부록
 
-### A. 콘텐츠 템플릿 카테고리 (19개)
+### A. 콘텐츠 템플릿 카테고리 (동적 확장)
+
+**초기 카테고리 (19개):**
 
 cover, toc, section, comparison, process, chart, stats, grid, diagram, timeline, content, quote, closing, cycle, matrix, feature, flow, table, infographic
 
-### B. 아이콘 시스템
+**확장 정책:**
+- LLM이 적합한 카테고리가 없으면 새 폴더 생성 가능
+- 폴더명: 영문 케밥케이스 (예: `team-intro`, `product-showcase`)
+- 현재 카테고리 목록: `ls templates/contents/` 로 확인
 
-**카테고리별 분류**:
-- technology: 보안, 속도, 데이터, AI, 클라우드, 서버 등 (10개)
-- business: 성장, 목표, 전략, 성공, 효율 등 (8개)
-- logistics: 창고, 배송, 주문, 재고, 대시보드 (5개)
-- risk: 위험, 지연, 오류, 변경 (4개)
+```
+templates/contents/
+├── cover/                ← 초기 19개
+├── toc/
+├── ...
+├── team-intro/           ← LLM이 추가한 카테고리
+└── sustainability/       
+```
+
+**ppt-extract 시 카테고리 결정 프롬프트 예시:**
+
+```markdown
+## 콘텐츠 카테고리 분류
+
+현재 등록된 카테고리:
+{{existing_categories}}
+
+### 분류 규칙
+1. 슬라이드 콘텐츠를 분석하여 가장 적합한 카테고리 선택
+2. 기존 카테고리 중 적합한 것이 없으면 새 카테고리 생성
+
+### 새 카테고리 생성 조건
+- 기존 카테고리로 표현하기 어려운 독특한 패턴
+- 재사용 가능성이 높은 일반적인 레이아웃
+- 폴더명: 영문 케밥케이스 (예: team-intro, product-showcase)
+
+### 출력 형식
+{
+  "category": "comparison",     // 기존 또는 새 카테고리명
+  "is_new_category": false,     // 새 카테고리 여부
+  "new_category_description": null  // 새 카테고리면 설명 필수
+}
+
+### 예시 1: 기존 카테고리 사용
+슬라이드: 3개 항목 비교표
+→ { "category": "comparison", "is_new_category": false }
+
+### 예시 2: 새 카테고리 생성
+슬라이드: 팀원 4명 사진+이름+역할 그리드
+→ {
+    "category": "team-intro",
+    "is_new_category": true,
+    "new_category_description": "팀원 소개 레이아웃 (사진+이름+역할)"
+  }
+```
+
+### B. 아이콘 시스템 (동적 확장)
+
+**초기 카테고리:**
+- technology: 보안, 속도, 데이터, AI, 클라우드, 서버 등
+- business: 성장, 목표, 전략, 성공, 효율 등
+- logistics: 창고, 배송, 주문, 재고, 대시보드
+- risk: 위험, 지연, 오류, 변경
 - 기타: communication, process, finance, quality, document, location, customer
+
+**확장 정책:**
+- LLM이 적합한 아이콘 카테고리가 없으면 새 폴더 생성 가능
+- 현재 목록: `ls templates/assets/icons/` 로 확인
+
+### C. 영역 감지 코드
+
+Title/Footer 판별 및 콘텐츠 영역 필터링 로직입니다.
+
+| 함수 | 설명 |
+|------|------|
+| `is_title_shape()` | 타이틀 플레이스홀더 판별 |
+| `is_footer_shape()` | 푸터/슬라이드 번호 판별 |
+| `detect_content_zone()` | 콘텐츠 영역 경계 계산 |
+
+> 상세 코드: [부록 G 참조](./PRD_PPT_Skills_Suite_Appendix.md#부록-g-영역-감지-코드)

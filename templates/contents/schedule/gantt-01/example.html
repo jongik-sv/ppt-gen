@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>프로젝트 일정 - Gantt Chart</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      margin-bottom: 40px;
+    }
+
+    .title {
+      font-size: 48px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 24px;
+      color: #64748b;
+    }
+
+    .gantt-container {
+      flex: 1;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      padding: 40px;
+      overflow: hidden;
+    }
+
+    /* Frappe Gantt 커스텀 스타일 */
+    .gantt .bar {
+      fill: #3b82f6;
+    }
+
+    .gantt .bar-progress {
+      fill: #1d4ed8;
+    }
+
+    .gantt .bar-label {
+      fill: #fff;
+      font-weight: 600;
+    }
+
+    .gantt .grid-header {
+      fill: #f1f5f9;
+    }
+
+    .gantt .lower-text,
+    .gantt .upper-text {
+      fill: #475569;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide">
+    <div class="header">
+      <h1 class="title">프로젝트 일정</h1>
+      <p class="subtitle">2026년 1분기 개발 로드맵</p>
+    </div>
+
+    <div class="gantt-container">
+      <div id="gantt"></div>
+    </div>
+  </div>
+
+  <!-- ES Module 방식으로 로드 -->
+  <script type="module">
+    // ESM 방식으로 Frappe Gantt 임포트
+    import Gantt from 'https://cdn.jsdelivr.net/npm/frappe-gantt/+esm';
+
+    // 샘플 데이터 (Handlebars 치환 가능)
+    const tasks = [
+      {
+        id: 'task-1',
+        name: '요구사항 분석',
+        start: '2026-01-06',
+        end: '2026-01-17',
+        progress: 100,
+        dependencies: ''
+      },
+      {
+        id: 'task-2',
+        name: 'UI/UX 설계',
+        start: '2026-01-13',
+        end: '2026-01-24',
+        progress: 80,
+        dependencies: 'task-1'
+      },
+      {
+        id: 'task-3',
+        name: '백엔드 개발',
+        start: '2026-01-20',
+        end: '2026-02-14',
+        progress: 40,
+        dependencies: 'task-2'
+      },
+      {
+        id: 'task-4',
+        name: '프론트엔드 개발',
+        start: '2026-01-27',
+        end: '2026-02-21',
+        progress: 20,
+        dependencies: 'task-2'
+      },
+      {
+        id: 'task-5',
+        name: '통합 테스트',
+        start: '2026-02-17',
+        end: '2026-02-28',
+        progress: 0,
+        dependencies: 'task-3, task-4'
+      },
+      {
+        id: 'task-6',
+        name: '배포 및 런칭',
+        start: '2026-03-02',
+        end: '2026-03-06',
+        progress: 0,
+        dependencies: 'task-5'
+      }
+    ];
+
+    const gantt = new Gantt("#gantt", tasks, {
+      header_height: 60,
+      column_width: 45,
+      step: 24,
+      view_modes: ['Day', 'Week', 'Month'],
+      bar_height: 36,
+      bar_corner_radius: 8,
+      arrow_curve: 5,
+      padding: 24,
+      view_mode: 'Week',
+      date_format: 'YYYY-MM-DD',
+      language: 'ko'
+    });
+  </script>
+</body>
+
+</html>
