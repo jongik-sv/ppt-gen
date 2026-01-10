@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <style>
+        /* 디자인 토큰 - 테마 변경 시 이 값만 수정 */
+        :root {
+            --color-background: #ffffff;
+            --color-surface: #ffffff;
+            --color-surface-alt: #f8fafc;
+            --color-border: #e2e8f0;
+            --color-text: #1e293b;
+            --color-text-muted: #64748b;
+            --color-text-task: #334155;
+
+            /* Phase 색상 */
+            --color-phase1: #3b82f6;
+            --color-phase1-dark: #1d4ed8;
+            --color-phase2: #10b981;
+            --color-phase2-dark: #059669;
+            --color-phase3: #f59e0b;
+            --color-phase3-dark: #d97706;
+            --color-phase4: #8b5cf6;
+            --color-phase4-dark: #7c3aed;
+            --color-milestone: #ef4444;
+
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --shadow-bar: 0 2px 6px rgba(0, 0, 0, 0.15);
+            --radius-card: 16px;
+            --radius-bar: 6px;
+            --font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+
+            /* 동적 계산용 */
+            --week-percent: calc(100 / {
+                        {
+                        total_weeks
+                    }
+                });
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .slide {
+            width: 1920px;
+            height: 1080px;
+            background: var(--color-background);
+            font-family: var(--font-family);
+            padding: 50px 60px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 44px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--color-text-muted);
+        }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-text-muted);
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .legend-milestone {
+            width: 12px;
+            height: 12px;
+            background: var(--color-milestone);
+            transform: rotate(45deg);
+        }
+
+        .gantt-wrapper {
+            background: var(--color-surface);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            padding: 30px;
+        }
+
+        .weeks {
+            display: flex;
+            margin-bottom: 15px;
+            padding-left: 180px;
+        }
+
+        .week {
+            flex: 1;
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            border-left: 1px dashed var(--color-border);
+            padding: 8px 0;
+        }
+
+        .week:first-child {
+            border-left: none;
+        }
+
+        .week-month {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 4px;
+        }
+
+        .task-row {
+            display: flex;
+            align-items: center;
+            height: 50px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .task-row:last-child {
+            border-bottom: none;
+        }
+
+        .task-name {
+            width: 180px;
+            color: var(--color-text-task);
+            font-size: 14px;
+            font-weight: 500;
+            padding-right: 16px;
+            text-align: right;
+        }
+
+        .task-bar-container {
+            flex: 1;
+            height: 30px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .task-bar {
+            position: absolute;
+            height: 28px;
+            border-radius: var(--radius-bar);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: var(--shadow-bar);
+        }
+
+        .phase1 {
+            background: linear-gradient(135deg, var(--color-phase1), var(--color-phase1-dark));
+        }
+
+        .phase2 {
+            background: linear-gradient(135deg, var(--color-phase2), var(--color-phase2-dark));
+        }
+
+        .phase3 {
+            background: linear-gradient(135deg, var(--color-phase3), var(--color-phase3-dark));
+        }
+
+        .phase4 {
+            background: linear-gradient(135deg, var(--color-phase4), var(--color-phase4-dark));
+        }
+
+        .progress-indicator {
+            position: absolute;
+            right: 12px;
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .milestone {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--color-milestone);
+            transform: rotate(45deg);
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+        }
+
+        .milestone-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--color-milestone);
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .phase-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+            margin: 8px 0 8px 180px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide">
+        <div class="header">
+            <div>
+                <h1 class="title">{{title}}</h1>
+                <p class="subtitle">{{subtitle}}</p>
+            </div>
+            <div class="legend">
+                {{#each phases}}
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--color-{{color}});"></div>
+                    <span>{{name}}</span>
+                </div>
+                {{/each}}
+                <div class="legend-item">
+                    <div class="legend-milestone"></div>
+                    <span>마일스톤</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gantt-wrapper">
+            <!-- 주차 헤더 -->
+            <div class="weeks">
+                {{#each week_labels}}
+                {{#each weeks}}
+                <div class="week">
+                    {{#if @first}}<span class="week-month">{{../month}}</span>{{/if}}
+                    {{this}}
+                </div>
+                {{/each}}
+                {{/each}}
+            </div>
+
+            <!-- 태스크 -->
+            {{#each phases}}
+            {{#each tasks}}
+            <div class="task-row">
+                <div class="task-name">{{name}}</div>
+                <div class="task-bar-container">
+                    <div class="task-bar {{../color}}" style="left: {{multiply (subtract start_week 1) (divide 100 ../../../total_weeks)}}%; 
+                        width: {{multiply duration_weeks (divide 100 ../../../total_weeks)}}%;">
+                        {{name}}
+                        <span class="progress-indicator">{{progress}}%</span>
+                    </div>
+                    {{#if milestone.enabled}}
+                    <div class="milestone"
+                        style="left: {{multiply (subtract (add start_week duration_weeks) 1) (divide 100 ../../../total_weeks)}}%;">
+                        <div class="milestone-label"
+                            style="transform: rotate(-45deg) translateX(20px) translateY(-8px);">
+                            {{milestone.label}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+            {{#unless @last}}<div class="phase-divider"></div>{{/unless}}
+            {{/each}}
+        </div>
+    </div>
+</body>
+
+</html>

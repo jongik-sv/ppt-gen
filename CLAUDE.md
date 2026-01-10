@@ -35,14 +35,26 @@ Claude Code 환경에서 **전문 디자이너 수준의 PPT**를 자동 생성�
 - ❌ 텍스트를 이미지로 변환 금지
 - ⚠️ **예외**: 라이브러리 기반 차트 (스크린샷 허용)
 
-### 차트 라이브러리 (content-create)
-추출할 원본 없이 **동적 차트 템플릿 직접 생성**:
-- **Frappe Gantt** - 프로젝트 일정 (⭐⭐⭐)
-- **Mermaid** - 다이어그램, 간트 (⭐⭐⭐)
-- **Chart.js** - 막대/선/파이 (⭐⭐)
+### 콘텐츠 생성용 라이브러리 (content-create)
 
-**렌더링**: HTML + 라이브러리 → 스크린샷 → 이미지 삽입
+추출할 원본 없이 **동적 콘텐츠 템플릿 직접 생성**:
+
+| 카테고리 | 라이브러리 | 용도 | CDN |
+|---------|-----------|------|-----|
+| **일정** | Frappe Gantt | 간트 차트 | `frappe-gantt/+esm` |
+| **일정** | Pure CSS | 간트 (정적) | - |
+| **차트** | Chart.js | 막대/선/파이 | `chart.js` |
+| **차트** | ApexCharts | 대시보드 | `apexcharts` |
+| **다이어그램** | Mermaid | 플로우/시퀀스 | `mermaid` |
+| **아이콘** | Lucide | 라인 아이콘 | `lucide` |
+| **일러스트** | unDraw | SVG 일러스트 | undraw.co |
+
+**렌더링 방식**: `render_method: library` → HTML + 라이브러리 → 스크린샷 → 이미지 삽입
 **제약**: 편집 불가, 수정 시 재생성 필요
+
+**완료된 템플릿:**
+- `templates/contents/schedule/gantt-yearly/` - 연간 간트 (Dark, Pure CSS)
+- `templates/contents/schedule/gantt-01/` - 분기 간트 (Light, Pure CSS)
 
 ### 카테고리 확장 정책
 - 초기 19개 카테고리 제공
@@ -86,3 +98,7 @@ PPT 생성 시 `output/session.yaml`에 진행 상태 저장:
 - settings: Stage 1 설정 (문서 종류, 양식, 청중, 톤)
 - slides[]: 슬라이드별 아웃라인, 템플릿 매칭, 평가 결과
 - output: 최종 파일 경로
+
+
+## 기타
+- 채팅 중 내가 todo 항목으로 기록하라는 것은 idea.md 파일에 남겨줘

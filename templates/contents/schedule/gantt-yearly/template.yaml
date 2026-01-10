@@ -1,0 +1,143 @@
+id: gantt-yearly
+category: schedule
+pattern: gantt-chart
+description: 연간 프로젝트 로드맵 간트차트 (Pure CSS, Dark Theme)
+element_count: "8-15"
+has_ooxml: false
+render_method: library  # library: 스크린샷 이미지 (편집 불가) | native: 편집 가능
+
+# 테마 설정
+theme:
+  mode: dark  # light | dark
+  
+# 데이터 스키마
+schema:
+  title: string
+  subtitle: string
+  total_months: number  # 12개월 고정 권장
+  
+  # 월 라벨
+  month_labels: [string]  # ["1월", "2월", ..., "12월"]
+  
+  # Phase 정의
+  phases:
+    - id: number
+      name: string
+      color: phase1 | phase2 | phase3 | phase4
+      tasks:
+        - name: string
+          start_month: number       # 1부터 시작 (1월=1)
+          duration_months: number
+          progress: number          # 0-100
+          milestone:                # 선택적
+            enabled: boolean
+            label: string
+
+# 레이아웃 설정
+layout:
+  task_name_width: 180px
+  month_width: 130px  # 12개월 기준 1560px
+  bar_height: 26px
+  row_height: 40px
+  row_gap: 6px
+
+# 예시 데이터
+example:
+  title: "2026 프로젝트 로드맵"
+  subtitle: "스마트 물류 시스템 구축 프로젝트 (12개월)"
+  total_months: 12
+  
+  month_labels:
+    - "1월"
+    - "2월"
+    - "3월"
+    - "4월"
+    - "5월"
+    - "6월"
+    - "7월"
+    - "8월"
+    - "9월"
+    - "10월"
+    - "11월"
+    - "12월"
+  
+  phases:
+    - id: 1
+      name: "Phase 1: 기획"
+      color: phase1
+      tasks:
+        - name: "요구사항 분석"
+          start_month: 1
+          duration_months: 1
+          progress: 100
+        - name: "시스템 설계"
+          start_month: 2
+          duration_months: 1
+          progress: 100
+          milestone:
+            enabled: true
+            label: "설계 완료"
+        - name: "UI/UX 설계"
+          start_month: 2
+          duration_months: 1.5
+          progress: 80
+    
+    - id: 2
+      name: "Phase 2: 개발"
+      color: phase2
+      tasks:
+        - name: "백엔드 개발"
+          start_month: 3
+          duration_months: 4
+          progress: 60
+        - name: "프론트엔드 개발"
+          start_month: 3.5
+          duration_months: 4
+          progress: 40
+          milestone:
+            enabled: true
+            label: "개발 완료"
+        - name: "API 연동"
+          start_month: 5
+          duration_months: 3
+          progress: 20
+    
+    - id: 3
+      name: "Phase 3: 테스트"
+      color: phase3
+      tasks:
+        - name: "단위 테스트"
+          start_month: 7
+          duration_months: 2
+          progress: 0
+        - name: "통합 테스트"
+          start_month: 8.5
+          duration_months: 1.5
+          progress: 0
+        - name: "UAT"
+          start_month: 10
+          duration_months: 1
+          progress: 0
+          milestone:
+            enabled: true
+            label: "테스트 완료" 
+    
+    - id: 4
+      name: "Phase 4: 배포"
+      color: phase4
+      tasks:
+        - name: "스테이징 배포"
+          start_month: 11
+          duration_months: 0.5
+          progress: 0
+        - name: "프로덕션 배포"
+          start_month: 11.5
+          duration_months: 0.5
+          progress: 0
+        - name: "안정화/모니터링"
+          start_month: 12
+          duration_months: 1
+          progress: 0
+          milestone:
+            enabled: true
+            label: "🎉 런칭"

@@ -1,0 +1,104 @@
+id: gantt-quarterly
+category: schedule
+pattern: gantt-chart
+description: 분기별 프로젝트 간트차트 (Pure CSS)
+element_count: "4-10"
+has_ooxml: false
+render_method: library  # library: 스크린샷 이미지 (편집 불가) | native: 편집 가능
+
+# 테마 설정
+theme:
+  mode: light  # light | dark
+  
+# 데이터 스키마
+schema:
+  title: string
+  subtitle: string
+  total_weeks: number
+  
+  # 주차 라벨 (자동 생성 또는 커스텀)
+  week_labels:
+    - month: string
+      weeks: [string]
+  
+  # Phase 정의
+  phases:
+    - id: number
+      name: string
+      color: phase1 | phase2 | phase3 | phase4
+      tasks:
+        - name: string
+          start_week: number      # 1부터 시작
+          duration_weeks: number
+          progress: number        # 0-100
+          milestone:              # 선택적
+            enabled: boolean
+            label: string
+
+# 예시 데이터
+example:
+  title: "프로젝트 일정"
+  subtitle: "2026년 1분기 개발 로드맵"
+  total_weeks: 9
+  
+  week_labels:
+    - month: "1월"
+      weeks: ["1주", "2주", "3주", "4주"]
+    - month: "2월"
+      weeks: ["1주", "2주", "3주", "4주"]
+    - month: "3월"
+      weeks: ["1주"]
+  
+  phases:
+    - id: 1
+      name: "기획/설계"
+      color: phase1
+      tasks:
+        - name: "요구사항 분석"
+          start_week: 1
+          duration_weeks: 2
+          progress: 100
+        - name: "UI/UX 설계"
+          start_week: 2
+          duration_weeks: 2
+          progress: 80
+          milestone:
+            enabled: true
+            label: "설계 완료"
+    
+    - id: 2
+      name: "개발"
+      color: phase2
+      tasks:
+        - name: "백엔드 개발"
+          start_week: 3
+          duration_weeks: 4
+          progress: 40
+        - name: "프론트엔드 개발"
+          start_week: 4
+          duration_weeks: 4
+          progress: 20
+          milestone:
+            enabled: true
+            label: "개발 완료"
+    
+    - id: 3
+      name: "테스트"
+      color: phase3
+      tasks:
+        - name: "통합 테스트"
+          start_week: 7
+          duration_weeks: 2
+          progress: 0
+    
+    - id: 4
+      name: "배포"
+      color: phase4
+      tasks:
+        - name: "배포 및 런칭"
+          start_week: 9
+          duration_weeks: 1
+          progress: 0
+          milestone:
+            enabled: true
+            label: "🎉 런칭"

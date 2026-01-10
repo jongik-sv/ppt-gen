@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <style>
+        /* 디자인 토큰 - 테마 변경 시 이 값만 수정 */
+        :root {
+            --color-background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --color-surface: #1e293b;
+            --color-surface-border: #334155;
+            --color-text: #f8fafc;
+            --color-text-muted: #94a3b8;
+            --color-text-secondary: #cbd5e1;
+            --color-text-task: #e2e8f0;
+
+            /* Phase 색상 */
+            --color-phase1: #3b82f6;
+            --color-phase1-dark: #1d4ed8;
+            --color-phase2: #10b981;
+            --color-phase2-dark: #059669;
+            --color-phase3: #f59e0b;
+            --color-phase3-dark: #d97706;
+            --color-phase4: #8b5cf6;
+            --color-phase4-dark: #7c3aed;
+            --color-milestone: #ef4444;
+            --color-milestone-dark: #dc2626;
+
+            --shadow-bar: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --radius-card: 16px;
+            --radius-bar: 5px;
+            --font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .slide {
+            width: 1920px;
+            height: 1080px;
+            background: var(--color-background);
+            font-family: var(--font-family);
+            padding: 50px 60px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .title {
+            font-size: 44px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--color-text-muted);
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-text-secondary);
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .legend-milestone {
+            width: 12px;
+            height: 12px;
+            background: var(--color-milestone);
+            transform: rotate(45deg);
+        }
+
+        .gantt-wrapper {
+            background: var(--color-surface);
+            border-radius: var(--radius-card);
+            padding: 30px;
+            position: relative;
+        }
+
+        /* 월 헤더 */
+        .months {
+            display: flex;
+            margin-bottom: 15px;
+            padding-left: 180px;
+        }
+
+        .month {
+            width: 130px;
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* 태스크 행 */
+        .task-row {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            margin-bottom: 6px;
+        }
+
+        .task-name {
+            width: 180px;
+            color: var(--color-text-task);
+            font-size: 13px;
+            padding-right: 16px;
+            text-align: right;
+        }
+
+        .task-bar-container {
+            flex: 1;
+            height: 26px;
+            position: relative;
+        }
+
+        .task-bar {
+            position: absolute;
+            height: 26px;
+            border-radius: var(--radius-bar);
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+            box-shadow: var(--shadow-bar);
+        }
+
+        /* Phase 색상 */
+        .phase1 {
+            background: linear-gradient(135deg, var(--color-phase1), var(--color-phase1-dark));
+        }
+
+        .phase2 {
+            background: linear-gradient(135deg, var(--color-phase2), var(--color-phase2-dark));
+        }
+
+        .phase3 {
+            background: linear-gradient(135deg, var(--color-phase3), var(--color-phase3-dark));
+        }
+
+        .phase4 {
+            background: linear-gradient(135deg, var(--color-phase4), var(--color-phase4-dark));
+        }
+
+        /* 진행률 표시 */
+        .progress-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-bar) 0 0 var(--radius-bar);
+        }
+
+        /* 마일스톤 */
+        .milestone {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, var(--color-milestone), var(--color-milestone-dark));
+            transform: rotate(45deg) translateY(-50%);
+            top: 50%;
+            margin-top: -4px;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+            z-index: 10;
+        }
+
+        .milestone-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--color-milestone);
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* 마일스톤 세로선 */
+        .milestone-line {
+            position: absolute;
+            width: 2px;
+            background: rgba(239, 68, 68, 0.3);
+            top: 0;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* 월 구분 수직 점선 */
+        .month-grid-line {
+            position: absolute;
+            border-left: 1px dashed rgba(148, 163, 184, 0.25);
+            top: 50px;
+            height: calc(100% - 50px);
+            z-index: 0;
+        }
+
+        /* 구분선 */
+        .phase-divider {
+            height: 1px;
+            background: var(--color-surface-border);
+            margin: 10px 0 10px 180px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide">
+        <div class="header">
+            <div>
+                <h1 class="title">{{title}}</h1>
+                <p class="subtitle">{{subtitle}}</p>
+            </div>
+            <div class="legend">
+                {{#each phases}}
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--color-{{color}});"></div>
+                    <span>{{name}}</span>
+                </div>
+                {{/each}}
+                <div class="legend-item">
+                    <div class="legend-milestone"></div>
+                    <span>마일스톤</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gantt-wrapper">
+            <!-- 월 구분 수직 점선 (Handlebars로 동적 생성) -->
+            {{#each month_labels}}
+            {{#unless @first}}
+            <div class="month-grid-line" style="left: calc(180px + {{multiply @index 130}}px);"></div>
+            {{/unless}}
+            {{/each}}
+
+            <!-- 월 헤더 -->
+            <div class="months">
+                {{#each month_labels}}
+                <div class="month">{{this}}</div>
+                {{/each}}
+            </div>
+
+            <!-- 태스크 -->
+            {{#each phases}}
+            {{#each tasks}}
+            <div class="task-row">
+                <div class="task-name">{{name}}</div>
+                <div class="task-bar-container">
+                    <div class="task-bar {{../color}}" style="left: {{multiply (subtract start_month 1) (divide 1560 ../../../total_months)}}px; 
+                                width: {{multiply duration_months (divide 1560 ../../../total_months)}}px;">
+                        {{#if progress}}<div class="progress-bar" style="width: {{progress}}%;"></div>{{/if}}
+                        {{progress}}%
+                    </div>
+                    {{#if milestone.enabled}}
+                    <div class="milestone"
+                        style="left: {{multiply (subtract (add start_month duration_months) 1) (divide 1560 ../../../total_months)}}px;">
+                        <div class="milestone-label"
+                            style="transform: rotate(-45deg) translateX(20px) translateY(-12px);">
+                            {{milestone.label}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+            {{#unless @last}}<div class="phase-divider"></div>{{/unless}}
+            {{/each}}
+        </div>
+    </div>
+</body>
+
+</html>

@@ -5,6 +5,34 @@
     <meta charset="UTF-8">
     <title>프로젝트 로드맵 2026</title>
     <style>
+        /* 디자인 토큰 - 테마 변경 시 이 값만 수정 */
+        :root {
+            --color-background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --color-surface: #1e293b;
+            --color-surface-border: #334155;
+            --color-text: #f8fafc;
+            --color-text-muted: #94a3b8;
+            --color-text-secondary: #cbd5e1;
+            --color-text-task: #e2e8f0;
+
+            /* Phase 색상 */
+            --color-phase1: #3b82f6;
+            --color-phase1-dark: #1d4ed8;
+            --color-phase2: #10b981;
+            --color-phase2-dark: #059669;
+            --color-phase3: #f59e0b;
+            --color-phase3-dark: #d97706;
+            --color-phase4: #8b5cf6;
+            --color-phase4-dark: #7c3aed;
+            --color-milestone: #ef4444;
+            --color-milestone-dark: #dc2626;
+
+            --shadow-bar: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --radius-card: 16px;
+            --radius-bar: 5px;
+            --font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,8 +42,8 @@
         .slide {
             width: 1920px;
             height: 1080px;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            background: var(--color-background);
+            font-family: var(--font-family);
             padding: 50px 60px;
         }
 
@@ -29,13 +57,13 @@
         .title {
             font-size: 44px;
             font-weight: 700;
-            color: #f8fafc;
+            color: var(--color-text);
             margin-bottom: 8px;
         }
 
         .subtitle {
             font-size: 20px;
-            color: #94a3b8;
+            color: var(--color-text-muted);
         }
 
         .legend {
@@ -47,7 +75,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #cbd5e1;
+            color: var(--color-text-secondary);
             font-size: 13px;
         }
 
@@ -60,13 +88,13 @@
         .legend-milestone {
             width: 12px;
             height: 12px;
-            background: #ef4444;
+            background: var(--color-milestone);
             transform: rotate(45deg);
         }
 
         .gantt-wrapper {
-            background: #1e293b;
-            border-radius: 16px;
+            background: var(--color-surface);
+            border-radius: var(--radius-card);
             padding: 30px;
             position: relative;
         }
@@ -81,7 +109,7 @@
         .month {
             width: 130px;
             text-align: center;
-            color: #94a3b8;
+            color: var(--color-text-muted);
             font-size: 13px;
             font-weight: 500;
         }
@@ -96,7 +124,7 @@
 
         .task-name {
             width: 180px;
-            color: #e2e8f0;
+            color: var(--color-text-task);
             font-size: 13px;
             padding-right: 16px;
             text-align: right;
@@ -111,31 +139,31 @@
         .task-bar {
             position: absolute;
             height: 26px;
-            border-radius: 5px;
+            border-radius: var(--radius-bar);
             display: flex;
             align-items: center;
             padding-left: 10px;
             color: white;
             font-size: 11px;
             font-weight: 500;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-bar);
         }
 
         /* Phase 색상 */
         .phase1 {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            background: linear-gradient(135deg, var(--color-phase1), var(--color-phase1-dark));
         }
 
         .phase2 {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, var(--color-phase2), var(--color-phase2-dark));
         }
 
         .phase3 {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, var(--color-phase3), var(--color-phase3-dark));
         }
 
         .phase4 {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            background: linear-gradient(135deg, var(--color-phase4), var(--color-phase4-dark));
         }
 
         /* 진행률 표시 */
@@ -145,7 +173,7 @@
             top: 0;
             height: 100%;
             background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px 0 0 5px;
+            border-radius: var(--radius-bar) 0 0 var(--radius-bar);
         }
 
         /* 마일스톤 */
@@ -153,7 +181,7 @@
             position: absolute;
             width: 18px;
             height: 18px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: linear-gradient(135deg, var(--color-milestone), var(--color-milestone-dark));
             transform: rotate(45deg) translateY(-50%);
             top: 50%;
             margin-top: -4px;
@@ -166,7 +194,7 @@
             top: -24px;
             left: 50%;
             transform: translateX(-50%);
-            color: #ef4444;
+            color: var(--color-milestone);
             font-size: 10px;
             font-weight: 600;
             white-space: nowrap;
@@ -194,7 +222,7 @@
         /* 구분선 */
         .phase-divider {
             height: 1px;
-            background: #334155;
+            background: var(--color-surface-border);
             margin: 10px 0 10px 180px;
         }
     </style>
