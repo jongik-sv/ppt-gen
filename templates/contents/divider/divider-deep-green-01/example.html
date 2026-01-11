@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Divider - Deep Green</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #22523B;
+      --secondary: #153325;
+      --muted: #6F886A;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* VERSION. 라벨 */
+    .version-label {
+      font-size: 24px;
+      color: var(--primary);
+      letter-spacing: 6px;
+      font-weight: 400;
+      margin-bottom: 0;
+    }
+
+    /* 버전 숫자 */
+    .version-number {
+      font-size: 72px;
+      color: var(--primary);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* 장식선 - 양 끝에 점 */
+    .deco-line-container {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: -20px;
+      margin-bottom: 30px;
+    }
+
+    .deco-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    .deco-line {
+      width: 280px;
+      height: 1px;
+      background: var(--primary);
+    }
+
+    /* 제목 */
+    .title {
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--secondary);
+      margin-bottom: 30px;
+      letter-spacing: -1px;
+    }
+
+    /* 부제목 */
+    .subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.8;
+      max-width: 60%;
+    }
+
+    /* 푸터 */
+    .footer {
+      position: absolute;
+      right: 40px;
+      bottom: 30px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <p class="version-label">VERSION.</p>
+    <p class="version-number">01</p>
+
+    <div class="deco-line-container">
+      <div class="deco-dot"></div>
+      <div class="deco-line"></div>
+      <div class="deco-dot"></div>
+    </div>
+
+    <h1 class="title">제목을 입력하세요.</h1>
+
+    <p class="subtitle">Side step right left to my beat (heartbeat) High like the moon rock with me baby<br>Know that I got that heat Let me show you 'cause talk is cheap<br>Side step right left to my beat (heartbeat) Get it, let it roll Smooth like butter</p>
+
+    <p class="footer">© YEONDU-UNNIE POWERPOINT PRESENTATION</p>
+  </div>
+</body>
+</html>

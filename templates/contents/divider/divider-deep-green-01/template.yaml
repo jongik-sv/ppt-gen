@@ -1,0 +1,68 @@
+# Divider Template - Deep Green Style
+id: divider-deep-green-01
+name: 딥그린 섹션 구분
+category: divider
+description: VERSION 번호와 제목이 포함된 섹션 구분 슬라이드
+
+source:
+  file: "깔끔이 딥그린.pptx"
+  slide: 3
+  extracted_at: "2026-01-11"
+
+quality: high
+theme: deep-green
+
+layout:
+  type: divider
+  structure: freeform
+  full_slide: true
+
+placeholders:
+  - name: version
+    type: text
+    required: true
+    sample: "01"
+    style:
+      position: { x: "28.5%", y: "26%" }
+      font_size: "14pt"
+      color: "#22523B"
+      letter_spacing: "2px"
+      align: "left"
+
+  - name: title
+    type: text
+    required: true
+    sample: "제목을 입력하세요."
+    style:
+      position: { x: "28.5%", y: "45%" }
+      font_size: "40pt"
+      font_weight: normal
+      color: "#153325"
+      align: "left"
+
+  - name: subtitle
+    type: text
+    required: false
+    sample: "Side step right left to my beat\nKeep it sweet like a heartbeat"
+    style:
+      position: { x: "28.5%", y: "58%" }
+      font_size: "14pt"
+      color: "#6F886A"
+      align: "left"
+      width: "40%"
+
+decorative_elements:
+  - type: line
+    position: { x: "28.5%", y: "42%" }
+    width: "120px"
+    color: "#22523B"
+    style: "solid-with-dots"
+
+semantic_description: |
+  섹션 구분 슬라이드. 좌측 편향(Left-biased) 레이아웃.
+  상단에 "VERSION." 라벨과 큰 숫자(01)가 수직으로 배치됨.
+  숫자 아래에 점 장식이 있는 녹색 구분선.
+  구분선 아래에 우아한 제목.
+  제목 아래에 여러 줄의 부제목.
+
+match_keywords: [섹션, 구분, 버전, 챕터, 파트]

@@ -1,0 +1,111 @@
+# Diagram Template - Honeycomb 5 Items
+id: diagram-honeycomb-5-01
+name: 5개 허니콤 다이어그램
+category: diagram
+description: 5개 육각형이 허니콤 패턴으로 배치된 다이어그램 (콘텐츠 영역만)
+
+source:
+  file: "깔끔이 딥그린.pptx"
+  slide: 11
+  extracted_at: "2026-01-11"
+
+quality: high
+theme: deep-green
+
+colors:
+  primary: "#22523B"
+  secondary: "#153325"
+  hex-1: "#479374"    # gradient-4
+  hex-2: "#578F76"    # gradient-5
+  hex-3: "#99C7BF"    # muted-5
+  hex-4: "#A1BFB4"    # muted-6
+  hex-5: "#C4D6D0"    # muted-7
+
+layout:
+  type: diagram
+  structure: honeycomb-5
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+  hexagon:
+    type: flat-top
+    width: 392px
+    height: 338px
+    clip_path: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)"
+  icon_placeholder:
+    width: 144px
+    height: 144px
+  items_position:
+    # 하단 행 (1, 3, 5) - 제목이 위에
+    - name: hex-1
+      position: "하단 행 왼쪽"
+      left: "5.7%"
+      top: "40.9%"
+      title_position: top
+      color: "#479374"
+    - name: hex-3
+      position: "하단 행 중앙"
+      left: "39.9%"
+      top: "40.9%"
+      title_position: top
+      color: "#99C7BF"
+    - name: hex-5
+      position: "하단 행 오른쪽"
+      left: "73.8%"
+      top: "40.9%"
+      title_position: top
+      color: "#C4D6D0"
+    # 상단 행 (2, 4) - 제목이 아래에
+    - name: hex-2
+      position: "상단 행 왼쪽"
+      left: "22.7%"
+      top: "14.4%"
+      title_position: bottom
+      color: "#578F76"
+    - name: hex-4
+      position: "상단 행 오른쪽"
+      left: "56.8%"
+      top: "14.4%"
+      title_position: bottom
+      color: "#A1BFB4"
+
+placeholders:
+  - name: hexagons
+    type: array
+    min: 3
+    max: 5
+    item_schema:
+      - name: title
+        type: text
+      - name: icon
+        type: image
+        required: false
+    sample:
+      - { title: "제목을 입력하세요.", icon: "icon1.svg" }
+      - { title: "제목을 입력하세요.", icon: "icon2.svg" }
+      - { title: "제목을 입력하세요.", icon: "icon3.svg" }
+      - { title: "제목을 입력하세요.", icon: "icon4.svg" }
+      - { title: "제목을 입력하세요.", icon: "icon5.svg" }
+
+title_style:
+  width: 392px
+  font_size: 18px
+  font_weight: 600
+  color: "#153325"
+  text_align: center
+  offset: 60px  # 육각형으로부터의 거리
+
+object_extraction:
+  detected: true
+  reason: "비선형 배치 (허니콤 패턴, flat-top 육각형)"
+  saved_to: "objects/diagram/honeycomb"
+
+semantic_description: |
+  허니콤 다이어그램. 5개 flat-top 육각형이 지그재그로 배치.
+  하단 행에 1, 3, 5번 육각형 (제목이 위에 위치).
+  상단 행에 2, 4번 육각형 (제목이 아래에 위치).
+  각 육각형 내부에 아이콘 플레이스홀더 (144x144px).
+  색상은 진한 녹색에서 연한 녹색으로 그라데이션.
+
+match_keywords: [허니콤, 육각형, 벌집, 다이어그램, 5개, flat-top]

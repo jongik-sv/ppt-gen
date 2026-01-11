@@ -18,6 +18,7 @@ Usage:
 """
 
 import argparse
+import platform
 import subprocess
 import sys
 import tempfile
@@ -36,6 +37,15 @@ try:
 except ImportError:
     HAS_PPTX = False
 
+# Windows PowerPoint COM 자동화
+HAS_WIN32 = False
+if platform.system() == 'Windows':
+    try:
+        import win32com.client
+        HAS_WIN32 = True
+    except ImportError:
+        pass
+
 
 # 썸네일 크기
 THUMBNAIL_SIZES = {
@@ -50,9 +60,50 @@ CONVERSION_DPI = 150
 JPEG_QUALITY = 95
 
 
-def convert_pptx_to_images(pptx_path: Path, output_dir: Path, dpi: int = CONVERSION_DPI) -> List[Path]:
-    """PPTX를 이미지로 변환 (LibreOffice + pdftoppm)"""
+def convert_pptx_to_images_win32(pptx_path: Path, output_dir: Path, width: int = 1920) -> List[Path]:
+    """Windows PowerPoint COM 자동화로 PPTX를 이미지로 변환."""
+    if not HAS_WIN32:
+        raise ImportError("pywin32가 필요합니다: pip install pywin32")
 
+    import win32com.client
+
+    # 절대 경로로 변환
+    pptx_path = Path(pptx_path).resolve()
+    output_dir = Path(output_dir).resolve()
+
+    powerpoint = None
+    presentation = None
+
+    try:
+        # PowerPoint 인스턴스 생성
+        powerpoint = win32com.client.Dispatch("PowerPoint.Application")
+
+        # 프레젠테이션 열기 (ReadOnly, WithWindow=False)
+        presentation = powerpoint.Presentations.Open(
+            str(pptx_path),
+            ReadOnly=True,
+            Untitled=False,
+            WithWindow=False
+        )
+
+        images = []
+        for i, slide in enumerate(presentation.Slides):
+            output_file = output_dir / f"slide-{i:02d}.png"
+            # Export(Path, FilterName, ScaleWidth, ScaleHeight)
+            slide.Export(str(output_file), "PNG", width)
+            images.append(output_file)
+
+        return images
+
+    finally:
+        if presentation:
+            presentation.Close()
+        if powerpoint:
+            powerpoint.Quit()
+
+
+def convert_pptx_to_images_libreoffice(pptx_path: Path, output_dir: Path, dpi: int = CONVERSION_DPI) -> List[Path]:
+    """LibreOffice + pdftoppm으로 PPTX를 이미지로 변환."""
     # PDF로 변환
     pdf_path = output_dir / f"{pptx_path.stem}.pdf"
 
@@ -78,6 +129,23 @@ def convert_pptx_to_images(pptx_path: Path, output_dir: Path, dpi: int = CONVERS
     # 생성된 이미지 목록
     images = sorted(output_dir.glob("slide-*.png"))
     return images
+
+
+def convert_pptx_to_images(pptx_path: Path, output_dir: Path, dpi: int = CONVERSION_DPI) -> List[Path]:
+    """PPTX를 이미지로 변환.
+
+    Windows에서는 PowerPoint COM 자동화를 먼저 시도하고,
+    실패하면 LibreOffice를 사용합니다.
+    """
+    # Windows + pywin32 사용 가능시 PowerPoint COM 시도
+    if HAS_WIN32:
+        try:
+            return convert_pptx_to_images_win32(pptx_path, output_dir)
+        except Exception as e:
+            print(f"  PowerPoint COM 실패: {e}, LibreOffice 시도...")
+
+    # LibreOffice 폴백
+    return convert_pptx_to_images_libreoffice(pptx_path, output_dir, dpi)
 
 
 def create_thumbnail(image_path: Path, size: tuple, output_path: Path):

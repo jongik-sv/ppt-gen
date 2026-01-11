@@ -1,0 +1,82 @@
+/id: toc-3col-01
+name: 3컬럼 목차
+category: toc
+description: 3개 섹션으로 구성된 목차 슬라이드, 각 섹션에 번호/제목/항목 리스트 포함
+source: 깔끔이 딥그린.pptx
+quality: medium
+
+layout:
+  type: grid
+  columns: 3
+  structure: header-sections
+
+placeholders:
+  - name: page_title
+    type: text
+    zone: title
+    description: 페이지 제목 (CONTENTS)
+    position: { x: "6.8%", y: "17%", w: "15%", h: "6.7%" }
+    style:
+      font_family: "코트라 볼드체"
+      font_size: 24
+      color: "#22523B"
+      align: left
+    sample: "CONTENTS"
+
+  - name: sections
+    type: repeater
+    zone: content
+    description: 목차 섹션 반복 (3개)
+    min_count: 2
+    max_count: 3
+    item_template:
+      - name: number
+        type: text
+        description: 섹션 번호
+        style:
+          font_family: "코트라 볼드체"
+          font_size: 24
+          color: "#22523B"
+        sample: "0 1"
+
+      - name: section_title
+        type: text
+        description: 섹션 제목
+        style:
+          font_family: "서평원 꺾깎체 TTF"
+          font_size: 18
+          color: "#22523B"
+        sample: "제목을 입력하세요."
+
+      - name: items
+        type: list
+        description: 항목 리스트 (최대 5개)
+        max_items: 5
+        style:
+          font_family: "나눔바른펜"
+          font_size: 12
+          color: "#22523B"
+          line_height: 1.8
+        sample:
+          - "첫 번째 관련 주제에 대해 설명해주세요."
+          - "두 번째 관련 주제에 대해 설명해주세요."
+          - "세 번째 관련 주제에 대해 설명해주세요."
+
+    positions:
+      - { x: "6.8%", y: "33%", w: "26.5%" }   # Section 1
+      - { x: "36.4%", y: "33%", w: "26.5%" }  # Section 2
+      - { x: "66%", y: "33%", w: "26.5%" }    # Section 3
+
+decorations:
+  - type: line
+    repeat: per_section
+    offset_y: "7.9%"
+    style:
+      color: "#153325"
+      weight: 1
+
+theme_colors:
+  primary: "#22523B"
+  secondary: "#153325"
+  text: "#22523B"
+  background: "#FFFFFF"

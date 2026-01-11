@@ -1,0 +1,69 @@
+# TOC Template - Deep Green Style
+id: toc-deep-green-01
+name: 딥그린 목차
+category: toc
+description: 3열 목차 슬라이드. 각 항목에 번호, 제목, 설명 포함
+
+source:
+  file: "깔끔이 딥그린.pptx"
+  slide: 2
+  extracted_at: "2026-01-11"
+
+quality: high
+theme: deep-green
+
+layout:
+  type: toc
+  structure: 3-column
+  full_slide: true
+
+placeholders:
+  - name: page_title
+    type: text
+    required: true
+    sample: "CONTENTS"
+    style:
+      position: { x: "6.8%", y: "17%" }
+      font_size: "36pt"
+      font_weight: bold
+      color: "#153325"
+
+  - name: items
+    type: array
+    min: 1
+    max: 6
+    item_schema:
+      - name: number
+        type: text
+        sample: "01"
+      - name: title
+        type: text
+        sample: "제목을 입력하세요."
+      - name: description
+        type: text
+        sample: "첫 번째 관련 주제에 대해 설명해주세요.\n두 번째 관련 주제에 대해 설명해주세요."
+    sample:
+      - { number: "0 1", title: "제목을 입력하세요.", description: "첫 번째 관련 주제에 대해 설명해주세요.\n두 번째 관련 주제에 대해 설명해주세요." }
+      - { number: "0 2", title: "제목을 입력하세요.", description: "첫 번째 관련 주제에 대해 설명해주세요.\n두 번째 관련 주제에 대해 설명해주세요." }
+      - { number: "0 3", title: "제목을 입력하세요.", description: "첫 번째 관련 주제에 대해 설명해주세요.\n두 번째 관련 주제에 대해 설명해주세요." }
+
+variants:
+  - count: 3
+    layout: { columns: 3, gap: "6%" }
+  - count: 4
+    layout: { columns: 4, gap: "4%" }
+  - count: 6
+    layout: { columns: 3, rows: 2, gap: "4%" }
+
+decorative_elements:
+  - type: line
+    description: 번호 아래 구분선
+    color: "#22523B"
+
+semantic_description: |
+  목차 슬라이드. 좌상단에 "CONTENTS" 제목.
+  3열로 목차 항목 배치. 각 항목은 큰 번호(예: "0 1"),
+  번호 아래 녹색 구분선, 제목, 설명 텍스트로 구성.
+  항목 간격 균등 배치.
+
+match_keywords: [목차, 컨텐츠, 인덱스, TOC, 순서]

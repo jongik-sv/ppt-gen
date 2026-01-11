@@ -1,0 +1,45 @@
+# Grid Template - 6 Step Zigzag Process
+id: grid-process-6step-01
+name: 6단계 지그재그 프로세스
+category: grid
+description: 6개 단계가 지그재그로 배치된 프로세스 레이아웃 (콘텐츠 영역만)
+
+source:
+  file: "깔끔이 딥그린.pptx"
+  slide: 5
+  extracted_at: "2026-01-11"
+
+quality: high
+theme: deep-green
+
+layout:
+  type: process
+  structure: zigzag-6step
+  content_only: true
+
+placeholders:
+  - name: steps
+    type: array
+    min: 4
+    max: 6
+    item_schema:
+      - name: number
+        type: text
+      - name: title
+        type: text
+      - name: description
+        type: text
+    sample:
+      - { number: "1", title: "제목을 입력해 주세요.", description: "분기별 현황보고서를 작성해주세요.\n성과에 대해 간략하게 작성해주세요." }
+      - { number: "2", title: "제목을 입력해 주세요.", description: "분기별 현황보고서를 작성해주세요.\n성과에 대해 간략하게 작성해주세요." }
+      - { number: "3", title: "제목을 입력해 주세요.", description: "분기별 현황보고서를 작성해주세요.\n성과에 대해 간략하게 작성해주세요." }
+      - { number: "4", title: "제목을 입력해 주세요.", description: "분기별 현황보고서를 작성해주세요.\n성과에 대해 간략하게 작성해주세요." }
+      - { number: "5", title: "제목을 입력해 주세요.", description: "분기별 현황보고서를 작성해주세요.\n성과에 대해 간략하게 작성해주세요." }
+      - { number: "6", title: "제목을 입력해 주세요.", description: "분기별 현황보고서를 작성해주세요.\n성과에 대해 간략하게 작성해주세요." }
+
+semantic_description: |
+  6단계 프로세스. 상단 행에 홀수 번호(1,3,5), 하단 행에 짝수 번호(2,4,6) 지그재그 배치.
+  각 단계는 원형 번호, 둥근 카드, 삼각형 화살표 포함.
+  헤더(제목/부제목)는 문서 양식에서 관리.
+
+match_keywords: [프로세스, 단계, 절차, 순서, 스텝, 지그재그]

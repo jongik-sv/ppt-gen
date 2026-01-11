@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Radial 5 Diagram - Content Only</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Primary colors */
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      /* Box colors - 5가지 구분 */
+      --box-1: #6AB495;    /* 타이틀1 - 밝은 녹색 */
+      --box-2: #22523B;    /* 타이틀2 - 진한 녹색 */
+      --box-3: #2D6A4F;    /* 타이틀3 - 중진한 녹색 */
+      --box-4: #1B4332;    /* 타이틀4 - 가장 진한 녹색 */
+      --box-5: #479374;    /* 타이틀5 - 중간 녹색 */
+      /* Text colors */
+      --text-dark: #333;
+      --text-muted: #666;
+    }
+
+    .content {
+      width: 1920px;
+      height: 734px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .radial-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 600px;
+    }
+
+    /* 중앙 순환 화살표 */
+    .center-arrows {
+      position: absolute;
+      top: calc(50% + 45px);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 360px;
+      height: 360px;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .center-arrows svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* 5개 박스 + 설명 텍스트 */
+    .radial-item {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .item-box {
+      min-width: 100px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .item-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 280px;
+    }
+
+    /* 상단 - 타이틀1 (12시, 원 위에 걸침) */
+    .item-top {
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      flex-direction: column;
+      text-align: center;
+    }
+    .item-top .item-desc {
+      order: -1;
+      margin-bottom: 8px;
+    }
+    .item-top .item-box { background: var(--box-1); }
+
+    /* 오른쪽 위 - 타이틀2 (2시 방향) */
+    .item-right-top {
+      top: 248px;
+      right: -100px;
+      flex-direction: row;
+    }
+    .item-right-top .item-box { background: var(--box-2); }
+
+    /* 오른쪽 아래 - 타이틀3 (5시 방향) */
+    .item-right-bottom {
+      bottom: 80px;
+      right: -50px;
+      flex-direction: row;
+    }
+    .item-right-bottom .item-box { background: var(--box-3); }
+
+    /* 왼쪽 아래 - 타이틀4 (7시 방향) */
+    .item-left-bottom {
+      bottom: 80px;
+      left: -50px;
+      flex-direction: row-reverse;
+    }
+    .item-left-bottom .item-box { background: var(--box-4); }
+    .item-left-bottom .item-desc { text-align: right; }
+
+    /* 왼쪽 위 - 타이틀5 (10시 방향) */
+    .item-left-top {
+      top: 248px;
+      left: -100px;
+      flex-direction: row-reverse;
+    }
+    .item-left-top .item-box { background: var(--box-5); }
+    .item-left-top .item-desc { text-align: right; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="radial-container">
+      <!-- 중앙 순환 화살표 (하나의 연속된 화살표) -->
+      <div class="center-arrows">
+        <svg viewBox="0 0 200 200">
+          <defs>
+            <!-- 작은 화살표 머리 -->
+            <marker id="arrowhead" markerWidth="2" markerHeight="2" refX="1" refY="1" orient="auto">
+              <path d="M0,0 L2,1 L0,2 Z" fill="#83A99B"/>
+            </marker>
+          </defs>
+
+          <!-- 하나의 연속된 순환 화살표 (거의 완전한 원, 작은 간격) -->
+          <path d="M 100 12
+                   A 88 88 0 1 1 53 25"
+                stroke="#83A99B" stroke-width="12" fill="none"
+                stroke-linecap="round" marker-end="url(#arrowhead)"/>
+
+        </svg>
+      </div>
+
+      <!-- 상단 -->
+      <div class="radial-item item-top">
+        <p class="item-desc">Then you say I wanna dance The music's got me going Ain't nothing that can stop how we move yeah Let's break our plans And live just like we're golden And roll in like we're dancing fools</p>
+        <div class="item-box">타이틀1</div>
+      </div>
+
+      <!-- 오른쪽 위 -->
+      <div class="radial-item item-right-top">
+        <div class="item-box">타이틀2</div>
+        <p class="item-desc">Then you say I wanna dance The music's got me going Ain't nothing that can stop how we move yeah Let's break our plans And live just like we're golden And roll in like we're dancing fools</p>
+      </div>
+
+      <!-- 오른쪽 아래 -->
+      <div class="radial-item item-right-bottom">
+        <div class="item-box">타이틀3</div>
+        <p class="item-desc">Then you say I wanna dance The music's got me going Ain't nothing that can stop how we move yeah Let's break our plans And live just like we're golden And roll in like we're dancing fools</p>
+      </div>
+
+      <!-- 왼쪽 아래 -->
+      <div class="radial-item item-left-bottom">
+        <div class="item-box">타이틀4</div>
+        <p class="item-desc">Then you say I wanna dance The music's got me going Ain't nothing that can stop how we move yeah Let's break our plans And live just like we're golden And roll in like we're dancing fools</p>
+      </div>
+
+      <!-- 왼쪽 위 -->
+      <div class="radial-item item-left-top">
+        <div class="item-box">타이틀5</div>
+        <p class="item-desc">Then you say I wanna dance The music's got me going Ain't nothing that can stop how we move yeah Let's break our plans And live just like we're golden And roll in like we're dancing fools</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

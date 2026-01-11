@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>6 Step Process - Content Only</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Primary colors */
+      --primary: {{theme.primary}};
+      --secondary: {{theme.secondary}};
+      --accent: {{theme.accent}};
+      /* Gradient scale */
+      --gradient-1: {{theme.gradient.dark}};
+      --gradient-2: {{theme.gradient.deep}};
+      --gradient-3: {{theme.gradient.primary}};
+      --gradient-4: {{theme.gradient.accent}};
+      --gradient-5: {{theme.gradient.medium}};
+      --gradient-6: {{theme.gradient.light}};
+      /* Muted scale */
+      --muted-1: {{theme.muted.dark}};
+      --muted-2: {{theme.muted.green}};
+      --muted-3: {{theme.muted.sage}};
+      --muted-4: {{theme.muted.mint}};
+      --muted-5: {{theme.muted.aqua}};
+      --muted-6: {{theme.muted.pale}};
+      --muted-7: {{theme.muted.light}};
+      /* Backgrounds */
+      --bg-light: {{theme.background.light}};
+      --bg-neutral: {{theme.background.neutral}};
+    }
+
+    /* 콘텐츠 영역만 */
+    .content {
+      width: 1920px;
+      height: 734px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+      padding: 40px 3%;
+    }
+
+    .center-line {
+      position: absolute;
+      top: 50%;
+      left: 2.4%;
+      right: 2.4%;
+      height: 2px;
+      background: var(--primary);
+    }
+
+    .top-row {
+      position: absolute;
+      top: 5%;
+      left: 0;
+      right: 0;
+      height: 40%;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .bottom-row {
+      position: absolute;
+      bottom: 5%;
+      left: 0;
+      right: 0;
+      height: 40%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 15%;
+    }
+
+    .step-item {
+      position: relative;
+      width: 28%;
+    }
+
+    .step-number {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      z-index: 10;
+    }
+
+    /* 각 숫자 뱃지 다른 색상 */
+    .top-row .step-item:nth-child(1) .step-number { background: var(--gradient-1); }
+    .bottom-row .step-item:nth-child(1) .step-number { background: var(--gradient-2); }
+    .top-row .step-item:nth-child(2) .step-number { background: var(--gradient-3); }
+    .bottom-row .step-item:nth-child(2) .step-number { background: var(--gradient-4); }
+    .top-row .step-item:nth-child(3) .step-number { background: var(--gradient-5); }
+    .bottom-row .step-item:nth-child(3) .step-number { background: var(--muted-6); }
+
+    .top-row .step-number {
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .bottom-row .step-number {
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .step-card {
+      border-radius: 16px;
+      padding: 24px;
+      height: 100%;
+    }
+
+    /* 각 카드 다른 배경색 */
+    .top-row .step-item:nth-child(1) .step-card { background: var(--muted-6); }
+    .bottom-row .step-item:nth-child(1) .step-card { background: var(--muted-7); }
+    .top-row .step-item:nth-child(2) .step-card { background: var(--bg-light); }
+    .bottom-row .step-item:nth-child(2) .step-card { background: var(--muted-6); }
+    .top-row .step-item:nth-child(3) .step-card { background: var(--muted-7); }
+    .bottom-row .step-item:nth-child(3) .step-card { background: var(--bg-light); }
+
+    .step-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-row .step-item:nth-child(1) .step-arrow { bottom: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--muted-6); }
+    .bottom-row .step-item:nth-child(1) .step-arrow { top: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--muted-7); }
+    .top-row .step-item:nth-child(2) .step-arrow { bottom: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--bg-light); }
+    .bottom-row .step-item:nth-child(2) .step-arrow { top: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--muted-6); }
+    .top-row .step-item:nth-child(3) .step-arrow { bottom: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--muted-7); }
+    .bottom-row .step-item:nth-child(3) .step-arrow { top: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--bg-light); }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 12px;
+    }
+
+    .step-description {
+      font-size: 14px;
+      color: var(--muted-1);
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <!-- 콘텐츠 영역만 (헤더 제외) -->
+  <div class="content">
+    <div class="center-line"></div>
+
+    <div class="top-row">
+      {{#each steps}}
+      {{#unless (isOdd @index)}}
+      <div class="step-item">
+        <div class="step-card">
+          <h3 class="step-title">{{this.title}}</h3>
+          <p class="step-description">{{this.description}}</p>
+        </div>
+        <div class="step-arrow"></div>
+        <div class="step-number">{{this.number}}</div>
+      </div>
+      {{/unless}}
+      {{/each}}
+    </div>
+
+    <div class="bottom-row">
+      {{#each steps}}
+      {{#if (isOdd @index)}}
+      <div class="step-item">
+        <div class="step-number">{{this.number}}</div>
+        <div class="step-arrow"></div>
+        <div class="step-card">
+          <h3 class="step-title">{{this.title}}</h3>
+          <p class="step-description">{{this.description}}</p>
+        </div>
+      </div>
+      {{/if}}
+      {{/each}}
+    </div>
+  </div>
+</body>
+</html>

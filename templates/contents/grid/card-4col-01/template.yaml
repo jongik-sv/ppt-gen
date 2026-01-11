@@ -1,0 +1,61 @@
+# Grid Template - 4 Column Cards
+id: card-4col-01
+name: 4열 카드 레이아웃
+category: grid
+description: 4개 카드가 가로로 배치된 레이아웃
+
+source:
+  file: "깔끔이 딥그린.pptx"
+  slide: 9
+  extracted_at: "2026-01-11"
+
+quality: high
+theme: deep-green
+
+layout:
+  type: grid
+  structure: 4-column
+  header_height: "22%"
+
+placeholders:
+  - name: page_title
+    type: text
+    required: true
+    sample: "제목을 입력해 주세요."
+
+  - name: page_subtitle
+    type: text
+    required: false
+    sample: "간략한 설명을 적어주세요."
+
+  - name: cards
+    type: array
+    min: 2
+    max: 4
+    item_schema:
+      - name: number
+        type: text
+      - name: title
+        type: text
+      - name: description
+        type: text
+    sample:
+      - { number: "01", title: "텍스트 입력", description: "내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마" }
+      - { number: "02", title: "텍스트 입력", description: "내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마" }
+      - { number: "03", title: "텍스트 입력", description: "내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마" }
+      - { number: "04", title: "텍스트 입력", description: "내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마" }
+
+variants:
+  - count: 2
+    layout: { columns: 2, gap: "4%" }
+  - count: 3
+    layout: { columns: 3, gap: "3%" }
+  - count: 4
+    layout: { columns: 4, gap: "2%" }
+
+semantic_description: |
+  4열 카드 레이아웃. 상단에 타이틀 텍스트, 하단에 녹색 카드.
+  각 카드는 직사각형 배경에 설명 텍스트.
+  카드 하단에 원형 번호 뱃지 (01, 02, 03, 04).
+
+match_keywords: [카드, 그리드, 4열, 박스, 레이아웃]

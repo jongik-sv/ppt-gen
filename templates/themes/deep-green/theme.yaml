@@ -1,0 +1,90 @@
+# Deep Green Theme
+# Source: 깔끔이 딥그린.pptx
+# Extracted: 2026-01-11
+
+id: deep-green
+name: 딥그린
+description: 자연스러운 녹색 톤의 전문적인 비즈니스 테마
+
+# 주요 색상 팔레트
+colors:
+  primary: "#22523B"      # 메인 그린 (제목, 강조)
+  secondary: "#153325"    # 다크 그린 (배경, 서브)
+  accent: "#479374"       # 밝은 그린 (포인트)
+
+  # 그라데이션 색상 (진한 순서)
+  gradient:
+    dark: "#153325"       # 가장 어두운
+    deep: "#183C2B"
+    primary: "#22523B"    # 기본
+    accent: "#479374"
+    medium: "#578F76"
+    light: "#67B7B5"      # 청록
+
+  # 보조 색상 (밝은 순서)
+  muted:
+    dark: "#6F886A"
+    green: "#83A99B"
+    sage: "#859C80"
+    mint: "#8BAFA2"
+    aqua: "#99C7BF"
+    pale: "#A1BFB4"
+    light: "#C4D6D0"
+
+  # CSS 변수용 전체 팔레트
+  tokens:
+    # 6단계 그라데이션
+    gradient-1: "#153325"
+    gradient-2: "#183C2B"
+    gradient-3: "#22523B"
+    gradient-4: "#479374"
+    gradient-5: "#578F76"
+    gradient-6: "#67B7B5"
+    # 보조색 7단계
+    muted-1: "#6F886A"
+    muted-2: "#83A99B"
+    muted-3: "#859C80"
+    muted-4: "#8BAFA2"
+    muted-5: "#99C7BF"
+    muted-6: "#A1BFB4"
+    muted-7: "#C4D6D0"
+
+  # 배경 색상
+  background:
+    dark: "#153325"
+    light: "#DCF0EF"
+    neutral: "#E8E8E8"
+
+  # 특수 색상
+  special:
+    olive: "#D0D5AF"      # 올리브 포인트
+
+# 폰트 설정
+fonts:
+  display: "나눔스퀘어라운드 Bold"    # 큰 제목
+  heading: "Rix열정도"                 # 헤딩
+  body: "나눔바른펜"                   # 본문
+  accent: "서평원 꺾깎체 TTF"          # 강조 텍스트
+  decorative: "카페24 써라운드"        # 장식 텍스트
+  bold: "코트라 볼드체"                # 볼드 강조
+
+# 대체 폰트 (시스템에 없을 경우)
+font_fallbacks:
+  "나눔스퀘어라운드 Bold": ["Noto Sans KR", "맑은 고딕"]
+  "Rix열정도": ["Noto Sans KR Bold", "맑은 고딕"]
+  "나눔바른펜": ["Noto Sans KR", "맑은 고딕"]
+  "서평원 꺾깎체 TTF": ["Noto Sans KR", "맑은 고딕"]
+  "카페24 써라운드": ["Noto Sans KR", "맑은 고딕"]
+  "코트라 볼드체": ["Noto Sans KR Bold", "맑은 고딕"]
+
+# 스타일 속성
+style:
+  border_radius: "16px"     # 둥근 모서리
+  shadow: "0 4px 12px rgba(0,0,0,0.08)"
+  line_style: solid
+
+# 메타데이터
+metadata:
+  source_file: "깔끔이 딥그린.pptx"
+  extracted_at: "2026-01-11"
+  author: "YEONDU-UNNIE"

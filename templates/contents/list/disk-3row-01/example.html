@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Disk 3-Row List - Content Only</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Primary colors */
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      /* Gradient scale */
+      --gradient-1: #153325;
+      --gradient-2: #183C2B;
+      --gradient-3: #22523B;
+      --gradient-4: #479374;
+      --gradient-5: #578F76;
+      --gradient-6: #67B7B5;
+      /* Muted scale */
+      --muted-1: #6F886A;
+      --muted-2: #83A99B;
+      --muted-3: #859C80;
+      --muted-4: #8BAFA2;
+      --muted-5: #99C7BF;
+      --muted-6: #A1BFB4;
+      --muted-7: #C4D6D0;
+      /* Backgrounds */
+      --bg-light: #DCF0EF;
+      --bg-neutral: #E8E8E8;
+    }
+
+    /* 콘텐츠 영역만 (1920x734px) */
+    .content {
+      width: 1920px;
+      height: 734px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+      padding: 40px 6%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .disk-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .disk-icon {
+      width: 120px;
+      height: 80px;
+      border-radius: 10px 10px 50% 50% / 10px 10px 30% 30%;
+      position: relative;
+    }
+
+    .disk-icon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+      border-radius: 50%;
+    }
+
+    /* 각 행별 다른 색상 */
+    .list-item:nth-child(1) .disk-icon { background: var(--gradient-3); }
+    .list-item:nth-child(1) .disk-icon::before { background: var(--gradient-4); }
+    .list-item:nth-child(2) .disk-icon { background: var(--muted-2); }
+    .list-item:nth-child(2) .disk-icon::before { background: var(--muted-6); }
+    .list-item:nth-child(3) .disk-icon { background: var(--muted-7); }
+    .list-item:nth-child(3) .disk-icon::before { background: var(--bg-light); }
+
+    .disk-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-top: 12px;
+      text-align: center;
+      width: 120px;
+    }
+
+    .connector {
+      width: 100px;
+      height: 2px;
+      background: var(--primary);
+    }
+
+    .description-box {
+      flex: 1;
+      border-radius: 8px;
+      padding: 24px 32px;
+    }
+
+    /* 각 행별 다른 배경색 */
+    .list-item:nth-child(1) .description-box { background: var(--muted-7); }
+    .list-item:nth-child(2) .description-box { background: var(--muted-6); }
+    .list-item:nth-child(3) .description-box { background: var(--bg-light); }
+
+    .description-text {
+      font-size: 14px;
+      color: var(--muted-1);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <!-- 콘텐츠 영역만 (헤더 제외) -->
+  <div class="content">
+    <div class="list-item">
+      <div class="disk-container">
+        <div class="disk-icon"></div>
+        <p class="disk-title">제목을 입력하세요.</p>
+      </div>
+      <div class="connector"></div>
+      <div class="description-box">
+        <p class="description-text">내용을 입력해 주세요.</p>
+      </div>
+    </div>
+
+    <div class="list-item">
+      <div class="disk-container">
+        <div class="disk-icon"></div>
+        <p class="disk-title">제목을 입력하세요.</p>
+      </div>
+      <div class="connector"></div>
+      <div class="description-box">
+        <p class="description-text">내용을 입력해 주세요.</p>
+      </div>
+    </div>
+
+    <div class="list-item">
+      <div class="disk-container">
+        <div class="disk-icon"></div>
+        <p class="disk-title">제목을 입력하세요.</p>
+      </div>
+      <div class="connector"></div>
+      <div class="description-box">
+        <p class="description-text">내용을 입력해 주세요.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

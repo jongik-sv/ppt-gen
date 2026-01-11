@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Honeycomb 5 - Content Only</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Primary colors */
+      --primary: {{theme.primary}};
+      --secondary: {{theme.secondary}};
+      --accent: {{theme.accent}};
+      /* Gradient scale */
+      --gradient-1: {{theme.gradient.dark}};
+      --gradient-2: {{theme.gradient.deep}};
+      --gradient-3: {{theme.gradient.primary}};
+      --gradient-4: {{theme.gradient.accent}};
+      --gradient-5: {{theme.gradient.medium}};
+      --gradient-6: {{theme.gradient.light}};
+      /* Muted scale */
+      --muted-1: {{theme.muted.dark}};
+      --muted-2: {{theme.muted.green}};
+      --muted-3: {{theme.muted.sage}};
+      --muted-4: {{theme.muted.mint}};
+      --muted-5: {{theme.muted.aqua}};
+      --muted-6: {{theme.muted.pale}};
+      --muted-7: {{theme.muted.light}};
+      /* Backgrounds */
+      --bg-light: {{theme.background.light}};
+      --bg-neutral: {{theme.background.neutral}};
+    }
+
+    /* 콘텐츠 영역만 (1920x734px) */
+    .content {
+      width: 1920px;
+      height: 734px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .hex-item {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* flat-top 육각형 (가로로 뉘인 형태) */
+    .hexagon {
+      width: 392px;  /* 2.721in */
+      height: 338px; /* 2.345in */
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 각 육각형 다른 색상 */
+    .hex-item:nth-child(1) .hexagon { background: var(--gradient-4); }
+    .hex-item:nth-child(2) .hexagon { background: var(--gradient-5); }
+    .hex-item:nth-child(3) .hexagon { background: var(--muted-5); }
+    .hex-item:nth-child(4) .hexagon { background: var(--muted-6); }
+    .hex-item:nth-child(5) .hexagon { background: var(--muted-7); }
+
+    .hex-icon {
+      width: 144px;
+      height: 144px;
+    }
+
+    .icon-placeholder {
+      width: 144px;
+      height: 144px;
+      border: 2px dashed rgba(255,255,255,0.5);
+      border-radius: 8px;
+    }
+
+    .hex-title {
+      position: absolute;
+      width: 392px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--secondary);
+      text-align: center;
+    }
+
+    /* 하단 행 육각형 (1, 3, 5) - 제목이 위에 */
+    .hex-item:nth-child(1) { left: 5.7%; top: 40.9%; }
+    .hex-item:nth-child(1) .hex-title { top: -60px; }
+
+    .hex-item:nth-child(3) { left: 39.9%; top: 40.9%; }
+    .hex-item:nth-child(3) .hex-title { top: -60px; }
+
+    .hex-item:nth-child(5) { left: 73.8%; top: 40.9%; }
+    .hex-item:nth-child(5) .hex-title { top: -60px; }
+
+    /* 상단 행 육각형 (2, 4) - 제목이 아래에 */
+    .hex-item:nth-child(2) { left: 22.7%; top: 14.4%; }
+    .hex-item:nth-child(2) .hex-title { bottom: -60px; top: auto; }
+
+    .hex-item:nth-child(4) { left: 56.8%; top: 14.4%; }
+    .hex-item:nth-child(4) .hex-title { bottom: -60px; top: auto; }
+  </style>
+</head>
+<body>
+  <!-- 콘텐츠 영역만 (헤더 제외) -->
+  <div class="content">
+    {{#each hexagons}}
+    <div class="hex-item">
+      {{#if (isOdd @index)}}
+      <div class="hexagon">
+        {{#if this.icon}}<img class="hex-icon" src="{{this.icon}}" alt="" />{{else}}<div class="icon-placeholder"></div>{{/if}}
+      </div>
+      <p class="hex-title">{{this.title}}</p>
+      {{else}}
+      <p class="hex-title">{{this.title}}</p>
+      <div class="hexagon">
+        {{#if this.icon}}<img class="hex-icon" src="{{this.icon}}" alt="" />{{else}}<div class="icon-placeholder"></div>{{/if}}
+      </div>
+      {{/if}}
+    </div>
+    {{/each}}
+  </div>
+</body>
+</html>

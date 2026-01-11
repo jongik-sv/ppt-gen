@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>SmartArt Left Diagram - 2x2 Matrix</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Primary colors */
+      --primary: {{theme.primary}};
+      --secondary: {{theme.secondary}};
+      --accent: {{theme.accent}};
+      /* Grid box colors */
+      --box-1: {{theme.matrix.box1}};
+      --box-2: {{theme.matrix.box2}};
+      --box-3: {{theme.matrix.box3}};
+      --box-4: {{theme.matrix.box4}};
+      /* Muted scale */
+      --muted-1: {{theme.muted.dark}};
+      --muted-2: {{theme.muted.green}};
+      /* Arrow color */
+      --arrow-color: #888888;
+    }
+
+    /* 콘텐츠 영역만 (1920x734px) */
+    .content {
+      width: 1920px;
+      height: 734px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex;
+      align-items: center;
+      padding: 40px 80px;
+    }
+
+    .diagram-area {
+      width: 35%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* 2x2 그리드 매트릭스 */
+    .matrix-grid {
+      width: 100%;
+      max-width: 340px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 16px;
+      aspect-ratio: 1;
+      position: relative;
+    }
+
+    .matrix-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 500;
+      font-size: 17px;
+      text-align: center;
+      padding: 20px;
+      line-height: 1.5;
+      border-radius: 6px;
+    }
+
+    .matrix-box:nth-child(1) {
+      background: var(--box-1);
+    }
+
+    .matrix-box:nth-child(2) {
+      background: var(--box-2);
+    }
+
+    .matrix-box:nth-child(3) {
+      background: var(--box-3);
+      color: #3A5A4A;
+    }
+
+    .matrix-box:nth-child(4) {
+      background: var(--box-4);
+      color: #3A5A4A;
+    }
+
+    /* 중앙 화살표 컨테이너 - 그리드보다 크게 */
+    .center-arrows {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 120%;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* 가로 화살표 - 박스 밖으로 튀어나옴 */
+    .arrow-horizontal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: calc(100% - 30px);
+      height: 10px;
+      background: var(--arrow-color);
+    }
+
+    .arrow-horizontal::before,
+    .arrow-horizontal::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      border: solid var(--arrow-color);
+      border-width: 0 10px 10px 0;
+      padding: 10px;
+    }
+
+    .arrow-horizontal::before {
+      left: -4px;
+      transform: translateY(-50%) rotate(135deg);
+    }
+
+    .arrow-horizontal::after {
+      right: -4px;
+      transform: translateY(-50%) rotate(-45deg);
+    }
+
+    /* 세로 화살표 - 박스 밖으로 튀어나옴 */
+    .arrow-vertical {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: calc(100% - 30px);
+      background: var(--arrow-color);
+    }
+
+    .arrow-vertical::before,
+    .arrow-vertical::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      border: solid var(--arrow-color);
+      border-width: 0 10px 10px 0;
+      padding: 10px;
+    }
+
+    .arrow-vertical::before {
+      top: -4px;
+      transform: translateX(-50%) rotate(-135deg);
+    }
+
+    .arrow-vertical::after {
+      bottom: -4px;
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    /* 도형과 텍스트 영역 사이 구분선 - 그리드 높이와 동일 */
+    .divider {
+      width: 4px;
+      align-self: center;
+      height: 340px;
+      background: var(--primary);
+      margin: 0 40px;
+      flex-shrink: 0;
+      position: relative;
+      left: -120px;
+    }
+
+    .text-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 60px;
+      position: relative;
+      left: -100px;
+      max-width: 550px;
+    }
+
+    .content-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 16px;
+    }
+
+    .content-description {
+      font-size: 13px;
+      color: var(--muted-1);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .content-description:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .source {
+      font-size: 12px;
+      color: var(--muted-2);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 콘텐츠 영역만 (헤더 제외) -->
+  <div class="content">
+    <div class="diagram-area">
+      <div class="matrix-grid">
+        {{#each matrix_items}}
+        <div class="matrix-box">{{{this.label}}}</div>
+        {{/each}}
+        <!-- 중앙 양방향 화살표 -->
+        <div class="center-arrows">
+          <div class="arrow-horizontal"></div>
+          <div class="arrow-vertical"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 도형과 텍스트 영역 구분선 -->
+    <div class="divider"></div>
+
+    <div class="text-area">
+      <h2 class="content-title">{{content_title}}</h2>
+      <p class="content-description">{{content_description_1}}</p>
+      {{#if content_description_2}}
+      <p class="content-description">{{content_description_2}}</p>
+      {{/if}}
+    </div>
+  </div>
+</body>
+</html>

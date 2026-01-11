@@ -1,5 +1,15 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(python .claude/skills/ppt-extract/ppt_extract.py:*)",
+      "Bash(python ppt_extract.py:*)",
+      "Bash(python:*)"
+    ]
+  },
   "enableAllProjectMcpServers": false,
+  "enabledPlugins": {
+    "sentry@claude-plugins-official": true
+  },
   "mcpServers": {
     "sequential-thinking": {
       "command": "cmd",
@@ -31,8 +41,5 @@
         "--access-token=sbp_0d964d692332b36db8a4970782b76f83ae9853ac"
       ]
     }
-  },
-  "enabledPlugins": {
-    "sentry@claude-plugins-official": true
   }
 }

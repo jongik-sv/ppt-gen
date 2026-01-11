@@ -1,0 +1,54 @@
+# Diagram Template - SmartArt Left (2x2 Matrix)
+id: diagram-smartart-left-01
+name: 좌측 2x2 매트릭스 다이어그램
+category: diagram
+description: 좌측에 2x2 매트릭스 다이어그램(양방향 화살표 포함), 우측에 제목과 설명 텍스트
+
+source:
+  file: "깔끔이 딥그린.pptx"
+  slide: 10
+  extracted_at: "2026-01-11"
+
+quality: medium
+theme: deep-green
+
+layout:
+  type: diagram
+  structure: left-matrix-right-text
+  content_height: "734px"
+
+placeholders:
+  - name: content_title
+    type: text
+    required: true
+    sample: "제목을 입력하세요."
+
+  - name: content_description_1
+    type: text
+    required: true
+    sample: "영화 미비포유의 줄거리… 이별을 준비하는 마지막에 나타난 짜증나는 여자"
+
+  - name: content_description_2
+    type: text
+    required: false
+    sample: "영화 미드나잇 선의 줄거리… XP(색소성건피증)라는 희귀병으로 태양을 피해야만 하는 케이티."
+
+  - name: matrix_items
+    type: array
+    required: true
+    min_items: 4
+    max_items: 4
+    sample:
+      - label: "제목을 입력해주세요."
+      - label: "제목을 입력해 주세요."
+      - label: "제목을 입력해 주세요."
+      - label: "제목을 입력해 주세요."
+
+semantic_description: |
+  좌측 2x2 매트릭스 다이어그램 슬라이드.
+  - 좌측 35%: 2x2 그리드 박스 (4개), 중앙에 양방향 십자 화살표
+  - 중앙: 녹색 세로 구분선
+  - 우측: 제목과 2개의 설명 텍스트 단락
+  박스 색상: 좌상(짙은 회녹색), 우상(중간 녹색), 좌하/우하(연한 청록색)
+
+match_keywords: [다이어그램, SmartArt, 매트릭스, 2x2, 그리드, 사분면]
