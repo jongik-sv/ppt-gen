@@ -1,183 +1,316 @@
-# Font Mappings - 폰트 대체 매핑 정의
-# 상용/누락 폰트 → Google Fonts 무료 대체
+# 폰트 대체 매핑
+# font-manager.py에서 사용
 #
-# 사용법:
-#   from font_manager import FontManager
-#   fm = FontManager(mappings_file="font-mappings.yaml")
+# 시스템에 설치되지 않은 폰트를 대체 폰트로 매핑
+# 우선순위: 첫 번째 항목이 가장 우선
 
-# 폰트 매핑 (원본 → 대체)
-mappings:
-  # ===== 본고딕 계열 (Adobe/산돌) =====
-  "본고딕": "Noto Sans KR"
-  "본고딕 Medium": "Noto Sans KR"
-  "본고딕 Normal": "Noto Sans KR"
-  "본고딕 Bold": "Noto Sans KR"
-  "본고딕 Light": "Noto Sans KR"
-  "본고딕 ExtraLight": "Noto Sans KR"
-  "본고딕 SemiBold": "Noto Sans KR"
-  "Source Han Sans": "Noto Sans KR"
-  "Source Han Sans K": "Noto Sans KR"
+# 한글 폰트 매핑
+korean:
+  # 프리텐다드 계열
+  Pretendard:
+    - Pretendard Variable
+    - Pretendard
+    - Noto Sans KR
+    - 맑은 고딕
+    - Malgun Gothic
+    - Apple SD Gothic Neo
+    - NanumGothic
+    - Arial
 
-  # ===== 본명조 계열 =====
-  "본명조": "Noto Serif KR"
-  "본명조 Regular": "Noto Serif KR"
-  "본명조 Bold": "Noto Serif KR"
-  "본명조 Light": "Noto Serif KR"
-  "Source Han Serif": "Noto Serif KR"
-  "Source Han Serif K": "Noto Serif KR"
+  Pretendard Variable:
+    - Pretendard
+    - Noto Sans KR
+    - 맑은 고딕
+    - Malgun Gothic
 
-  # ===== 산돌 계열 =====
-  "산돌고딕": "Noto Sans KR"
-  "산돌고딕 Neo": "Noto Sans KR"
-  "산돌명조": "Noto Serif KR"
-  "Sandoll Gothic": "Noto Sans KR"
+  # 나눔 계열
+  NanumGothic:
+    - 나눔고딕
+    - Noto Sans KR
+    - 맑은 고딕
+    - Malgun Gothic
 
-  # ===== 윤고딕 계열 =====
-  "윤고딕": "Noto Sans KR"
-  "윤고딕 100": "Noto Sans KR"
-  "윤고딕 300": "Noto Sans KR"
-  "윤고딕 700": "Noto Sans KR"
-  "Yoon Gothic": "Noto Sans KR"
+  나눔고딕:
+    - NanumGothic
+    - Noto Sans KR
+    - 맑은 고딕
 
-  # ===== Windows 시스템 폰트 =====
-  "맑은 고딕": "Noto Sans KR"
-  "Malgun Gothic": "Noto Sans KR"
-  "굴림": "Noto Sans KR"
-  "Gulim": "Noto Sans KR"
-  "바탕": "Noto Serif KR"
-  "Batang": "Noto Serif KR"
-  "돋움": "Noto Sans KR"
-  "Dotum": "Noto Sans KR"
-  "궁서": "Noto Serif KR"
-  "Gungsuh": "Noto Serif KR"
+  NanumMyeongjo:
+    - 나눔명조
+    - Noto Serif KR
+    - 바탕
+    - Batang
 
-  # ===== macOS 시스템 폰트 =====
-  "Apple SD Gothic Neo": "Noto Sans KR"
-  "AppleGothic": "Noto Sans KR"
-  "Apple Myungjo": "Noto Serif KR"
+  나눔명조:
+    - NanumMyeongjo
+    - Noto Serif KR
+    - 바탕
 
-  # ===== 나눔 계열 (Google Fonts 직접 제공) =====
-  "나눔고딕": "Nanum Gothic"
-  "NanumGothic": "Nanum Gothic"
-  "나눔명조": "Nanum Myeongjo"
-  "NanumMyeongjo": "Nanum Myeongjo"
-  "나눔바른고딕": "Nanum Gothic"
-  "NanumBarunGothic": "Nanum Gothic"
-  "나눔스퀘어": "Nanum Gothic"
-  "NanumSquare": "Nanum Gothic"
-  "나눔펜스크립트": "Nanum Pen Script"
-  "NanumPenScript": "Nanum Pen Script"
+  NanumBarunGothic:
+    - 나눔바른고딕
+    - NanumGothic
+    - Noto Sans KR
+    - 맑은 고딕
 
-  # ===== 영문 시스템 폰트 =====
-  "Arial": "Roboto"
-  "Helvetica": "Roboto"
-  "Helvetica Neue": "Roboto"
-  "Times New Roman": "Roboto Serif"
-  "Times": "Roboto Serif"
-  "Georgia": "Roboto Serif"
-  "Verdana": "Roboto"
-  "Tahoma": "Roboto"
-  "Trebuchet MS": "Roboto"
-  "Calibri": "Roboto"
-  "Cambria": "Roboto Serif"
+  # 본고딕/본명조
+  Noto Sans KR:
+    - 본고딕
+    - Source Han Sans KR
+    - Pretendard
+    - 맑은 고딕
+    - Malgun Gothic
 
-  # ===== 프레젠테이션 전용 폰트 =====
-  "Century Gothic": "Poppins"
-  "Futura": "Poppins"
-  "Gill Sans": "Roboto"
-  "Franklin Gothic": "Roboto"
-  "Impact": "Roboto"
+  본고딕:
+    - Noto Sans KR
+    - Source Han Sans KR
+    - 맑은 고딕
 
-# Google Fonts 메타데이터
-google_fonts:
-  "Noto Sans KR":
-    weights: [100, 300, 400, 500, 700, 900]
-    category: "sans-serif"
-    korean: true
-    url: "https://fonts.google.com/specimen/Noto+Sans+KR"
-    description: "구글/어도비 합작 한글 고딕체. 본고딕과 동일한 디자인."
+  Noto Serif KR:
+    - 본명조
+    - Source Han Serif KR
+    - 바탕
+    - Batang
 
-  "Noto Serif KR":
-    weights: [200, 300, 400, 500, 600, 700, 900]
-    category: "serif"
-    korean: true
-    url: "https://fonts.google.com/specimen/Noto+Serif+KR"
-    description: "구글/어도비 합작 한글 명조체. 본명조와 동일한 디자인."
+  본명조:
+    - Noto Serif KR
+    - Source Han Serif KR
+    - 바탕
 
-  "Nanum Gothic":
-    weights: [400, 700, 800]
-    category: "sans-serif"
-    korean: true
-    url: "https://fonts.google.com/specimen/Nanum+Gothic"
-    description: "네이버 나눔글꼴 고딕체."
+  # 시스템 기본
+  맑은 고딕:
+    - Malgun Gothic
+    - Noto Sans KR
+    - NanumGothic
+    - Apple SD Gothic Neo
 
-  "Nanum Myeongjo":
-    weights: [400, 700, 800]
-    category: "serif"
-    korean: true
-    url: "https://fonts.google.com/specimen/Nanum+Myeongjo"
-    description: "네이버 나눔글꼴 명조체."
+  Malgun Gothic:
+    - 맑은 고딕
+    - Noto Sans KR
+    - NanumGothic
 
-  "Nanum Pen Script":
-    weights: [400]
-    category: "handwriting"
-    korean: true
-    url: "https://fonts.google.com/specimen/Nanum+Pen+Script"
-    description: "네이버 나눔글꼴 손글씨체."
+  굴림:
+    - Gulim
+    - 맑은 고딕
+    - NanumGothic
 
-  "Roboto":
-    weights: [100, 300, 400, 500, 700, 900]
-    category: "sans-serif"
-    korean: false
-    url: "https://fonts.google.com/specimen/Roboto"
-    description: "구글 기본 영문 고딕체. Android 시스템 폰트."
+  돋움:
+    - Dotum
+    - 맑은 고딕
+    - NanumGothic
 
-  "Roboto Serif":
-    weights: [100, 300, 400, 500, 700, 900]
-    category: "serif"
-    korean: false
-    url: "https://fonts.google.com/specimen/Roboto+Serif"
-    description: "구글 영문 세리프체."
+  바탕:
+    - Batang
+    - Noto Serif KR
+    - NanumMyeongjo
 
-  "Poppins":
-    weights: [100, 200, 300, 400, 500, 600, 700, 800, 900]
-    category: "sans-serif"
-    korean: false
-    url: "https://fonts.google.com/specimen/Poppins"
-    description: "기하학적 산세리프. 프레젠테이션에 적합."
+  궁서:
+    - Gungsuh
+    - 바탕
+    - Noto Serif KR
 
-  "Open Sans":
-    weights: [300, 400, 500, 600, 700, 800]
-    category: "sans-serif"
-    korean: false
-    url: "https://fonts.google.com/specimen/Open+Sans"
-    description: "가독성 높은 영문 고딕체."
+  # 카카오 폰트
+  KakaoBold:
+    - Kakao Bold
+    - Pretendard
+    - 맑은 고딕
 
-# 폴백 체인 (우선순위 순)
-fallback_chains:
-  korean_sans:
-    - "Noto Sans KR"
-    - "Nanum Gothic"
-    - "Malgun Gothic"
-    - "Apple SD Gothic Neo"
-    - "sans-serif"
+  # 배민 폰트
+  배민 을지로체:
+    - BMEULJIRO
+    - 맑은 고딕
 
-  korean_serif:
-    - "Noto Serif KR"
-    - "Nanum Myeongjo"
-    - "Batang"
-    - "Apple Myungjo"
-    - "serif"
+  배민 한나체:
+    - BMHANNAPro
+    - 맑은 고딕
 
-  english_sans:
-    - "Roboto"
-    - "Open Sans"
-    - "Arial"
-    - "Helvetica"
-    - "sans-serif"
+  # 스포카 한 산스
+  Spoqa Han Sans:
+    - Spoqa Han Sans Neo
+    - Noto Sans KR
+    - 맑은 고딕
 
-  english_serif:
-    - "Roboto Serif"
-    - "Georgia"
-    - "Times New Roman"
-    - "serif"
+  Spoqa Han Sans Neo:
+    - Spoqa Han Sans
+    - Noto Sans KR
+    - 맑은 고딕
+
+# 영문 폰트 매핑
+english:
+  # Sans-serif
+  Helvetica:
+    - Helvetica Neue
+    - Arial
+    - Noto Sans
+    - Roboto
+
+  Helvetica Neue:
+    - Helvetica
+    - Arial
+    - SF Pro Display
+
+  Arial:
+    - Helvetica
+    - Noto Sans
+    - Liberation Sans
+
+  Roboto:
+    - Noto Sans
+    - Arial
+    - Helvetica
+
+  SF Pro Display:
+    - SF Pro Text
+    - Helvetica Neue
+    - Arial
+
+  Open Sans:
+    - Noto Sans
+    - Arial
+    - Roboto
+
+  Lato:
+    - Open Sans
+    - Noto Sans
+    - Arial
+
+  Montserrat:
+    - Poppins
+    - Noto Sans
+    - Arial
+
+  Poppins:
+    - Montserrat
+    - Noto Sans
+    - Arial
+
+  Inter:
+    - Roboto
+    - Noto Sans
+    - Arial
+
+  # Serif
+  Times New Roman:
+    - Times
+    - Noto Serif
+    - Georgia
+    - Liberation Serif
+
+  Georgia:
+    - Noto Serif
+    - Times New Roman
+    - Cambria
+
+  Cambria:
+    - Georgia
+    - Noto Serif
+    - Times New Roman
+
+  Playfair Display:
+    - Georgia
+    - Times New Roman
+    - Noto Serif
+
+  Merriweather:
+    - Georgia
+    - Noto Serif
+    - Times New Roman
+
+  # Monospace
+  Consolas:
+    - Monaco
+    - Courier New
+    - Liberation Mono
+    - Noto Mono
+
+  Monaco:
+    - Consolas
+    - Menlo
+    - Courier New
+
+  Menlo:
+    - Monaco
+    - Consolas
+    - Courier New
+
+  Fira Code:
+    - JetBrains Mono
+    - Consolas
+    - Courier New
+
+  JetBrains Mono:
+    - Fira Code
+    - Consolas
+    - Courier New
+
+  Source Code Pro:
+    - Consolas
+    - Monaco
+    - Courier New
+
+  Courier New:
+    - Courier
+    - Liberation Mono
+    - Noto Mono
+
+# 기본 폴백 (모든 매핑 실패 시)
+defaults:
+  korean:
+    sans: 맑은 고딕
+    serif: 바탕
+    mono: Consolas
+
+  english:
+    sans: Arial
+    serif: Times New Roman
+    mono: Courier New
+
+  # 플랫폼별 기본값
+  windows:
+    korean_sans: 맑은 고딕
+    korean_serif: 바탕
+    english_sans: Arial
+    english_serif: Times New Roman
+
+  macos:
+    korean_sans: Apple SD Gothic Neo
+    korean_serif: AppleMyungjo
+    english_sans: Helvetica Neue
+    english_serif: Times New Roman
+
+  linux:
+    korean_sans: Noto Sans KR
+    korean_serif: Noto Serif KR
+    english_sans: Noto Sans
+    english_serif: Noto Serif
+
+# 폰트 분류 (font-manager.py에서 타입 판별용)
+font_types:
+  sans_serif:
+    - Pretendard
+    - Noto Sans KR
+    - 맑은 고딕
+    - NanumGothic
+    - Arial
+    - Helvetica
+    - Roboto
+
+  serif:
+    - Noto Serif KR
+    - 바탕
+    - NanumMyeongjo
+    - Times New Roman
+    - Georgia
+
+  monospace:
+    - Consolas
+    - Monaco
+    - Courier New
+    - Fira Code
+    - JetBrains Mono
+
+  display:
+    - Montserrat
+    - Poppins
+    - Playfair Display
+    - 배민 을지로체
+    - 배민 한나체

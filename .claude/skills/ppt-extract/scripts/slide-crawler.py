@@ -1,500 +1,474 @@
 #!/usr/bin/env python3
 """
-Slide Crawler - 온라인 슬라이드에서 콘텐츠 패턴 추출
+PPTX 슬라이드 파싱 및 도형/텍스트 추출.
 
-SlideShare, Speaker Deck 등에서 슬라이드를 크롤링하여
-콘텐츠 템플릿 YAML로 변환합니다.
+슬라이드에서 모든 도형(shape)을 추출하고 구조화된 JSON으로 출력.
+GroupShape 재귀 처리, 절대 위치 계산, 영역 분류(Title/Content/Footer) 포함.
 
 Usage:
-    python slide-crawler.py <url> --output <template_id>
-    python slide-crawler.py "https://slideshare.net/..." --output timeline2 --category timeline
-
-Examples:
-    # SlideShare에서 크롤링
-    python slide-crawler.py "https://www.slideshare.net/user/presentation" --output my-template
-
-    # 카테고리 지정
-    python slide-crawler.py "https://speakerdeck.com/user/deck" --output process1 --category process
-
-    # 분석만 (저장 안함)
-    python slide-crawler.py "https://slideshare.net/..." --analyze-only
-
-Dependencies:
-    pip install requests beautifulsoup4 Pillow
+    python slide-crawler.py input.pptx --slide 3 --output working/parsed.json
+    python slide-crawler.py input.pptx --all --output working/all-slides.json
 """
 
 import argparse
-import re
+import json
 import sys
-from datetime import datetime
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
-from urllib.parse import urlparse, urljoin
-
-import yaml
-
-try:
-    import requests
-    HAS_REQUESTS = True
-except ImportError:
-    HAS_REQUESTS = False
-
-try:
-    from bs4 import BeautifulSoup
-    HAS_BS4 = True
-except ImportError:
-    HAS_BS4 = False
-
-# 공유 모듈 import
-import sys
-SCRIPT_DIR = Path(__file__).parent
-sys.path.insert(0, str(SCRIPT_DIR.parent.parent / 'shared'))
-from config import CONTENTS_DIR
-from yaml_utils import load_registry, save_registry
-
-# 레지스트리 경로
-REGISTRY_PATH = CONTENTS_DIR / 'registry.yaml'
-
-
-class SlideExtractor:
-    """슬라이드 추출 베이스 클래스"""
-
-    def __init__(self, url: str):
-        self.url = url
-        self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        })
-
-    def extract(self) -> dict:
-        """슬라이드 정보 추출 → {'title', 'slides', 'metadata'}"""
-        raise NotImplementedError
-
-    def _get_page(self, url: str) -> BeautifulSoup:
-        """페이지 가져오기"""
-        response = self.session.get(url, timeout=30)
-        response.raise_for_status()
-        return BeautifulSoup(response.text, 'html.parser')
-
-
-class SlideShareExtractor(SlideExtractor):
-    """SlideShare 슬라이드 추출"""
-
-    def extract(self) -> dict:
-        soup = self._get_page(self.url)
-
-        result = {
-            'title': '',
-            'slides': [],
-            'metadata': {
-                'source': 'slideshare',
-                'url': self.url,
-            }
-        }
-
-        # 제목 추출
-        title_elem = soup.select_one('h1.slideshow-title, h1[class*="title"]')
-        if title_elem:
-            result['title'] = title_elem.get_text(strip=True)
-
-        # 슬라이드 이미지 URL 추출
-        # SlideShare는 이미지로 슬라이드를 제공
-        slide_images = soup.select('img[class*="slide-image"], img[data-src*="slide"]')
-
-        for i, img in enumerate(slide_images):
-            src = img.get('data-src') or img.get('src', '')
-            if src:
-                result['slides'].append({
-                    'index': i,
-                    'image_url': src,
-                    'type': 'image',
-                })
-
-        # 대체 방법: JSON 데이터에서 추출
-        if not result['slides']:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                text = script.string or ''
-                if 'slideImages' in text or 'slides' in text:
-                    # JSON 패턴 매칭
-                    urls = re.findall(r'https?://[^"\']+\.(?:jpg|png|jpeg)[^"\']*', text)
-                    for i, url in enumerate(urls):
-                        result['slides'].append({
-                            'index': i,
-                            'image_url': url,
-                            'type': 'image',
-                        })
-                    break
-
-        # 메타데이터
-        author = soup.select_one('a[class*="author"], span[class*="author"]')
-        if author:
-            result['metadata']['author'] = author.get_text(strip=True)
-
-        return result
-
-
-class SpeakerDeckExtractor(SlideExtractor):
-    """Speaker Deck 슬라이드 추출"""
-
-    def extract(self) -> dict:
-        soup = self._get_page(self.url)
-
-        result = {
-            'title': '',
-            'slides': [],
-            'metadata': {
-                'source': 'speakerdeck',
-                'url': self.url,
-            }
-        }
-
-        # 제목 추출
-        title_elem = soup.select_one('h1.deck-title, h1[class*="title"]')
-        if title_elem:
-            result['title'] = title_elem.get_text(strip=True)
-
-        # 슬라이드 이미지 추출
-        slide_frames = soup.select('div.slide, div[class*="slide-"]')
-
-        for i, frame in enumerate(slide_frames):
-            img = frame.select_one('img')
-            if img:
-                src = img.get('data-src') or img.get('src', '')
-                if src:
-                    result['slides'].append({
-                        'index': i,
-                        'image_url': src,
-                        'type': 'image',
-                    })
-
-        # 대체: data 속성에서 추출
-        if not result['slides']:
-            deck_elem = soup.select_one('[data-slides]')
-            if deck_elem:
-                slides_data = deck_elem.get('data-slides', '')
-                urls = re.findall(r'https?://[^"\']+\.(?:jpg|png|jpeg)[^"\']*', slides_data)
-                for i, url in enumerate(urls):
-                    result['slides'].append({
-                        'index': i,
-                        'image_url': url,
-                        'type': 'image',
-                    })
-
-        return result
-
-
-class GenericExtractor(SlideExtractor):
-    """일반 웹페이지에서 슬라이드 추출 시도"""
-
-    def extract(self) -> dict:
-        soup = self._get_page(self.url)
-
-        result = {
-            'title': '',
-            'slides': [],
-            'metadata': {
-                'source': 'generic',
-                'url': self.url,
-            }
-        }
-
-        # 제목
-        title = soup.find('title')
-        if title:
-            result['title'] = title.get_text(strip=True)
-
-        # 이미지 기반 슬라이드 찾기
-        # 슬라이드 비율 (16:9, 4:3)에 가까운 이미지 찾기
-        images = soup.find_all('img')
-
-        for i, img in enumerate(images):
-            src = img.get('src', '')
-            if not src:
-                continue
-
-            # 절대 URL로 변환
-            if not src.startswith('http'):
-                src = urljoin(self.url, src)
-
-            # 슬라이드 관련 키워드 확인
-            alt = img.get('alt', '').lower()
-            classes = ' '.join(img.get('class', [])).lower()
-
-            is_slide = any(kw in alt or kw in classes or kw in src.lower()
-                          for kw in ['slide', 'page', 'deck', 'presentation'])
-
-            if is_slide or i < 20:  # 처음 20개 이미지 포함
-                result['slides'].append({
-                    'index': i,
-                    'image_url': src,
-                    'type': 'image',
-                })
-
-        return result
-
-
-def get_extractor(url: str) -> SlideExtractor:
-    """URL에 맞는 추출기 반환"""
-    parsed = urlparse(url)
-    domain = parsed.netloc.lower()
-
-    if 'slideshare' in domain:
-        return SlideShareExtractor(url)
-    elif 'speakerdeck' in domain:
-        return SpeakerDeckExtractor(url)
-    else:
-        return GenericExtractor(url)
-
-
-def analyze_layout(slides: list) -> dict:
-    """슬라이드 레이아웃 분석"""
-    analysis = {
-        'total_slides': len(slides),
-        'patterns': [],
-        'suggested_category': 'general',
-    }
-
-    if not slides:
-        return analysis
-
-    # 슬라이드 수에 따른 카테고리 추천
-    count = len(slides)
-    if count <= 3:
-        analysis['suggested_category'] = 'cover'
-    elif count <= 6:
-        analysis['suggested_category'] = 'overview'
-    elif count <= 10:
-        analysis['suggested_category'] = 'content'
-    else:
-        analysis['suggested_category'] = 'presentation'
-
-    return analysis
-
-
-def generate_content_template(
-    template_id: str,
-    name: str,
-    category: str,
-    slide_data: dict,
-    analysis: dict
-) -> dict:
-    """콘텐츠 템플릿 YAML 데이터 생성"""
-    template = {
-        'template': {
-            'id': template_id,
-            'name': name,
-            'category': category,
-            'source': {
-                'type': slide_data['metadata'].get('source', 'unknown'),
-                'url': slide_data['metadata'].get('url', ''),
-                'title': slide_data.get('title', ''),
-            },
-            'created': datetime.now().strftime('%Y-%m-%d'),
-        },
-        'structure': {
-            'type': 'custom',
-            'description': f'{len(slide_data["slides"])}개 슬라이드 패턴',
-        },
-        'slides': [],
-    }
-
-    # 슬라이드 정보 추가
-    for i, slide in enumerate(slide_data['slides'][:10]):  # 최대 10개
-        slide_entry = {
-            'index': i,
-            'type': 'content',
-        }
-        if slide.get('image_url'):
-            slide_entry['reference_image'] = slide['image_url']
-        template['slides'].append(slide_entry)
-
-    # 사용 가이드
-    template['usage'] = {
-        'keywords': [category, 'custom', template_id],
-        'use_for': f'{category} 유형의 슬라이드 생성',
-        'notes': '원본 슬라이드를 참고하여 레이아웃 구성',
-    }
-
-    return template
-
-
-def update_registry(template_id: str, name: str, category: str, file_name: str) -> None:
-    """레지스트리 업데이트"""
-    registry = load_registry(REGISTRY_PATH, ['templates'])
-    templates = registry.get('templates', [])
-
-    # 기존 항목 확인
-    existing_ids = [t['id'] for t in templates]
-
-    entry = {
-        'id': template_id,
-        'name': name,
-        'category': category,
-        'file': file_name,
-        'source': 'crawled',
-        'created': datetime.now().strftime('%Y-%m-%d'),
-    }
-
-    if template_id in existing_ids:
-        # 업데이트
-        for i, t in enumerate(templates):
-            if t['id'] == template_id:
-                templates[i] = entry
-                break
-    else:
-        # 추가
-        templates.append(entry)
-
-    registry['templates'] = templates
-    save_registry(REGISTRY_PATH, registry, '콘텐츠 템플릿 레지스트리')
-
-
-def cmd_crawl(args) -> int:
-    """슬라이드 크롤링 실행"""
-    url = args.url
-    template_id = args.output
-    category = args.category
-    analyze_only = args.analyze_only
-    name = args.name
-
-    print(f"슬라이드 크롤러")
-    print(f"=" * 50)
-    print(f"URL: {url}")
-
-    # 추출기 선택
-    extractor = get_extractor(url)
-    print(f"추출기: {type(extractor).__name__}")
-    print()
-
-    # 슬라이드 추출
-    print("[1/4] 슬라이드 추출...")
+from typing import Any, Dict, List, Optional, Tuple
+
+from pptx import Presentation
+from pptx.util import Emu
+from pptx.enum.shapes import MSO_SHAPE_TYPE
+from pptx.enum.shapes import PP_PLACEHOLDER
+
+
+# EMU to inches conversion factor
+EMU_PER_INCH = 914400
+
+
+@dataclass
+class TextRun:
+    """텍스트 런 (폰트 스타일 포함)"""
+    text: str
+    font_name: Optional[str] = None
+    font_size: Optional[float] = None  # points
+    bold: Optional[bool] = None
+    italic: Optional[bool] = None
+    color: Optional[str] = None  # RGB hex
+
+
+@dataclass
+class Paragraph:
+    """단락 정보"""
+    text: str
+    runs: List[TextRun] = field(default_factory=list)
+    alignment: Optional[str] = None
+    level: int = 0
+    bullet: bool = False
+    space_before: Optional[float] = None  # points
+    space_after: Optional[float] = None  # points
+    line_spacing: Optional[float] = None  # points
+
+
+@dataclass
+class ShapeGeometry:
+    """도형 위치/크기 (vmin 및 EMU 단위)"""
+    x: float  # vmin
+    y: float  # vmin
+    cx: float  # vmin (width)
+    cy: float  # vmin (height)
+    emu: Dict[str, int] = field(default_factory=dict)  # 원본 EMU 값
+
+
+@dataclass
+class ShapeStyle:
+    """도형 스타일 정보"""
+    fill_color: Optional[str] = None  # RGB hex
+    fill_type: Optional[str] = None  # solid, gradient, picture, none
+    line_color: Optional[str] = None
+    line_width: Optional[float] = None  # points
+    shadow: bool = False
+    rotation: float = 0.0  # degrees
+
+
+@dataclass
+class ExtractedShape:
+    """추출된 도형 정보"""
+    id: str
+    name: str
+    shape_type: str
+    geometry: ShapeGeometry
+    style: ShapeStyle
+    zone: str  # title, content, footer
+    paragraphs: List[Paragraph] = field(default_factory=list)
+    placeholder_type: Optional[str] = None
+    is_group: bool = False
+    children: List['ExtractedShape'] = field(default_factory=list)
+
+
+@dataclass
+class ExtractedSlide:
+    """추출된 슬라이드 정보"""
+    index: int
+    width: float  # vmin
+    height: float  # vmin
+    width_emu: int
+    height_emu: int
+    shapes: List[ExtractedShape] = field(default_factory=list)
+    content_zone: Optional[Dict[str, float]] = None  # top, bottom in vmin
+
+
+def emu_to_inches(emu: int) -> float:
+    """EMU to inches"""
+    return emu / EMU_PER_INCH
+
+
+def emu_to_vmin(emu: int, vmin_emu: int) -> float:
+    """EMU to vmin (relative to slide's shorter dimension)"""
+    return round((emu / vmin_emu) * 100, 2)
+
+
+def get_rgb_color(color_format) -> Optional[str]:
+    """pptx 컬러 객체에서 RGB hex 추출"""
     try:
-        slide_data = extractor.extract()
-    except Exception as e:
-        print(f"Error: 추출 실패 - {e}")
-        return 1
+        if color_format and hasattr(color_format, 'rgb') and color_format.rgb:
+            return str(color_format.rgb)
+    except Exception:
+        pass
+    return None
 
-    slide_count = len(slide_data.get('slides', []))
-    print(f"  제목: {slide_data.get('title', '(없음)')}")
-    print(f"  슬라이드: {slide_count}개")
 
-    if slide_count == 0:
-        print("\nWarning: 슬라이드를 찾을 수 없습니다.")
-        print("  - URL이 올바른지 확인하세요")
-        print("  - 로그인이 필요한 콘텐츠일 수 있습니다")
-        return 1
+def get_placeholder_type_name(placeholder_format) -> Optional[str]:
+    """플레이스홀더 타입 이름 반환"""
+    if not placeholder_format or not placeholder_format.type:
+        return None
 
-    # 레이아웃 분석
-    print("\n[2/4] 레이아웃 분석...")
-    analysis = analyze_layout(slide_data['slides'])
-    print(f"  추천 카테고리: {analysis['suggested_category']}")
+    type_str = str(placeholder_format.type)
+    # "TITLE (1)" -> "TITLE"
+    return type_str.split('(')[0].strip().split('.')[-1]
 
-    # 카테고리 설정
-    if not category:
-        category = analysis['suggested_category']
-    print(f"  사용 카테고리: {category}")
 
-    # 분석만 모드
-    if analyze_only:
-        print("\n--- 분석 결과 ---")
-        print(f"Title: {slide_data.get('title')}")
-        print(f"Slides: {slide_count}")
-        print(f"Source: {slide_data['metadata'].get('source')}")
-        print(f"Category: {category}")
-        print("\n슬라이드 목록:")
-        for slide in slide_data['slides'][:10]:
-            print(f"  [{slide['index']}] {slide.get('image_url', '')[:60]}...")
-        return 0
+def determine_zone(shape, slide_height_emu: int) -> str:
+    """도형이 속한 영역 판별 (title/content/footer)"""
 
-    # 템플릿 ID 확인
-    if not template_id:
-        print("Error: --output 옵션으로 템플릿 ID를 지정해주세요")
-        return 1
+    # 플레이스홀더 기반 판별
+    if hasattr(shape, 'is_placeholder') and shape.is_placeholder:
+        ph_type = shape.placeholder_format.type
+        if ph_type in [PP_PLACEHOLDER.TITLE, PP_PLACEHOLDER.CENTER_TITLE, PP_PLACEHOLDER.SUBTITLE]:
+            return "title"
+        if ph_type in [PP_PLACEHOLDER.FOOTER, PP_PLACEHOLDER.SLIDE_NUMBER, PP_PLACEHOLDER.DATE]:
+            return "footer"
 
-    # 템플릿 이름
-    if not name:
-        name = slide_data.get('title') or template_id
+    # 이름 기반 판별
+    name_lower = shape.name.lower() if hasattr(shape, 'name') else ""
+    if 'title' in name_lower:
+        return "title"
+    if 'footer' in name_lower or 'slide number' in name_lower:
+        return "footer"
 
-    # 템플릿 생성
-    print("\n[3/4] 템플릿 생성...")
-    template = generate_content_template(
-        template_id, name, category, slide_data, analysis
+    # 위치 기반 판별
+    if hasattr(shape, 'top'):
+        shape_center_y = shape.top + (shape.height / 2) if hasattr(shape, 'height') else shape.top
+        relative_y = shape_center_y / slide_height_emu
+
+        if relative_y < 0.22:
+            return "title"
+        if relative_y > 0.90:
+            return "footer"
+
+    return "content"
+
+
+def extract_text_runs(paragraph) -> List[TextRun]:
+    """단락에서 텍스트 런 추출"""
+    runs = []
+    for run in paragraph.runs:
+        font = run.font
+        runs.append(TextRun(
+            text=run.text,
+            font_name=font.name if font.name else None,
+            font_size=font.size.pt if font.size else None,
+            bold=font.bold,
+            italic=font.italic,
+            color=get_rgb_color(font.color) if hasattr(font, 'color') else None
+        ))
+    return runs
+
+
+def extract_paragraph(paragraph) -> Paragraph:
+    """단락 정보 추출"""
+    alignment_map = {
+        1: "LEFT",
+        2: "CENTER",
+        3: "RIGHT",
+        4: "JUSTIFY"
+    }
+
+    # 불릿 감지
+    bullet = False
+    if hasattr(paragraph, '_p') and paragraph._p is not None:
+        pPr = paragraph._p.pPr
+        if pPr is not None:
+            ns = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+            if pPr.find(f"{ns}buChar") is not None or pPr.find(f"{ns}buAutoNum") is not None:
+                bullet = True
+
+    return Paragraph(
+        text=paragraph.text.strip(),
+        runs=extract_text_runs(paragraph),
+        alignment=alignment_map.get(paragraph.alignment, None) if paragraph.alignment else None,
+        level=paragraph.level if hasattr(paragraph, 'level') else 0,
+        bullet=bullet,
+        space_before=paragraph.space_before.pt if paragraph.space_before else None,
+        space_after=paragraph.space_after.pt if paragraph.space_after else None,
+        line_spacing=paragraph.line_spacing.pt if hasattr(paragraph, 'line_spacing') and paragraph.line_spacing else None
     )
 
-    # 파일 저장
-    templates_dir = CONTENTS_DIR / 'templates'
-    templates_dir.mkdir(parents=True, exist_ok=True)
 
-    file_name = f"{template_id}.yaml"
-    file_path = templates_dir / file_name
+def extract_shape_style(shape) -> ShapeStyle:
+    """도형 스타일 추출"""
+    style = ShapeStyle()
 
-    yaml_str = f"""# {name}
-# 크롤링 소스: {url}
-# 생성: {datetime.now().strftime('%Y-%m-%d %H:%M')}
+    try:
+        if hasattr(shape, 'fill'):
+            fill = shape.fill
+            if fill.type is not None:
+                style.fill_type = str(fill.type).split('.')[-1].lower()
+            if hasattr(fill, 'fore_color') and fill.fore_color:
+                style.fill_color = get_rgb_color(fill.fore_color)
+    except Exception:
+        pass
 
-"""
-    yaml_str += yaml.dump(template, allow_unicode=True, default_flow_style=False, sort_keys=False)
+    try:
+        if hasattr(shape, 'line'):
+            line = shape.line
+            if line.color and line.color.rgb:
+                style.line_color = str(line.color.rgb)
+            if line.width:
+                style.line_width = line.width.pt
+    except Exception:
+        pass
 
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(yaml_str)
-    print(f"  저장: {file_path}")
+    try:
+        if hasattr(shape, 'shadow') and shape.shadow:
+            style.shadow = shape.shadow.inherit
+    except Exception:
+        pass
 
-    # 레지스트리 업데이트
-    print("\n[4/4] 레지스트리 업데이트...")
-    update_registry(template_id, name, category, file_name)
-    print(f"  registry.yaml 업데이트됨")
+    try:
+        if hasattr(shape, 'rotation'):
+            style.rotation = shape.rotation
+    except Exception:
+        pass
 
-    print("\n" + "=" * 50)
-    print("완료!")
-    print(f"  템플릿 ID: {template_id}")
-    print(f"  파일: {file_path}")
-    print(f"  카테고리: {category}")
+    return style
 
-    return 0
+
+def extract_shape(
+    shape,
+    vmin_emu: int,
+    slide_height_emu: int,
+    parent_left: int = 0,
+    parent_top: int = 0,
+    shape_counter: List[int] = None
+) -> ExtractedShape:
+    """도형 정보 추출 (재귀적으로 GroupShape 처리)"""
+
+    if shape_counter is None:
+        shape_counter = [0]
+
+    shape_id = f"shape-{shape_counter[0]}"
+    shape_counter[0] += 1
+
+    # 절대 위치 계산
+    left_emu = (shape.left if hasattr(shape, 'left') else 0) + parent_left
+    top_emu = (shape.top if hasattr(shape, 'top') else 0) + parent_top
+    width_emu = shape.width if hasattr(shape, 'width') else 0
+    height_emu = shape.height if hasattr(shape, 'height') else 0
+
+    geometry = ShapeGeometry(
+        x=emu_to_vmin(left_emu, vmin_emu),
+        y=emu_to_vmin(top_emu, vmin_emu),
+        cx=emu_to_vmin(width_emu, vmin_emu),
+        cy=emu_to_vmin(height_emu, vmin_emu),
+        emu={"x": left_emu, "y": top_emu, "cx": width_emu, "cy": height_emu}
+    )
+
+    # shape type 추출
+    shape_type = "unknown"
+    if hasattr(shape, 'shape_type') and shape.shape_type:
+        shape_type = str(shape.shape_type).split('.')[-1]
+
+    # 플레이스홀더 타입
+    placeholder_type = None
+    if hasattr(shape, 'is_placeholder') and shape.is_placeholder:
+        placeholder_type = get_placeholder_type_name(shape.placeholder_format)
+
+    # 텍스트 추출
+    paragraphs = []
+    if hasattr(shape, 'text_frame') and shape.text_frame:
+        for para in shape.text_frame.paragraphs:
+            if para.text.strip():
+                paragraphs.append(extract_paragraph(para))
+
+    # GroupShape 처리
+    children = []
+    is_group = False
+    if hasattr(shape, 'shapes'):
+        is_group = True
+        for child in shape.shapes:
+            children.append(extract_shape(
+                child, vmin_emu, slide_height_emu,
+                parent_left=left_emu, parent_top=top_emu,
+                shape_counter=shape_counter
+            ))
+
+    return ExtractedShape(
+        id=shape_id,
+        name=shape.name if hasattr(shape, 'name') else "",
+        shape_type=shape_type,
+        geometry=geometry,
+        style=extract_shape_style(shape),
+        zone=determine_zone(shape, slide_height_emu),
+        paragraphs=paragraphs,
+        placeholder_type=placeholder_type,
+        is_group=is_group,
+        children=children
+    )
+
+
+def detect_content_zone(shapes: List[ExtractedShape], slide_height_vmin: float) -> Dict[str, float]:
+    """콘텐츠 영역 경계 계산 (vmin 단위)"""
+
+    title_shapes = [s for s in shapes if s.zone == "title"]
+    footer_shapes = [s for s in shapes if s.zone == "footer"]
+
+    # Title 영역 하단
+    if title_shapes:
+        title_bottom = max(s.geometry.y + s.geometry.cy for s in title_shapes)
+        content_top = title_bottom + 2.0  # 2% 여백
+    else:
+        content_top = 22.0  # 기본 22%
+
+    # Footer 영역 상단
+    if footer_shapes:
+        footer_top = min(s.geometry.y for s in footer_shapes)
+        content_bottom = footer_top - 2.0  # 2% 여백
+    else:
+        content_bottom = 92.0  # 기본 92%
+
+    return {
+        "top": round(content_top, 2),
+        "bottom": round(content_bottom, 2)
+    }
+
+
+def extract_slide(slide, index: int) -> ExtractedSlide:
+    """슬라이드 전체 추출"""
+
+    # 슬라이드 크기
+    prs = slide.part.package.presentation_part.presentation
+    width_emu = prs.slide_width
+    height_emu = prs.slide_height
+    vmin_emu = min(width_emu, height_emu)
+
+    # vmin 단위로 변환
+    width_vmin = emu_to_vmin(width_emu, vmin_emu)
+    height_vmin = emu_to_vmin(height_emu, vmin_emu)
+
+    # 도형 추출
+    shape_counter = [0]
+    shapes = []
+    for shape in slide.shapes:
+        shapes.append(extract_shape(
+            shape, vmin_emu, height_emu,
+            shape_counter=shape_counter
+        ))
+
+    # 콘텐츠 영역 계산
+    content_zone = detect_content_zone(shapes, height_vmin)
+
+    return ExtractedSlide(
+        index=index,
+        width=width_vmin,
+        height=height_vmin,
+        width_emu=width_emu,
+        height_emu=height_emu,
+        shapes=shapes,
+        content_zone=content_zone
+    )
+
+
+def dataclass_to_dict(obj) -> Any:
+    """dataclass를 dict로 변환 (None 값 제외)"""
+    if hasattr(obj, '__dataclass_fields__'):
+        result = {}
+        for key, value in asdict(obj).items():
+            clean_value = dataclass_to_dict(value)
+            if clean_value is not None:
+                result[key] = clean_value
+        return result
+    elif isinstance(obj, list):
+        return [dataclass_to_dict(item) for item in obj if dataclass_to_dict(item) is not None]
+    elif isinstance(obj, dict):
+        return {k: dataclass_to_dict(v) for k, v in obj.items() if dataclass_to_dict(v) is not None}
+    else:
+        return obj
 
 
 def main():
-    if not HAS_REQUESTS:
-        print("Error: requests가 필요합니다.")
-        print("  pip install requests")
-        return 1
-
-    if not HAS_BS4:
-        print("Error: beautifulsoup4가 필요합니다.")
-        print("  pip install beautifulsoup4")
-        return 1
-
     parser = argparse.ArgumentParser(
-        description='온라인 슬라이드 크롤러',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  # SlideShare에서 크롤링
-  python slide-crawler.py "https://www.slideshare.net/user/deck" --output my-template
-
-  # 카테고리 지정
-  python slide-crawler.py "https://speakerdeck.com/user/deck" --output timeline2 --category timeline
-
-  # 분석만
-  python slide-crawler.py "https://slideshare.net/..." --analyze-only
-
-Supported sites:
-  - SlideShare (slideshare.net)
-  - Speaker Deck (speakerdeck.com)
-  - 기타 웹페이지 (이미지 기반 추출)
-        """
+        description="PPTX 슬라이드 파싱 및 도형/텍스트 추출"
     )
-
-    parser.add_argument('url', help='슬라이드 URL')
-    parser.add_argument('--output', '-o', help='템플릿 ID')
-    parser.add_argument('--name', '-n', help='템플릿 이름')
-    parser.add_argument('--category', '-c', help='카테고리 (cover, timeline, process 등)')
-    parser.add_argument('--analyze-only', action='store_true',
-                        help='분석만 수행 (저장 안함)')
+    parser.add_argument("input", help="입력 PPTX 파일")
+    parser.add_argument("--slide", type=int, help="특정 슬라이드 번호 (0-based)")
+    parser.add_argument("--all", action="store_true", help="모든 슬라이드 추출")
+    parser.add_argument("--output", "-o", help="출력 JSON 파일")
+    parser.add_argument("--content-only", action="store_true", help="콘텐츠 영역만 추출")
 
     args = parser.parse_args()
-    return cmd_crawl(args)
+
+    input_path = Path(args.input)
+    if not input_path.exists():
+        print(f"Error: 파일을 찾을 수 없습니다: {args.input}")
+        sys.exit(1)
+
+    if not args.slide and not args.all:
+        print("Error: --slide 또는 --all 옵션을 지정하세요")
+        sys.exit(1)
+
+    try:
+        prs = Presentation(str(input_path))
+
+        slides_data = []
+
+        if args.all:
+            for idx, slide in enumerate(prs.slides):
+                extracted = extract_slide(slide, idx)
+                slides_data.append(extracted)
+        else:
+            if args.slide < 0 or args.slide >= len(prs.slides):
+                print(f"Error: 슬라이드 {args.slide}가 존재하지 않습니다 (0-{len(prs.slides)-1})")
+                sys.exit(1)
+
+            slide = prs.slides[args.slide]
+            extracted = extract_slide(slide, args.slide)
+            slides_data.append(extracted)
+
+        # content-only 필터링
+        if args.content_only:
+            for slide_data in slides_data:
+                slide_data.shapes = [
+                    s for s in slide_data.shapes
+                    if s.zone == "content"
+                ]
+
+        # 출력
+        output_data = {
+            "source_file": str(input_path.name),
+            "slides": [dataclass_to_dict(s) for s in slides_data]
+        }
+
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump(output_data, f, indent=2, ensure_ascii=False)
+            print(f"저장됨: {args.output}")
+        else:
+            print(json.dumps(output_data, indent=2, ensure_ascii=False))
+
+        # 통계
+        total_shapes = sum(len(s.shapes) for s in slides_data)
+        print(f"추출 완료: {len(slides_data)} 슬라이드, {total_shapes} 도형")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
 
 
-if __name__ == '__main__':
-    sys.exit(main())
+if __name__ == "__main__":
+    main()

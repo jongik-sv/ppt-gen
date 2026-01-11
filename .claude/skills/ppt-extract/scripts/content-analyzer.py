@@ -1,743 +1,506 @@
 #!/usr/bin/env python3
 """
-Slide Content Analyzer - 슬라이드 콘텐츠 OOXML 완전 추출
+콘텐츠 영역 분석 및 플레이스홀더 후보 탐지.
 
-슬라이드의 모든 요소(도형, 이미지, 연결선, SmartArt)를 분석하여
-콘텐츠 템플릿 YAML을 생성합니다.
+slide-crawler.py의 출력(parsed.json)을 받아서:
+1. 콘텐츠 영역 필터링
+2. 텍스트 그룹 후보 탐지 (위치/스타일 기반)
+3. LLM 판단을 위한 구조화된 데이터 생성
 
 Usage:
-    python content-analyzer.py input.pptx --slide 11
-    python content-analyzer.py input.pptx --slide 11 --output template.yaml
-    python content-analyzer.py input.pptx --all  # 모든 슬라이드 분석
-
-Output:
-    - 화면에 YAML 출력 또는 파일 저장
-    - 각 도형의 완전한 OOXML 정보 포함
+    python content-analyzer.py working/parsed.json --output working/analysis.json
 """
 
 import argparse
+import json
 import sys
-import zipfile
-import re
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
-from datetime import datetime
-import xml.etree.ElementTree as ET
-
-# yaml 모듈은 선택적
-try:
-    import yaml
-    YAML_AVAILABLE = True
-except ImportError:
-    YAML_AVAILABLE = False
-
-# 공유 모듈 import
-SCRIPT_DIR = Path(__file__).parent
-sys.path.insert(0, str(SCRIPT_DIR.parent.parent / 'shared'))
-
-try:
-    from xml_utils import extract_slide_ooxml, extract_slide_rels, get_slide_count, NAMESPACES
-except ImportError:
-    # Fallback: 직접 정의
-    NAMESPACES = {
-        'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
-        'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-        'p': 'http://schemas.openxmlformats.org/presentationml/2006/main',
-        'rel': 'http://schemas.openxmlformats.org/package/2006/relationships',
-        'c': 'http://schemas.openxmlformats.org/drawingml/2006/chart',
-        'dgm': 'http://schemas.openxmlformats.org/drawingml/2006/diagram',
-        'asvg': 'http://schemas.microsoft.com/office/drawing/2016/SVG/main',
-    }
-
-    def extract_slide_ooxml(pptx_path, slide_num):
-        with zipfile.ZipFile(pptx_path, 'r') as zf:
-            path = f'ppt/slides/slide{slide_num}.xml'
-            if path in zf.namelist():
-                return zf.read(path).decode('utf-8')
-        return ''
-
-    def extract_slide_rels(pptx_path, slide_num):
-        with zipfile.ZipFile(pptx_path, 'r') as zf:
-            path = f'ppt/slides/_rels/slide{slide_num}.xml.rels'
-            if path in zf.namelist():
-                return zf.read(path).decode('utf-8')
-        return ''
-
-    def get_slide_count(pptx_path):
-        with zipfile.ZipFile(pptx_path, 'r') as zf:
-            files = [f for f in zf.namelist() if f.startswith('ppt/slides/slide') and f.endswith('.xml')]
-            return len(files)
-
-# 추가 네임스페이스
-NAMESPACES['dgm'] = 'http://schemas.openxmlformats.org/drawingml/2006/diagram'
-NAMESPACES['asvg'] = 'http://schemas.microsoft.com/office/drawing/2016/SVG/main'
-
-# 기본 슬라이드 크기 (EMU)
-DEFAULT_SLIDE_WIDTH = 12192000  # 16:9 기준
-DEFAULT_SLIDE_HEIGHT = 6858000
+from typing import Any, Dict, List, Optional, Tuple
 
 
-def register_namespaces():
-    """ET에 네임스페이스 등록"""
-    for prefix, uri in NAMESPACES.items():
-        ET.register_namespace(prefix, uri)
+@dataclass
+class TextGroupCandidate:
+    """텍스트 그룹 후보 (LLM이 최종 판단)"""
+    id: str
+    shapes: List[str]  # shape IDs
+    group_type: str  # list, grid, single
+    confidence: float  # 0.0 ~ 1.0
+    evidence: List[str]  # 그룹화 근거
+    sample_texts: List[str]
+    common_style: Dict[str, Any]  # 공통 스타일
 
 
-def parse_color(elem):
-    """색상 요소에서 색상값 추출"""
-    if elem is None:
-        return None
-
-    # srgbClr - 직접 RGB
-    srgb = elem.find('.//a:srgbClr', NAMESPACES)
-    if srgb is not None:
-        return f"#{srgb.get('val', '')}"
-
-    # schemeClr - 테마 색상 참조
-    scheme = elem.find('.//a:schemeClr', NAMESPACES)
-    if scheme is not None:
-        val = scheme.get('val', '')
-        # lumMod/lumOff 등 변형값 확인
-        lum_mod = scheme.find('a:lumMod', NAMESPACES)
-        lum_off = scheme.find('a:lumOff', NAMESPACES)
-        if lum_mod is not None or lum_off is not None:
-            mod = lum_mod.get('val', '100000') if lum_mod is not None else '100000'
-            off = lum_off.get('val', '0') if lum_off is not None else '0'
-            return f"scheme:{val}:lumMod{mod}:lumOff{off}"
-        return f"scheme:{val}"
-
-    # sysClr - 시스템 색상
-    sys_clr = elem.find('.//a:sysClr', NAMESPACES)
-    if sys_clr is not None:
-        return f"#{sys_clr.get('lastClr', '')}"
-
-    return None
+@dataclass
+class PlaceholderCandidate:
+    """플레이스홀더 후보"""
+    shape_id: str
+    suggested_name: str
+    suggested_type: str  # text, array, image
+    text_preview: str
+    geometry: Dict[str, float]
+    style_hints: Dict[str, Any]
 
 
-def extract_fill(sp_pr):
-    """도형의 채우기 정보 추출"""
-    if sp_pr is None:
-        return None
-
-    fill_info = {}
-
-    # solidFill
-    solid = sp_pr.find('a:solidFill', NAMESPACES)
-    if solid is not None:
-        fill_info['type'] = 'solid'
-        fill_info['color'] = parse_color(solid)
-        return fill_info
-
-    # gradFill
-    grad = sp_pr.find('a:gradFill', NAMESPACES)
-    if grad is not None:
-        fill_info['type'] = 'gradient'
-        fill_info['stops'] = []
-        for gs in grad.findall('.//a:gs', NAMESPACES):
-            pos = gs.get('pos', '0')
-            color = parse_color(gs)
-            fill_info['stops'].append({'pos': pos, 'color': color})
-        return fill_info
-
-    # noFill
-    if sp_pr.find('a:noFill', NAMESPACES) is not None:
-        return {'type': 'none'}
-
-    return None
+@dataclass
+class ContentAnalysis:
+    """콘텐츠 분석 결과"""
+    slide_index: int
+    content_zone: Dict[str, float]
+    text_groups: List[TextGroupCandidate]
+    placeholders: List[PlaceholderCandidate]
+    layout_pattern: str  # grid, list, mixed, single
+    element_count: int
 
 
-def extract_stroke(sp_pr):
-    """도형의 테두리 정보 추출"""
-    if sp_pr is None:
-        return None
+def load_parsed_data(input_path: Path) -> Dict:
+    """slide-crawler 출력 로드"""
+    with open(input_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
-    ln = sp_pr.find('a:ln', NAMESPACES)
-    if ln is None:
-        return None
 
-    stroke_info = {}
+def filter_content_shapes(slide_data: Dict) -> List[Dict]:
+    """콘텐츠 영역의 도형만 필터링"""
+    content_zone = slide_data.get('content_zone', {})
+    content_top = content_zone.get('top', 22.0)
+    content_bottom = content_zone.get('bottom', 92.0)
 
-    # 테두리 두께
-    width = ln.get('w')
-    if width:
-        stroke_info['width_emu'] = int(width)
+    content_shapes = []
+    for shape in slide_data.get('shapes', []):
+        if shape.get('zone') == 'content':
+            content_shapes.append(shape)
+        else:
+            # zone이 없거나 다른 경우 위치로 판단
+            geom = shape.get('geometry', {})
+            center_y = geom.get('y', 0) + geom.get('cy', 0) / 2
+            if content_top <= center_y <= content_bottom:
+                content_shapes.append(shape)
 
-    # 테두리 색상
-    solid = ln.find('a:solidFill', NAMESPACES)
-    if solid is not None:
-        stroke_info['color'] = parse_color(solid)
+    return content_shapes
 
-    # noFill (테두리 없음)
-    if ln.find('a:noFill', NAMESPACES) is not None:
-        return {'type': 'none'}
 
-    # 점선 스타일
-    prstDash = ln.find('a:prstDash', NAMESPACES)
-    if prstDash is not None:
-        stroke_info['dash'] = prstDash.get('val', 'solid')
+def get_shape_style_signature(shape: Dict) -> str:
+    """도형의 스타일 시그니처 생성 (그룹화 기준)"""
+    parts = []
 
-    # 화살표 (연결선용)
-    headEnd = ln.find('a:headEnd', NAMESPACES)
-    tailEnd = ln.find('a:tailEnd', NAMESPACES)
-    if headEnd is not None:
-        stroke_info['head_end'] = {
-            'type': headEnd.get('type', 'none'),
-            'w': headEnd.get('w', 'med'),
-            'len': headEnd.get('len', 'med')
-        }
-    if tailEnd is not None:
-        stroke_info['tail_end'] = {
-            'type': tailEnd.get('type', 'none'),
-            'w': tailEnd.get('w', 'med'),
-            'len': tailEnd.get('len', 'med')
+    # 폰트 크기
+    for para in shape.get('paragraphs', []):
+        for run in para.get('runs', []):
+            if run.get('font_size'):
+                parts.append(f"fs:{int(run['font_size'])}")
+                break
+        if parts:
+            break
+
+    # 폰트 볼드
+    for para in shape.get('paragraphs', []):
+        for run in para.get('runs', []):
+            if run.get('bold'):
+                parts.append("bold")
+                break
+        if parts and 'bold' in parts:
+            break
+
+    # 불릿
+    for para in shape.get('paragraphs', []):
+        if para.get('bullet'):
+            parts.append("bullet")
+            break
+
+    # 도형 크기 (대략적)
+    geom = shape.get('geometry', {})
+    width_class = 'w-sm' if geom.get('cx', 0) < 30 else ('w-md' if geom.get('cx', 0) < 60 else 'w-lg')
+    parts.append(width_class)
+
+    return '|'.join(parts) if parts else 'default'
+
+
+def detect_grid_pattern(shapes: List[Dict]) -> Tuple[bool, Dict]:
+    """그리드 패턴 감지"""
+    if len(shapes) < 2:
+        return False, {}
+
+    # 같은 Y 위치의 도형들 그룹화
+    y_groups = {}
+    tolerance = 5.0  # vmin
+
+    for shape in shapes:
+        y = shape.get('geometry', {}).get('y', 0)
+        matched = False
+        for key in y_groups:
+            if abs(y - key) < tolerance:
+                y_groups[key].append(shape)
+                matched = True
+                break
+        if not matched:
+            y_groups[y] = [shape]
+
+    # 각 행에 2개 이상의 도형이 있으면 그리드
+    grid_rows = [g for g in y_groups.values() if len(g) >= 2]
+
+    if grid_rows:
+        # 열 개수 추정
+        max_cols = max(len(row) for row in grid_rows)
+        return True, {
+            'rows': len(grid_rows),
+            'columns': max_cols,
+            'pattern': f'{len(grid_rows)}x{max_cols}'
         }
 
-    return stroke_info if stroke_info else None
-
-
-def extract_effects(sp_pr):
-    """도형의 효과 정보 추출"""
-    if sp_pr is None:
-        return None
-
-    effect_lst = sp_pr.find('a:effectLst', NAMESPACES)
-    if effect_lst is None:
-        return None
-
-    effects = []
-
-    # outerShdw (외부 그림자)
-    outer_shdw = effect_lst.find('a:outerShdw', NAMESPACES)
-    if outer_shdw is not None:
-        effects.append({
-            'type': 'outerShadow',
-            'blur': outer_shdw.get('blurRad', '0'),
-            'dist': outer_shdw.get('dist', '0'),
-            'dir': outer_shdw.get('dir', '0'),
-            'color': parse_color(outer_shdw)
-        })
-
-    # innerShdw (내부 그림자)
-    inner_shdw = effect_lst.find('a:innerShdw', NAMESPACES)
-    if inner_shdw is not None:
-        effects.append({
-            'type': 'innerShadow',
-            'blur': inner_shdw.get('blurRad', '0'),
-            'dist': inner_shdw.get('dist', '0'),
-            'dir': inner_shdw.get('dir', '0')
-        })
-
-    return effects if effects else None
-
-
-def extract_geometry(xfrm, slide_width=DEFAULT_SLIDE_WIDTH, slide_height=DEFAULT_SLIDE_HEIGHT):
-    """위치/크기 정보 추출"""
-    if xfrm is None:
-        return None
-
-    geom = {}
-
-    off = xfrm.find('a:off', NAMESPACES)
-    ext = xfrm.find('a:ext', NAMESPACES)
-
-    if off is not None:
-        x_emu = int(off.get('x', 0))
-        y_emu = int(off.get('y', 0))
-        geom['x_emu'] = x_emu
-        geom['y_emu'] = y_emu
-        geom['x_pct'] = round(x_emu / slide_width * 100, 2)
-        geom['y_pct'] = round(y_emu / slide_height * 100, 2)
-
-    if ext is not None:
-        cx_emu = int(ext.get('cx', 0))
-        cy_emu = int(ext.get('cy', 0))
-        geom['cx_emu'] = cx_emu
-        geom['cy_emu'] = cy_emu
-        geom['cx_pct'] = round(cx_emu / slide_width * 100, 2)
-        geom['cy_pct'] = round(cy_emu / slide_height * 100, 2)
-
-    return geom if geom else None
-
-
-def extract_preset_geometry(sp_pr):
-    """프리셋 도형 타입 추출"""
-    if sp_pr is None:
-        return None
-
-    prstGeom = sp_pr.find('a:prstGeom', NAMESPACES)
-    if prstGeom is not None:
-        return prstGeom.get('prst')
-
-    custGeom = sp_pr.find('a:custGeom', NAMESPACES)
-    if custGeom is not None:
-        return 'customGeometry'
-
-    return None
-
-
-def extract_text_content(shape):
-    """도형 내 텍스트 추출"""
-    txBody = shape.find('.//p:txBody', NAMESPACES)
-    if txBody is None:
-        return None
-
-    text_info = {'paragraphs': []}
-
-    for p in txBody.findall('a:p', NAMESPACES):
-        para = {'runs': []}
-        for r in p.findall('a:r', NAMESPACES):
-            t = r.find('a:t', NAMESPACES)
-            if t is not None and t.text:
-                para['runs'].append(t.text)
-        if para['runs']:
-            text_info['paragraphs'].append(para)
-
-    # 단순 텍스트 (한 줄)
-    all_text = ' '.join(
-        ' '.join(p['runs']) for p in text_info['paragraphs']
-    )
-    if all_text:
-        text_info['plain_text'] = all_text.strip()
-
-    return text_info if text_info.get('plain_text') else None
-
-
-def extract_shape(shape_elem, index, rels_map=None):
-    """p:sp 요소 추출"""
-    info = {'type': 'shape', 'index': index}
-
-    # 이름과 ID
-    nvSpPr = shape_elem.find('p:nvSpPr', NAMESPACES)
-    if nvSpPr is not None:
-        cNvPr = nvSpPr.find('p:cNvPr', NAMESPACES)
-        if cNvPr is not None:
-            info['id'] = cNvPr.get('id', '')
-            info['name'] = cNvPr.get('name', '')
-
-    # spPr (도형 속성)
-    spPr = shape_elem.find('p:spPr', NAMESPACES)
-
-    # 위치/크기
-    xfrm = spPr.find('a:xfrm', NAMESPACES) if spPr is not None else None
-    geom = extract_geometry(xfrm)
-    if geom:
-        info['geometry'] = geom
-
-    # 프리셋 도형
-    preset = extract_preset_geometry(spPr)
-    if preset:
-        info['preset'] = preset
-
-    # 채우기
-    fill = extract_fill(spPr)
-    if fill:
-        info['fill'] = fill
-
-    # 테두리
-    stroke = extract_stroke(spPr)
-    if stroke:
-        info['stroke'] = stroke
-
-    # 효과
-    effects = extract_effects(spPr)
-    if effects:
-        info['effects'] = effects
-
-    # 텍스트
-    text = extract_text_content(shape_elem)
-    if text:
-        info['text'] = text
-
-    # 원본 OOXML (compact)
-    info['ooxml_tag'] = 'p:sp'
-
-    return info
-
-
-def extract_picture(pic_elem, index, rels_map=None):
-    """p:pic 요소 추출 (이미지/SVG 아이콘)"""
-    info = {'type': 'picture', 'index': index}
-
-    # 이름과 ID
-    nvPicPr = pic_elem.find('p:nvPicPr', NAMESPACES)
-    if nvPicPr is not None:
-        cNvPr = nvPicPr.find('p:cNvPr', NAMESPACES)
-        if cNvPr is not None:
-            info['id'] = cNvPr.get('id', '')
-            info['name'] = cNvPr.get('name', '')
-            info['descr'] = cNvPr.get('descr', '')
-
-    # blipFill (이미지 참조)
-    blipFill = pic_elem.find('p:blipFill', NAMESPACES)
-    if blipFill is not None:
-        blip = blipFill.find('a:blip', NAMESPACES)
-        if blip is not None:
-            r_embed = blip.get(f'{{{NAMESPACES["r"]}}}embed')
-            if r_embed:
-                info['embed_rId'] = r_embed
-                # 관계 파일에서 실제 파일 경로 조회
-                if rels_map and r_embed in rels_map:
-                    info['target'] = rels_map[r_embed]
-
-            # SVG 아이콘 확인
-            svg_blip = blip.find('a:extLst/a:ext/asvg:svgBlip', NAMESPACES)
-            if svg_blip is not None:
-                svg_embed = svg_blip.get(f'{{{NAMESPACES["r"]}}}embed')
-                if svg_embed:
-                    info['svg_rId'] = svg_embed
-                    info['is_svg'] = True
-                    if rels_map and svg_embed in rels_map:
-                        info['svg_target'] = rels_map[svg_embed]
-
-    # spPr (위치/크기)
-    spPr = pic_elem.find('p:spPr', NAMESPACES)
-    if spPr is not None:
-        xfrm = spPr.find('a:xfrm', NAMESPACES)
-        geom = extract_geometry(xfrm)
-        if geom:
-            info['geometry'] = geom
-
-    info['ooxml_tag'] = 'p:pic'
-    return info
-
-
-def extract_connector(cxn_elem, index, rels_map=None):
-    """p:cxnSp 요소 추출 (연결선)"""
-    info = {'type': 'connector', 'index': index}
-
-    # 이름과 ID
-    nvCxnSpPr = cxn_elem.find('p:nvCxnSpPr', NAMESPACES)
-    if nvCxnSpPr is not None:
-        cNvPr = nvCxnSpPr.find('p:cNvPr', NAMESPACES)
-        if cNvPr is not None:
-            info['id'] = cNvPr.get('id', '')
-            info['name'] = cNvPr.get('name', '')
-
-        # 연결 정보
-        cNvCxnSpPr = nvCxnSpPr.find('p:cNvCxnSpPr', NAMESPACES)
-        if cNvCxnSpPr is not None:
-            stCxn = cNvCxnSpPr.find('a:stCxn', NAMESPACES)
-            endCxn = cNvCxnSpPr.find('a:endCxn', NAMESPACES)
-            if stCxn is not None:
-                info['start_connection'] = {
-                    'id': stCxn.get('id'),
-                    'idx': stCxn.get('idx')
-                }
-            if endCxn is not None:
-                info['end_connection'] = {
-                    'id': endCxn.get('id'),
-                    'idx': endCxn.get('idx')
-                }
-
-    # spPr (속성)
-    spPr = cxn_elem.find('p:spPr', NAMESPACES)
-    if spPr is not None:
-        # 위치/크기
-        xfrm = spPr.find('a:xfrm', NAMESPACES)
-        geom = extract_geometry(xfrm)
-        if geom:
-            info['geometry'] = geom
-
-        # 프리셋
-        preset = extract_preset_geometry(spPr)
-        if preset:
-            info['preset'] = preset
-
-        # 테두리 (연결선의 주요 속성)
-        stroke = extract_stroke(spPr)
-        if stroke:
-            info['stroke'] = stroke
-
-    info['ooxml_tag'] = 'p:cxnSp'
-    return info
-
-
-def extract_group(grp_elem, index, rels_map=None):
-    """p:grpSp 요소 추출 (그룹 도형)"""
-    info = {'type': 'group', 'index': index}
-
-    # 그룹 이름
-    nvGrpSpPr = grp_elem.find('p:nvGrpSpPr', NAMESPACES)
-    if nvGrpSpPr is not None:
-        cNvPr = nvGrpSpPr.find('p:cNvPr', NAMESPACES)
-        if cNvPr is not None:
-            info['id'] = cNvPr.get('id', '')
-            info['name'] = cNvPr.get('name', '')
-
-    # 그룹 속성 (위치/크기)
-    grpSpPr = grp_elem.find('p:grpSpPr', NAMESPACES)
-    if grpSpPr is not None:
-        xfrm = grpSpPr.find('a:xfrm', NAMESPACES)
-        if xfrm is not None:
-            geom = extract_geometry(xfrm)
-            if geom:
-                info['geometry'] = geom
-
-            # 그룹 내부 좌표계
-            chOff = xfrm.find('a:chOff', NAMESPACES)
-            chExt = xfrm.find('a:chExt', NAMESPACES)
-            if chOff is not None and chExt is not None:
-                info['child_offset'] = {
-                    'x': int(chOff.get('x', 0)),
-                    'y': int(chOff.get('y', 0))
-                }
-                info['child_extents'] = {
-                    'cx': int(chExt.get('cx', 0)),
-                    'cy': int(chExt.get('cy', 0))
-                }
-
-    # 하위 요소들
-    children = []
-    child_index = 0
-    for child in grp_elem:
-        tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
-        if tag == 'sp':
-            children.append(extract_shape(child, child_index, rels_map))
-            child_index += 1
-        elif tag == 'pic':
-            children.append(extract_picture(child, child_index, rels_map))
-            child_index += 1
-        elif tag == 'cxnSp':
-            children.append(extract_connector(child, child_index, rels_map))
-            child_index += 1
-        elif tag == 'grpSp':
-            children.append(extract_group(child, child_index, rels_map))
-            child_index += 1
-
-    if children:
-        info['children'] = children
-
-    info['ooxml_tag'] = 'p:grpSp'
-    return info
-
-
-def extract_graphic_frame(gf_elem, index, rels_map=None):
-    """p:graphicFrame 요소 추출 (SmartArt, 차트, 표)"""
-    info = {'type': 'graphicFrame', 'index': index}
-
-    # 이름
-    nvGraphicFramePr = gf_elem.find('p:nvGraphicFramePr', NAMESPACES)
-    if nvGraphicFramePr is not None:
-        cNvPr = nvGraphicFramePr.find('p:cNvPr', NAMESPACES)
-        if cNvPr is not None:
-            info['id'] = cNvPr.get('id', '')
-            info['name'] = cNvPr.get('name', '')
-
-    # 위치/크기
-    xfrm = gf_elem.find('p:xfrm', NAMESPACES)
-    geom = extract_geometry(xfrm)
-    if geom:
-        info['geometry'] = geom
-
-    # 그래픽 데이터 타입 확인
-    graphic = gf_elem.find('a:graphic', NAMESPACES)
-    if graphic is not None:
-        graphicData = graphic.find('a:graphicData', NAMESPACES)
-        if graphicData is not None:
-            uri = graphicData.get('uri', '')
-            info['graphic_uri'] = uri
-
-            # SmartArt (다이어그램)
-            if 'diagram' in uri:
-                info['graphic_type'] = 'diagram'
-                relIds = graphicData.find('dgm:relIds', NAMESPACES)
-                if relIds is not None:
-                    info['diagram_refs'] = {
-                        'dm': relIds.get(f'{{{NAMESPACES["r"]}}}dm'),
-                        'lo': relIds.get(f'{{{NAMESPACES["r"]}}}lo'),
-                        'qs': relIds.get(f'{{{NAMESPACES["r"]}}}qs'),
-                        'cs': relIds.get(f'{{{NAMESPACES["r"]}}}cs'),
+    return False, {}
+
+
+def detect_list_pattern(shapes: List[Dict]) -> Tuple[bool, Dict]:
+    """리스트 패턴 감지 (세로 배열)"""
+    if len(shapes) < 2:
+        return False, {}
+
+    # X 위치가 비슷하고 Y가 순차적인 도형들
+    x_tolerance = 10.0  # vmin
+    y_threshold = 3.0  # 최소 Y 간격
+
+    # X 위치로 그룹화
+    x_groups = {}
+    for shape in shapes:
+        x = shape.get('geometry', {}).get('x', 0)
+        matched = False
+        for key in x_groups:
+            if abs(x - key) < x_tolerance:
+                x_groups[key].append(shape)
+                matched = True
+                break
+        if not matched:
+            x_groups[x] = [shape]
+
+    # 가장 큰 그룹 확인
+    largest_group = max(x_groups.values(), key=len) if x_groups else []
+
+    if len(largest_group) >= 2:
+        # Y 순서 확인
+        sorted_by_y = sorted(largest_group, key=lambda s: s.get('geometry', {}).get('y', 0))
+        y_diffs = []
+        for i in range(1, len(sorted_by_y)):
+            y1 = sorted_by_y[i-1].get('geometry', {}).get('y', 0)
+            y2 = sorted_by_y[i].get('geometry', {}).get('y', 0)
+            y_diffs.append(y2 - y1)
+
+        # 간격이 일정한지 확인
+        if y_diffs and all(d > y_threshold for d in y_diffs):
+            avg_spacing = sum(y_diffs) / len(y_diffs)
+            return True, {
+                'count': len(largest_group),
+                'spacing': round(avg_spacing, 1),
+                'shapes': [s['id'] for s in sorted_by_y]
+            }
+
+    return False, {}
+
+
+def group_similar_shapes(shapes: List[Dict]) -> List[TextGroupCandidate]:
+    """스타일이 비슷한 도형들 그룹화"""
+    groups = []
+
+    # 스타일별로 도형 분류
+    style_groups: Dict[str, List[Dict]] = {}
+    for shape in shapes:
+        sig = get_shape_style_signature(shape)
+        if sig not in style_groups:
+            style_groups[sig] = []
+        style_groups[sig].append(shape)
+
+    # 그룹 생성
+    group_idx = 0
+    for sig, group_shapes in style_groups.items():
+        if len(group_shapes) < 2:
+            continue
+
+        # 위치 패턴 분석
+        is_grid, grid_info = detect_grid_pattern(group_shapes)
+        is_list, list_info = detect_list_pattern(group_shapes)
+
+        evidence = [f"동일 스타일: {sig}"]
+
+        if is_grid:
+            group_type = "grid"
+            evidence.append(f"그리드 패턴: {grid_info.get('pattern', '?')}")
+            confidence = 0.85
+        elif is_list:
+            group_type = "list"
+            evidence.append(f"리스트 패턴: {list_info.get('count', '?')}개")
+            confidence = 0.80
+        else:
+            group_type = "mixed"
+            evidence.append("위치 패턴 불명확")
+            confidence = 0.60
+
+        # 샘플 텍스트
+        sample_texts = []
+        for s in group_shapes[:3]:
+            for para in s.get('paragraphs', []):
+                if para.get('text'):
+                    sample_texts.append(para['text'][:50])
+                    break
+
+        # 공통 스타일 추출
+        common_style = {}
+        if group_shapes:
+            first = group_shapes[0]
+            for para in first.get('paragraphs', []):
+                for run in para.get('runs', []):
+                    common_style = {
+                        'font_name': run.get('font_name'),
+                        'font_size': run.get('font_size'),
+                        'bold': run.get('bold')
                     }
+                    break
+                break
 
-            # 차트
-            elif 'chart' in uri:
-                info['graphic_type'] = 'chart'
-                chart = graphicData.find('c:chart', NAMESPACES)
-                if chart is not None:
-                    chart_rid = chart.get(f'{{{NAMESPACES["r"]}}}id')
-                    if chart_rid:
-                        info['chart_rId'] = chart_rid
+        groups.append(TextGroupCandidate(
+            id=f"group-{group_idx}",
+            shapes=[s['id'] for s in group_shapes],
+            group_type=group_type,
+            confidence=confidence,
+            evidence=evidence,
+            sample_texts=sample_texts,
+            common_style=common_style
+        ))
+        group_idx += 1
 
-            # 표
-            elif 'table' in uri:
-                info['graphic_type'] = 'table'
-
-    info['ooxml_tag'] = 'p:graphicFrame'
-    return info
-
-
-def parse_rels_file(rels_content):
-    """관계 파일에서 rId → target 매핑 생성"""
-    if not rels_content:
-        return {}
-
-    rels_map = {}
-    try:
-        root = ET.fromstring(rels_content)
-        for rel in root.findall('.//{http://schemas.openxmlformats.org/package/2006/relationships}Relationship'):
-            rid = rel.get('Id', '')
-            target = rel.get('Target', '')
-            rel_type = rel.get('Type', '')
-            if rid and target:
-                rels_map[rid] = {
-                    'target': target,
-                    'type': rel_type.split('/')[-1] if '/' in rel_type else rel_type
-                }
-    except ET.ParseError:
-        pass
-
-    return rels_map
+    return groups
 
 
-def analyze_slide(pptx_path, slide_num):
-    """슬라이드 분석"""
-    result = {
-        'slide_num': slide_num,
-        'source': str(pptx_path),
-        'analyzed_at': datetime.now().isoformat(),
-        'elements': []
-    }
+def generate_placeholder_candidates(shapes: List[Dict], groups: List[TextGroupCandidate]) -> List[PlaceholderCandidate]:
+    """플레이스홀더 후보 생성"""
+    candidates = []
 
-    # 슬라이드 XML 추출
-    slide_xml = extract_slide_ooxml(pptx_path, slide_num)
-    if not slide_xml:
-        result['error'] = f'Slide {slide_num} not found'
-        return result
+    # 그룹에 속한 shape ID 수집
+    grouped_ids = set()
+    for g in groups:
+        grouped_ids.update(g.shapes)
 
-    # 관계 파일 로드
-    rels_content = extract_slide_rels(pptx_path, slide_num)
-    rels_map = parse_rels_file(rels_content)
+    for shape in shapes:
+        shape_id = shape['id']
 
-    # XML 파싱
-    register_namespaces()
-    try:
-        root = ET.fromstring(slide_xml)
-    except ET.ParseError as e:
-        result['error'] = f'XML parse error: {e}'
-        return result
+        # 텍스트가 있는 도형만
+        text_preview = ""
+        for para in shape.get('paragraphs', []):
+            if para.get('text'):
+                text_preview = para['text'][:100]
+                break
 
-    # spTree 찾기
-    spTree = root.find('.//p:spTree', NAMESPACES)
-    if spTree is None:
-        result['error'] = 'spTree not found'
-        return result
+        if not text_preview:
+            continue
 
-    # 모든 요소 추출
-    element_index = 0
-    for child in spTree:
-        tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
+        # 플레이스홀더 이름/타입 추천
+        if shape.get('placeholder_type'):
+            ph_type = shape['placeholder_type'].lower()
+            if 'title' in ph_type:
+                suggested_name = "title"
+                suggested_type = "text"
+            elif 'subtitle' in ph_type:
+                suggested_name = "subtitle"
+                suggested_type = "text"
+            else:
+                suggested_name = ph_type
+                suggested_type = "text"
+        elif shape_id in grouped_ids:
+            # 그룹에 속한 경우 → 배열 항목
+            suggested_name = "items"
+            suggested_type = "array"
+        else:
+            # 단독 텍스트
+            suggested_name = "body"
+            suggested_type = "text"
 
-        if tag == 'sp':
-            elem = extract_shape(child, element_index, rels_map)
-            result['elements'].append(elem)
-            element_index += 1
-        elif tag == 'pic':
-            elem = extract_picture(child, element_index, rels_map)
-            result['elements'].append(elem)
-            element_index += 1
-        elif tag == 'cxnSp':
-            elem = extract_connector(child, element_index, rels_map)
-            result['elements'].append(elem)
-            element_index += 1
-        elif tag == 'grpSp':
-            elem = extract_group(child, element_index, rels_map)
-            result['elements'].append(elem)
-            element_index += 1
-        elif tag == 'graphicFrame':
-            elem = extract_graphic_frame(child, element_index, rels_map)
-            result['elements'].append(elem)
-            element_index += 1
+        # 스타일 힌트
+        style_hints = {}
+        for para in shape.get('paragraphs', []):
+            if para.get('bullet'):
+                style_hints['bullet'] = True
+            if para.get('alignment'):
+                style_hints['alignment'] = para['alignment']
+            for run in para.get('runs', []):
+                if run.get('bold'):
+                    style_hints['bold'] = True
+                if run.get('font_size'):
+                    style_hints['font_size'] = run['font_size']
+                break
 
-    # 통계
-    result['summary'] = {
-        'total_elements': len(result['elements']),
-        'shapes': sum(1 for e in result['elements'] if e['type'] == 'shape'),
-        'pictures': sum(1 for e in result['elements'] if e['type'] == 'picture'),
-        'connectors': sum(1 for e in result['elements'] if e['type'] == 'connector'),
-        'groups': sum(1 for e in result['elements'] if e['type'] == 'group'),
-        'graphic_frames': sum(1 for e in result['elements'] if e['type'] == 'graphicFrame'),
-    }
+        candidates.append(PlaceholderCandidate(
+            shape_id=shape_id,
+            suggested_name=suggested_name,
+            suggested_type=suggested_type,
+            text_preview=text_preview,
+            geometry=shape.get('geometry', {}),
+            style_hints=style_hints
+        ))
 
-    # SVG 아이콘 목록
-    svg_icons = [e for e in result['elements'] if e.get('is_svg')]
-    if svg_icons:
-        result['svg_icons'] = [
-            {'name': e.get('name'), 'descr': e.get('descr'), 'target': e.get('svg_target')}
-            for e in svg_icons
-        ]
-
-    return result
+    return candidates
 
 
-def output_yaml(data, output_path=None):
-    """결과 출력"""
-    if YAML_AVAILABLE:
-        yaml_str = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
+def analyze_layout_pattern(shapes: List[Dict], groups: List[TextGroupCandidate]) -> str:
+    """레이아웃 패턴 분류"""
+    if len(shapes) <= 1:
+        return "single"
+
+    is_grid, _ = detect_grid_pattern(shapes)
+    if is_grid:
+        return "grid"
+
+    is_list, _ = detect_list_pattern(shapes)
+    if is_list:
+        return "list"
+
+    if groups:
+        return "mixed"
+
+    return "single"
+
+
+def analyze_slide(slide_data: Dict) -> ContentAnalysis:
+    """슬라이드 콘텐츠 분석"""
+
+    # 콘텐츠 영역 필터링
+    content_shapes = filter_content_shapes(slide_data)
+
+    # 텍스트 그룹 탐지
+    text_groups = group_similar_shapes(content_shapes)
+
+    # 플레이스홀더 후보 생성
+    placeholders = generate_placeholder_candidates(content_shapes, text_groups)
+
+    # 레이아웃 패턴 분석
+    layout_pattern = analyze_layout_pattern(content_shapes, text_groups)
+
+    return ContentAnalysis(
+        slide_index=slide_data.get('index', 0),
+        content_zone=slide_data.get('content_zone', {}),
+        text_groups=text_groups,
+        placeholders=placeholders,
+        layout_pattern=layout_pattern,
+        element_count=len(content_shapes)
+    )
+
+
+def dataclass_to_dict(obj) -> Any:
+    """dataclass를 dict로 변환"""
+    if hasattr(obj, '__dataclass_fields__'):
+        return {k: dataclass_to_dict(v) for k, v in asdict(obj).items()}
+    elif isinstance(obj, list):
+        return [dataclass_to_dict(item) for item in obj]
+    elif isinstance(obj, dict):
+        return {k: dataclass_to_dict(v) for k, v in obj.items()}
     else:
-        # YAML 없으면 간단 포맷
-        import json
-        yaml_str = json.dumps(data, ensure_ascii=False, indent=2)
+        return obj
 
-    if output_path:
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(yaml_str)
-        print(f"Output saved to: {output_path}")
-    else:
-        print(yaml_str)
+
+def generate_llm_prompt(analysis: ContentAnalysis) -> str:
+    """LLM 판단용 프롬프트 생성"""
+    prompt = f"""## 슬라이드 {analysis.slide_index} 콘텐츠 분석
+
+### 레이아웃 패턴: {analysis.layout_pattern}
+### 요소 개수: {analysis.element_count}
+
+### 텍스트 그룹 후보
+"""
+
+    for group in analysis.text_groups:
+        prompt += f"""
+**{group.id}** ({group.group_type}, 신뢰도: {group.confidence:.0%})
+- 도형: {', '.join(group.shapes)}
+- 근거: {', '.join(group.evidence)}
+- 샘플: {group.sample_texts[:2]}
+"""
+
+    prompt += """
+### 플레이스홀더 후보
+"""
+
+    for ph in analysis.placeholders:
+        prompt += f"""
+- **{ph.shape_id}**: {ph.suggested_name} ({ph.suggested_type})
+  - 텍스트: "{ph.text_preview[:50]}..."
+  - 위치: x={ph.geometry.get('x', 0):.1f}%, y={ph.geometry.get('y', 0):.1f}%
+"""
+
+    prompt += """
+### 판단 요청
+
+위 분석을 바탕으로 다음을 결정해 주세요:
+
+1. 텍스트 그룹이 실제로 리스트/그리드인가요?
+2. 각 플레이스홀더의 이름과 타입을 확정해 주세요.
+3. 배열 플레이스홀더의 경우 item_schema를 정의해 주세요.
+
+JSON 형식으로 응답해 주세요:
+```json
+{
+  "placeholders": [
+    { "id": "title", "type": "text", "shapes": ["shape-0"] },
+    { "id": "items", "type": "array", "shapes": ["shape-1", "shape-2", "shape-3"],
+      "item_schema": { "title": "string", "description": "string" }
+    }
+  ]
+}
+```
+"""
+
+    return prompt
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='슬라이드 콘텐츠 OOXML 분석기',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python content-analyzer.py presentation.pptx --slide 11
-  python content-analyzer.py presentation.pptx --slide 11 --output result.yaml
-  python content-analyzer.py presentation.pptx --all
-        """
+        description="콘텐츠 영역 분석 및 플레이스홀더 후보 탐지"
     )
-    parser.add_argument('pptx_path', help='PPTX 파일 경로')
-    parser.add_argument('--slide', '-s', type=int, help='분석할 슬라이드 번호 (1-based)')
-    parser.add_argument('--all', '-a', action='store_true', help='모든 슬라이드 분석')
-    parser.add_argument('--output', '-o', help='출력 파일 경로 (YAML)')
-    parser.add_argument('--summary', action='store_true', help='요약만 출력')
+    parser.add_argument("input", help="slide-crawler 출력 JSON 파일")
+    parser.add_argument("--output", "-o", help="출력 JSON 파일")
+    parser.add_argument("--prompt", action="store_true", help="LLM 프롬프트 출력")
 
     args = parser.parse_args()
 
-    pptx_path = Path(args.pptx_path)
-    if not pptx_path.exists():
-        print(f"Error: File not found: {pptx_path}")
+    input_path = Path(args.input)
+    if not input_path.exists():
+        print(f"Error: 파일을 찾을 수 없습니다: {args.input}")
         sys.exit(1)
 
-    if args.all:
-        # 모든 슬라이드 분석
-        slide_count = get_slide_count(pptx_path)
-        print(f"Analyzing {slide_count} slides...")
+    try:
+        data = load_parsed_data(input_path)
 
         results = []
-        for i in range(1, slide_count + 1):
-            result = analyze_slide(pptx_path, i)
-            results.append(result)
-            if args.summary:
-                s = result.get('summary', {})
-                print(f"  Slide {i}: {s.get('total_elements', 0)} elements "
-                      f"({s.get('shapes', 0)} shapes, {s.get('pictures', 0)} pics, "
-                      f"{s.get('connectors', 0)} connectors)")
+        for slide_data in data.get('slides', []):
+            analysis = analyze_slide(slide_data)
+            results.append(analysis)
 
-        if not args.summary:
-            output_yaml({'slides': results}, args.output)
+            if args.prompt:
+                print(generate_llm_prompt(analysis))
+                print("\n" + "="*60 + "\n")
 
-    elif args.slide:
-        # 단일 슬라이드 분석
-        result = analyze_slide(pptx_path, args.slide)
-        output_yaml(result, args.output)
+        # 출력
+        output_data = {
+            "source_file": data.get('source_file', ''),
+            "analyses": [dataclass_to_dict(r) for r in results]
+        }
 
-    else:
-        # 기본: 슬라이드 개수 표시
-        slide_count = get_slide_count(pptx_path)
-        print(f"PPTX contains {slide_count} slides.")
-        print("Use --slide N or --all to analyze.")
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump(output_data, f, indent=2, ensure_ascii=False)
+            print(f"저장됨: {args.output}")
+        elif not args.prompt:
+            print(json.dumps(output_data, indent=2, ensure_ascii=False))
+
+        # 통계
+        total_groups = sum(len(r.text_groups) for r in results)
+        total_placeholders = sum(len(r.placeholders) for r in results)
+        print(f"분석 완료: {len(results)} 슬라이드, {total_groups} 그룹, {total_placeholders} 플레이스홀더 후보")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

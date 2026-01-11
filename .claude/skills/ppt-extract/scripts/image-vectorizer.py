@@ -1,911 +1,443 @@
 #!/usr/bin/env python3
 """
-Image Vectorizer - 이미지를 SVG로 변환
+이미지에서 디자인 스타일 추출 (style-extractor.py와 연계).
 
-래스터 이미지(PNG, JPG 등)를 벡터 그래픽(SVG)으로 변환합니다.
-VTracer 라이브러리를 사용하여 고품질 벡터화를 수행합니다.
+이미지 분석을 통해:
+1. 색상 팔레트 추출 (K-means)
+2. 타이포그래피 힌트 감지 (OCR 없이 영역 분석)
+3. 레이아웃 패턴 감지 (엣지/컨투어 분석)
+4. 스타일 힌트 추출 (둥근 모서리, 그림자 등)
 
 Usage:
-    python image-vectorizer.py <image> --output <output.svg>
-    python image-vectorizer.py icon.png --preset icon
-    python image-vectorizer.py diagram.png --preset diagram --output result.svg
-
-Examples:
-    # 기본 변환 (자동 프리셋)
-    python image-vectorizer.py icon.png --output icon.svg
-
-    # 아이콘 프리셋 (최고 품질)
-    python image-vectorizer.py logo.png --preset icon --output logo.svg
-
-    # 다이어그램 프리셋
-    python image-vectorizer.py flowchart.png --preset diagram
-
-    # 텍스트 제거 후 변환
-    python image-vectorizer.py diagram.png --remove-text --output clean.svg
-
-    # 매끄러운 곡선 (smooth 프리셋)
-    python image-vectorizer.py logo.png --preset smooth
-
-    # 배치 변환 (디렉토리)
-    python image-vectorizer.py ./images/ --output ./svgs/ --preset logo
-
-    # 커스텀 옵션
-    python image-vectorizer.py image.png --color-precision 8 --corner-threshold 45
-
-Dependencies:
-    pip install vtracer Pillow
-    pip install opencv-python easyocr  # 텍스트 제거용 (선택)
+    python image-vectorizer.py reference.png --output themes/new-theme/theme.yaml
+    python image-vectorizer.py screenshot.png --analyze-only
 """
 
 import argparse
+import colorsys
+import json
 import sys
-import os
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
-    import vtracer
-    HAS_VTRACER = True
-except ImportError:
-    HAS_VTRACER = False
-
-try:
-    from PIL import Image
-    HAS_PIL = True
-except ImportError:
-    HAS_PIL = False
-
-try:
-    import cv2
+    from PIL import Image, ImageFilter, ImageStat
     import numpy as np
-    HAS_CV2 = True
+    from sklearn.cluster import KMeans
+    HAS_DEPS = True
 except ImportError:
-    HAS_CV2 = False
+    HAS_DEPS = False
 
 try:
-    import easyocr
-    HAS_EASYOCR = True
+    import yaml
+    HAS_YAML = True
 except ImportError:
-    HAS_EASYOCR = False
+    HAS_YAML = False
 
 
-def remove_text_from_image(
-    image_path: str,
-    output_path: str = None,
-    return_placeholders: bool = True
-) -> Dict[str, Any]:
-    """
-    이미지에서 텍스트를 감지하고 인페인팅으로 제거
-    텍스트 위치를 플레이스홀더로 반환
+@dataclass
+class ExtractedColor:
+    """추출된 색상"""
+    hex: str
+    rgb: Tuple[int, int, int]
+    percentage: float  # 이미지 내 비중
+    role: Optional[str] = None  # primary, secondary, accent, background, text
 
-    Args:
-        image_path: 입력 이미지 경로
-        output_path: 출력 이미지 경로 (None이면 자동 생성)
-        return_placeholders: True면 텍스트 위치 정보 반환
 
-    Returns:
-        {
-            'image_path': 텍스트 제거된 이미지 경로,
-            'placeholders': [
-                {
-                    'type': 'text',
-                    'bbox': [x1, y1, x2, y2],  # 픽셀 좌표
-                    'bbox_percent': [x%, y%, w%, h%],  # 퍼센트 좌표
-                    'content': '원본 텍스트',
-                    'confidence': 0.95
-                },
-                ...
-            ]
-        }
-    """
-    if not HAS_CV2:
-        raise ImportError("opencv-python이 필요합니다. pip install opencv-python")
-    if not HAS_EASYOCR:
-        raise ImportError("easyocr가 필요합니다. pip install easyocr")
+@dataclass
+class LayoutHint:
+    """레이아웃 힌트"""
+    type: str  # grid, list, centered, asymmetric
+    columns: Optional[int] = None
+    rows: Optional[int] = None
+    has_header: bool = False
+    has_sidebar: bool = False
 
-    # 이미지 로드
-    img = cv2.imread(image_path)
-    if img is None:
-        raise ValueError(f"이미지를 로드할 수 없습니다: {image_path}")
 
-    img_height, img_width = img.shape[:2]
+@dataclass
+class StyleHint:
+    """스타일 힌트"""
+    border_radius: str = "0px"
+    has_shadows: bool = False
+    has_gradients: bool = False
+    mood: str = "neutral"  # modern, classic, playful, minimal
 
-    # EasyOCR로 텍스트 감지
-    print("  텍스트 감지 중 (EasyOCR)...")
-    reader = easyocr.Reader(['en', 'ko'], gpu=False, verbose=False)
-    results = reader.readtext(image_path)
 
-    # 마스크 생성 및 플레이스홀더 수집
-    mask = np.zeros(img.shape[:2], dtype=np.uint8)
-    placeholders = []
+@dataclass
+class ImageAnalysis:
+    """이미지 분석 결과"""
+    colors: List[ExtractedColor]
+    layout: LayoutHint
+    style: StyleHint
+    dominant_hue: str  # warm, cool, neutral
+    contrast_level: str  # high, medium, low
 
-    for (bbox, text, prob) in results:
-        if prob > 0.3:  # 신뢰도 30% 이상
-            # 바운딩 박스 좌표 (4 포인트 → 사각형)
-            pts = np.array(bbox, dtype=np.int32)
-            x_coords = [p[0] for p in bbox]
-            y_coords = [p[1] for p in bbox]
-            x1, y1 = min(x_coords), min(y_coords)
-            x2, y2 = max(x_coords), max(y_coords)
 
-            # 플레이스홀더 정보 저장
-            placeholders.append({
-                'type': 'text',
-                'bbox': [int(x1), int(y1), int(x2), int(y2)],
-                'bbox_percent': {
-                    'x': round(x1 / img_width * 100, 2),
-                    'y': round(y1 / img_height * 100, 2),
-                    'width': round((x2 - x1) / img_width * 100, 2),
-                    'height': round((y2 - y1) / img_height * 100, 2),
-                },
-                'content': text,
-                'confidence': round(prob, 3),
-            })
+def rgb_to_hex(r: int, g: int, b: int) -> str:
+    """RGB를 HEX로 변환"""
+    return f"#{r:02x}{g:02x}{b:02x}"
 
-            # 마스크에 텍스트 영역 채우기
-            cv2.fillPoly(mask, [pts], 255)
 
-    # 마스크 확장 (텍스트 주변 여백 포함)
-    if np.any(mask):
-        kernel = np.ones((5, 5), np.uint8)
-        mask = cv2.dilate(mask, kernel, iterations=2)
+def hex_to_rgb(hex_color: str) -> Tuple[int, int, int]:
+    """HEX를 RGB로 변환"""
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
-    # 인페인팅 (텍스트 영역 채우기)
-    if np.any(mask):
-        print(f"  {len(placeholders)}개 텍스트 영역 인페인팅...")
-        result = cv2.inpaint(img, mask, inpaintRadius=7, flags=cv2.INPAINT_TELEA)
+
+def get_luminance(r: int, g: int, b: int) -> float:
+    """상대 휘도 계산"""
+    return 0.299 * r + 0.587 * g + 0.114 * b
+
+
+def get_saturation(r: int, g: int, b: int) -> float:
+    """채도 계산"""
+    h, l, s = colorsys.rgb_to_hls(r/255, g/255, b/255)
+    return s
+
+
+def get_hue(r: int, g: int, b: int) -> float:
+    """색조(Hue) 계산 (0-360)"""
+    h, l, s = colorsys.rgb_to_hls(r/255, g/255, b/255)
+    return h * 360
+
+
+def classify_hue_temperature(colors: List[ExtractedColor]) -> str:
+    """색상 온도 분류"""
+    warm_count = 0
+    cool_count = 0
+
+    for color in colors:
+        hue = get_hue(*color.rgb)
+        sat = get_saturation(*color.rgb)
+
+        if sat < 0.1:  # 무채색은 제외
+            continue
+
+        # 따뜻한 색: 0-60 (빨강~노랑) 또는 300-360 (마젠타)
+        if hue < 60 or hue > 300:
+            warm_count += color.percentage
+        # 차가운 색: 180-300 (청록~보라)
+        elif 180 <= hue <= 300:
+            cool_count += color.percentage
+
+    if warm_count > cool_count * 1.5:
+        return "warm"
+    elif cool_count > warm_count * 1.5:
+        return "cool"
+    return "neutral"
+
+
+def extract_colors_kmeans(image: Image.Image, n_colors: int = 8) -> List[ExtractedColor]:
+    """K-means로 주요 색상 추출"""
+    # 이미지 리사이즈
+    img = image.copy()
+    img.thumbnail((200, 200))
+    img = img.convert('RGB')
+
+    # numpy 배열로 변환
+    pixels = np.array(img).reshape(-1, 3)
+
+    # K-means 클러스터링
+    kmeans = KMeans(n_clusters=n_colors, random_state=42, n_init=10)
+    kmeans.fit(pixels)
+
+    # 클러스터 비중 계산
+    labels, counts = np.unique(kmeans.labels_, return_counts=True)
+    total_pixels = len(pixels)
+
+    colors = []
+    for i, center in enumerate(kmeans.cluster_centers_):
+        r, g, b = int(center[0]), int(center[1]), int(center[2])
+        percentage = counts[i] / total_pixels if i < len(counts) else 0
+
+        colors.append(ExtractedColor(
+            hex=rgb_to_hex(r, g, b),
+            rgb=(r, g, b),
+            percentage=round(percentage * 100, 1)
+        ))
+
+    # 비중 순으로 정렬
+    colors.sort(key=lambda c: c.percentage, reverse=True)
+    return colors
+
+
+def assign_color_roles(colors: List[ExtractedColor]) -> List[ExtractedColor]:
+    """색상에 역할 부여"""
+    if not colors:
+        return colors
+
+    # 복사본 생성
+    result = [ExtractedColor(**asdict(c)) for c in colors]
+
+    # 가장 밝은 색 → background
+    brightest = max(result, key=lambda c: get_luminance(*c.rgb))
+    brightest.role = "background"
+
+    # 가장 어두운 색 → text
+    darkest = min(result, key=lambda c: get_luminance(*c.rgb))
+    if darkest != brightest:
+        darkest.role = "text"
+
+    # 가장 채도가 높은 색 → primary (background, text 제외)
+    saturated = [c for c in result if c.role is None]
+    if saturated:
+        most_saturated = max(saturated, key=lambda c: get_saturation(*c.rgb))
+        most_saturated.role = "primary"
+
+        # 두 번째로 채도가 높은 색 → accent
+        remaining = [c for c in saturated if c.role is None]
+        if remaining:
+            second_saturated = max(remaining, key=lambda c: get_saturation(*c.rgb))
+            second_saturated.role = "accent"
+
+    # 나머지 → secondary
+    for c in result:
+        if c.role is None:
+            c.role = "secondary"
+            break
+
+    return result
+
+
+def analyze_layout(image: Image.Image) -> LayoutHint:
+    """레이아웃 패턴 분석 (엣지 감지 기반)"""
+    # 그레이스케일 변환
+    gray = image.convert('L')
+    gray = gray.resize((100, 100))
+
+    # 엣지 감지
+    edges = gray.filter(ImageFilter.FIND_EDGES)
+    edge_array = np.array(edges)
+
+    # 수평/수직 엣지 분석
+    h_edges = np.sum(edge_array, axis=1)  # 행별 합 (수평 라인)
+    v_edges = np.sum(edge_array, axis=0)  # 열별 합 (수직 라인)
+
+    # 강한 수평 라인 개수 (헤더 감지)
+    h_threshold = np.percentile(h_edges, 90)
+    strong_h_lines = np.sum(h_edges > h_threshold)
+
+    # 강한 수직 라인 개수 (그리드/컬럼 감지)
+    v_threshold = np.percentile(v_edges, 90)
+    strong_v_lines = np.sum(v_edges > v_threshold)
+
+    # 레이아웃 타입 추정
+    has_header = strong_h_lines > 5 and h_edges[:20].max() > h_threshold
+
+    if strong_v_lines > 15:
+        layout_type = "grid"
+        columns = min(strong_v_lines // 5, 6)
+    elif strong_h_lines > 10:
+        layout_type = "list"
+        columns = 1
     else:
-        result = img
-        print("  경고: 텍스트가 감지되지 않았습니다.")
-
-    # 출력 경로 설정
-    if output_path is None:
-        p = Path(image_path)
-        output_path = str(p.parent / f"{p.stem}_notext{p.suffix}")
-
-    cv2.imwrite(output_path, result)
-
-    return {
-        'image_path': output_path,
-        'original_size': {'width': img_width, 'height': img_height},
-        'placeholders': placeholders,
-    }
-
-
-def detect_icons_by_color(image_path: str, min_size: int = 20, max_size: int = 100) -> list:
-    """
-    색상 기반으로 아이콘 영역 감지 (흰색/단색 아이콘)
-
-    Args:
-        image_path: 입력 이미지 경로
-        min_size: 최소 아이콘 크기 (픽셀)
-        max_size: 최대 아이콘 크기 (픽셀)
-
-    Returns:
-        [{'bbox': [x1, y1, x2, y2], 'type': 'icon'}, ...]
-    """
-    if not HAS_CV2:
-        return []
-
-    img = cv2.imread(image_path)
-    if img is None:
-        return []
-
-    img_height, img_width = img.shape[:2]
-
-    # 흰색 영역 감지 (아이콘이 보통 흰색)
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-    # 흰색/밝은색 마스크
-    lower_white = np.array([0, 0, 200])
-    upper_white = np.array([180, 30, 255])
-    white_mask = cv2.inRange(hsv, lower_white, upper_white)
-
-    # 작은 노이즈 제거
-    kernel = np.ones((3, 3), np.uint8)
-    white_mask = cv2.morphologyEx(white_mask, cv2.MORPH_OPEN, kernel)
-    white_mask = cv2.morphologyEx(white_mask, cv2.MORPH_CLOSE, kernel)
-
-    # 컨투어 찾기
-    contours, _ = cv2.findContours(white_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    icons = []
-    for cnt in contours:
-        x, y, w, h = cv2.boundingRect(cnt)
-        area = cv2.contourArea(cnt)
-
-        # 크기 필터
-        if min_size <= w <= max_size and min_size <= h <= max_size:
-            # 정사각형에 가까운 것만 (아이콘 특성)
-            aspect_ratio = w / h if h > 0 else 0
-            if 0.5 <= aspect_ratio <= 2.0 and area > min_size * min_size * 0.3:
-                icons.append({
-                    'type': 'icon',
-                    'bbox': [x, y, x + w, y + h],
-                    'bbox_percent': {
-                        'x': round(x / img_width * 100, 2),
-                        'y': round(y / img_height * 100, 2),
-                        'width': round(w / img_width * 100, 2),
-                        'height': round(h / img_height * 100, 2),
-                    },
-                    'estimated_size': max(w, h),
-                })
-
-    return icons
-
-
-def remove_icons_from_image(
-    image_path: str,
-    output_path: str = None,
-    min_size: int = 15,
-    max_size: int = 150,
-    min_segment_area: int = 5000,
-    return_placeholders: bool = True
-) -> Dict[str, Any]:
-    """
-    이미지에서 컬러 세그먼트 내부의 흰색 아이콘을 감지하고 인페인팅으로 제거
-    아이콘 위치를 플레이스홀더로 반환
-
-    Args:
-        image_path: 입력 이미지 경로
-        output_path: 출력 이미지 경로 (None이면 자동 생성)
-        min_size: 최소 아이콘 크기 (픽셀)
-        max_size: 최대 아이콘 크기 (픽셀)
-        min_segment_area: 최소 세그먼트 면적 (픽셀²)
-        return_placeholders: True면 아이콘 위치 정보 반환
-
-    Returns:
-        {
-            'image_path': 아이콘 제거된 이미지 경로,
-            'placeholders': [{type, bbox, bbox_percent}, ...]
-        }
-    """
-    if not HAS_CV2:
-        print("[경고] opencv-python이 설치되지 않음. 아이콘 제거 불가")
-        return {'image_path': image_path, 'placeholders': []}
-
-    img = cv2.imread(image_path)
-    if img is None:
-        return {'image_path': image_path, 'placeholders': []}
-
-    img_height, img_width = img.shape[:2]
-    print(f"  아이콘 감지 중...")
-
-    # HSV로 변환
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-    # 1. 컬러(채도 있는) 영역 마스크 생성
-    lower_colored = np.array([0, 60, 80])
-    upper_colored = np.array([180, 255, 255])
-    colored_mask = cv2.inRange(hsv, lower_colored, upper_colored)
-
-    # 2. 컬러 영역의 컨투어 찾기 (세그먼트)
-    contours, _ = cv2.findContours(colored_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-    # 큰 컬러 영역들만 필터링 (세그먼트)
-    segments = []
-    for cnt in contours:
-        area = cv2.contourArea(cnt)
-        if area > min_segment_area:
-            x, y, w, h = cv2.boundingRect(cnt)
-            segments.append({'contour': cnt, 'bbox': (x, y, w, h), 'area': area})
-
-    print(f"  컬러 세그먼트: {len(segments)}개")
-
-    # 3. 각 세그먼트 내부에서 흰색 아이콘 찾기
-    inpaint_mask = np.zeros((img_height, img_width), dtype=np.uint8)
-    placeholders = []
-    seen_positions = set()  # 중복 방지
-
-    for seg in segments:
-        x, y, w, h = seg['bbox']
-
-        # 세그먼트 영역 자르기
-        roi_hsv = hsv[y:y+h, x:x+w]
-
-        # 세그먼트 마스크 생성
-        seg_mask = np.zeros((h, w), dtype=np.uint8)
-        shifted_cnt = seg['contour'] - [x, y]
-        cv2.drawContours(seg_mask, [shifted_cnt], -1, 255, -1)
-
-        # 흰색 영역 찾기
-        lower_white = np.array([0, 0, 200])
-        upper_white = np.array([180, 50, 255])
-        white_in_roi = cv2.inRange(roi_hsv, lower_white, upper_white)
-        white_in_seg = cv2.bitwise_and(white_in_roi, seg_mask)
-
-        # 흰색 컨투어 찾기
-        white_cnts, _ = cv2.findContours(white_in_seg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-        for wc in white_cnts:
-            wa = cv2.contourArea(wc)
-            wx, wy, ww, wh = cv2.boundingRect(wc)
-
-            # 크기 필터
-            if min_size <= ww <= max_size and min_size <= wh <= max_size and wa > min_size * min_size * 0.3:
-                # 전역 좌표로 변환
-                gx, gy = wx + x, wy + y
-
-                # 중복 체크 (근처에 이미 감지된 아이콘이 있는지)
-                pos_key = (gx // 20, gy // 20)
-                if pos_key in seen_positions:
-                    continue
-                seen_positions.add(pos_key)
-
-                # 인페인팅 마스크에 추가
-                padding = 5
-                x1 = max(0, gx - padding)
-                y1 = max(0, gy - padding)
-                x2 = min(img_width, gx + ww + padding)
-                y2 = min(img_height, gy + wh + padding)
-                cv2.rectangle(inpaint_mask, (x1, y1), (x2, y2), 255, -1)
-
-                placeholders.append({
-                    'type': 'icon',
-                    'bbox': [gx, gy, gx + ww, gy + wh],
-                    'bbox_percent': {
-                        'x': round(gx / img_width * 100, 2),
-                        'y': round(gy / img_height * 100, 2),
-                        'width': round(ww / img_width * 100, 2),
-                        'height': round(wh / img_height * 100, 2),
-                    },
-                    'estimated_size': max(ww, wh),
-                })
-
-    print(f"  아이콘 {len(placeholders)}개 감지/제거됨")
-
-    if len(placeholders) == 0:
-        return {'image_path': image_path, 'placeholders': []}
-
-    # 인페인팅 (NS 알고리즘 - 더 부드러운 결과)
-    result = cv2.inpaint(img, inpaint_mask, inpaintRadius=10, flags=cv2.INPAINT_NS)
-
-    # 저장
-    if output_path is None:
-        base = Path(image_path).stem
-        output_path = str(Path(image_path).parent / f"{base}_noicons.png")
-
-    cv2.imwrite(output_path, result)
-    print(f"  임시 파일: {Path(output_path).name}")
-
-    return {
-        'image_path': output_path,
-        'placeholders': placeholders,
-    }
-
-
-# 품질 우선 프리셋 정의
-PRESETS: Dict[str, Dict[str, Any]] = {
-    'icon': {
-        # 아이콘: 최고 품질, 세밀한 디테일 보존
-        'colormode': 'color',
-        'hierarchical': 'stacked',
-        'mode': 'spline',
-        'filter_speckle': 2,          # 노이즈 최소 제거
-        'color_precision': 8,         # 최대 색상 정밀도
-        'layer_difference': 16,
-        'corner_threshold': 60,       # 코너 보존
-        'length_threshold': 2.0,      # 짧은 세그먼트도 유지
-        'max_iterations': 15,         # 곡선 피팅 정밀도 ↑
-        'splice_threshold': 45,
-        'path_precision': 4,          # 좌표 정밀도 ↑
-    },
-    'logo': {
-        # 로고: 높은 품질 + 선명한 엣지
-        'colormode': 'color',
-        'hierarchical': 'stacked',
-        'mode': 'spline',
-        'filter_speckle': 1,          # 노이즈 거의 안 제거
-        'color_precision': 8,
-        'layer_difference': 6,        # 레이어 분리 정밀
-        'corner_threshold': 45,       # 날카로운 코너 보존
-        'length_threshold': 2.0,
-        'max_iterations': 15,
-        'splice_threshold': 45,
-        'path_precision': 4,
-    },
-    'diagram': {
-        # 다이어그램: 직선/곡선 혼합
-        'colormode': 'color',
-        'hierarchical': 'stacked',
-        'mode': 'spline',             # 부드러운 곡선
-        'filter_speckle': 3,
-        'color_precision': 6,
-        'layer_difference': 16,
-        'corner_threshold': 75,       # 직각 코너 보존
-        'length_threshold': 3.0,
-        'max_iterations': 10,
-        'splice_threshold': 45,
-        'path_precision': 3,
-    },
-    'chart': {
-        # 차트: 정확한 형태 보존, 직각 우선
-        'colormode': 'color',
-        'hierarchical': 'stacked',
-        'mode': 'polygon',            # 다각형 모드
-        'filter_speckle': 2,
-        'color_precision': 6,
-        'layer_difference': 16,
-        'corner_threshold': 90,       # 직각 최대 보존
-        'length_threshold': 4.0,
-        'max_iterations': 10,
-        'splice_threshold': 45,
-        'path_precision': 3,
-    },
-    'default': {
-        # 기본: 균형 잡힌 설정
-        'colormode': 'color',
-        'hierarchical': 'stacked',
-        'mode': 'spline',
-        'filter_speckle': 4,
-        'color_precision': 6,
-        'layer_difference': 16,
-        'corner_threshold': 60,
-        'length_threshold': 4.0,
-        'max_iterations': 10,
-        'splice_threshold': 45,
-        'path_precision': 3,
-    },
-    'smooth': {
-        # 매끄러운 곡선: 부드러운 베지어 곡선 우선
-        'colormode': 'color',
-        'hierarchical': 'stacked',
-        'mode': 'spline',             # 스플라인 모드 필수
-        'filter_speckle': 4,          # 노이즈 제거
-        'color_precision': 6,
-        'layer_difference': 16,
-        'corner_threshold': 120,      # 높음 = 더 적은 코너, 더 부드러운 곡선
-        'length_threshold': 6.0,      # 짧은 세그먼트 병합
-        'max_iterations': 20,         # 더 많은 반복 = 더 정밀한 피팅
-        'splice_threshold': 90,       # 경로 연결 부드럽게
-        'path_precision': 4,          # 좌표 정밀도
-    },
-    'ultra_smooth': {
-        # 초매끄러운: 최대한 부드러운 곡선 (디테일 손실 가능)
-        'colormode': 'color',
-        'hierarchical': 'stacked',
-        'mode': 'spline',
-        'filter_speckle': 8,          # 더 많은 노이즈 제거
-        'color_precision': 4,         # 색상 단순화
-        'layer_difference': 24,
-        'corner_threshold': 150,      # 거의 코너 없음
-        'length_threshold': 10.0,     # 긴 세그먼트만
-        'max_iterations': 25,         # 최대 반복
-        'splice_threshold': 120,      # 최대 병합
-        'path_precision': 3,
-    },
-}
-
-
-def get_image_info(image_path: str) -> Dict[str, Any]:
-    """이미지 정보 추출"""
-    if not HAS_PIL:
-        return {'width': 0, 'height': 0, 'format': 'unknown'}
-
-    try:
-        with Image.open(image_path) as img:
-            return {
-                'width': img.width,
-                'height': img.height,
-                'format': img.format,
-                'mode': img.mode,
-            }
-    except Exception as e:
-        return {'error': str(e)}
-
-
-def detect_preset(image_path: str) -> str:
-    """이미지 특성에 따라 자동 프리셋 선택"""
-    info = get_image_info(image_path)
-
-    if 'error' in info:
-        return 'default'
-
-    width = info.get('width', 0)
-    height = info.get('height', 0)
-
-    # 작은 이미지 (아이콘 가능성)
-    if width <= 256 and height <= 256:
-        return 'icon'
-
-    # 정사각형에 가까운 이미지 (로고 가능성)
-    aspect_ratio = width / height if height > 0 else 1
-    if 0.8 <= aspect_ratio <= 1.2 and width <= 512:
-        return 'logo'
-
-    # 넓은 이미지 (다이어그램/차트 가능성)
-    if aspect_ratio > 1.5:
-        return 'diagram'
-
-    return 'default'
-
-
-def vectorize_image(
-    input_path: str,
-    output_path: Optional[str] = None,
-    preset: Optional[str] = None,
-    options: Optional[Dict[str, Any]] = None
-) -> str:
-    """
-    이미지를 SVG로 변환
-
-    Args:
-        input_path: 입력 이미지 경로
-        output_path: 출력 SVG 경로 (None이면 SVG 문자열만 반환)
-        preset: 프리셋 이름 (icon, logo, diagram, chart, default)
-        options: 커스텀 옵션 (프리셋 위에 덮어쓰기)
-
-    Returns:
-        SVG 문자열
-    """
-    if not HAS_VTRACER:
-        raise ImportError("vtracer가 필요합니다. pip install vtracer")
-
-    # 프리셋 결정
-    if preset is None:
-        preset = detect_preset(input_path)
-
-    # 기본 옵션 로드
-    base_options = PRESETS.get(preset, PRESETS['default']).copy()
-
-    # 커스텀 옵션 적용
-    if options:
-        base_options.update(options)
-
-    # 출력 경로 설정
-    if output_path is None:
-        output_path = str(Path(input_path).with_suffix('.svg'))
-
-    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-
-    # VTracer 실행 (out_path 필수)
-    vtracer.convert_image_to_svg_py(
-        input_path,
-        output_path,
-        colormode=base_options.get('colormode', 'color'),
-        hierarchical=base_options.get('hierarchical', 'stacked'),
-        mode=base_options.get('mode', 'spline'),
-        filter_speckle=base_options.get('filter_speckle', 4),
-        color_precision=base_options.get('color_precision', 6),
-        layer_difference=base_options.get('layer_difference', 16),
-        corner_threshold=base_options.get('corner_threshold', 60),
-        length_threshold=base_options.get('length_threshold', 4.0),
-        max_iterations=base_options.get('max_iterations', 10),
-        splice_threshold=base_options.get('splice_threshold', 45),
-        path_precision=base_options.get('path_precision', 3),
+        layout_type = "centered"
+        columns = None
+
+    return LayoutHint(
+        type=layout_type,
+        columns=columns,
+        has_header=has_header
     )
 
-    # SVG 파일 읽기
-    with open(output_path, 'r', encoding='utf-8') as f:
-        svg_str = f.read()
 
-    return svg_str
+def analyze_style(image: Image.Image, colors: List[ExtractedColor]) -> StyleHint:
+    """스타일 힌트 분석"""
 
+    # 그라데이션 감지 (인접 픽셀 색상 변화)
+    img = image.resize((50, 50)).convert('RGB')
+    pixels = np.array(img)
 
-def vectorize_directory(
-    input_dir: str,
-    output_dir: str,
-    preset: Optional[str] = None,
-    extensions: tuple = ('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.webp')
-) -> Dict[str, str]:
-    """
-    디렉토리 내 모든 이미지를 SVG로 변환
+    # 인접 픽셀 차이 계산
+    h_diff = np.abs(np.diff(pixels, axis=1)).mean()
+    v_diff = np.abs(np.diff(pixels, axis=0)).mean()
+    has_gradients = h_diff > 5 or v_diff > 5
 
-    Args:
-        input_dir: 입력 디렉토리
-        output_dir: 출력 디렉토리
-        preset: 프리셋 이름
-        extensions: 처리할 확장자 목록
+    # 대비 분석
+    if colors:
+        luminances = [get_luminance(*c.rgb) for c in colors[:4]]
+        contrast_range = max(luminances) - min(luminances)
+    else:
+        contrast_range = 0
 
-    Returns:
-        {입력파일: 출력파일} 딕셔너리
-    """
-    input_path = Path(input_dir)
-    output_path = Path(output_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
+    # 분위기 추정
+    if contrast_range > 150:
+        mood = "modern"
+    elif contrast_range < 50:
+        mood = "minimal"
+    else:
+        mood = "classic"
 
-    results = {}
+    # 채도 기반 분위기 보정
+    avg_saturation = np.mean([get_saturation(*c.rgb) for c in colors[:4]]) if colors else 0
+    if avg_saturation > 0.6:
+        mood = "playful"
 
-    for img_file in input_path.iterdir():
-        if img_file.suffix.lower() in extensions:
-            svg_file = output_path / (img_file.stem + '.svg')
-            try:
-                vectorize_image(
-                    str(img_file),
-                    str(svg_file),
-                    preset=preset
-                )
-                results[str(img_file)] = str(svg_file)
-            except Exception as e:
-                results[str(img_file)] = f"Error: {e}"
-
-    return results
+    return StyleHint(
+        border_radius="16px" if mood in ["modern", "playful"] else "4px",
+        has_shadows=mood in ["modern", "classic"],
+        has_gradients=has_gradients,
+        mood=mood
+    )
 
 
-def get_svg_stats(svg_str: str) -> Dict[str, Any]:
-    """SVG 통계 정보 추출"""
-    path_count = svg_str.count('<path')
-    circle_count = svg_str.count('<circle')
-    rect_count = svg_str.count('<rect')
-    size_bytes = len(svg_str.encode('utf-8'))
+def calculate_contrast_level(colors: List[ExtractedColor]) -> str:
+    """대비 수준 계산"""
+    if len(colors) < 2:
+        return "medium"
+
+    luminances = sorted([get_luminance(*c.rgb) for c in colors])
+    contrast = luminances[-1] - luminances[0]
+
+    if contrast > 180:
+        return "high"
+    elif contrast > 100:
+        return "medium"
+    return "low"
+
+
+def analyze_image(image_path: Path) -> ImageAnalysis:
+    """이미지 전체 분석"""
+    if not HAS_DEPS:
+        raise ImportError("필요한 패키지: pip install Pillow numpy scikit-learn")
+
+    img = Image.open(image_path)
+
+    # 색상 추출
+    colors = extract_colors_kmeans(img)
+    colors = assign_color_roles(colors)
+
+    # 레이아웃 분석
+    layout = analyze_layout(img)
+
+    # 스타일 분석
+    style = analyze_style(img, colors)
+
+    # 색조 분류
+    dominant_hue = classify_hue_temperature(colors)
+
+    # 대비 수준
+    contrast_level = calculate_contrast_level(colors)
+
+    return ImageAnalysis(
+        colors=colors,
+        layout=layout,
+        style=style,
+        dominant_hue=dominant_hue,
+        contrast_level=contrast_level
+    )
+
+
+def analysis_to_theme(analysis: ImageAnalysis, name: str) -> Dict:
+    """분석 결과를 테마 형식으로 변환"""
+
+    # 색상 역할별 매핑
+    color_map = {}
+    for color in analysis.colors:
+        if color.role and color.role not in color_map:
+            color_map[color.role] = color.hex
 
     return {
-        'size_bytes': size_bytes,
-        'size_kb': round(size_bytes / 1024, 2),
-        'path_count': path_count,
-        'circle_count': circle_count,
-        'rect_count': rect_count,
-        'total_elements': path_count + circle_count + rect_count,
+        "id": name.lower().replace(" ", "-").replace("_", "-"),
+        "name": f"{name} 테마",
+        "colors": {
+            "primary": color_map.get("primary", "#1a5f4a"),
+            "secondary": color_map.get("secondary", "#2d7a5e"),
+            "accent": color_map.get("accent", "#4a9d7f"),
+            "background": color_map.get("background", "#ffffff"),
+            "surface": color_map.get("secondary", "#f5f9f7"),
+            "text": color_map.get("text", "#1a1a1a"),
+            "muted": "#6b7c74",
+        },
+        "style_hints": {
+            "border_radius": analysis.style.border_radius,
+            "shadow": "0 4px 12px rgba(0,0,0,0.08)" if analysis.style.has_shadows else "none",
+            "mood": analysis.style.mood,
+        },
+        "analysis": {
+            "dominant_hue": analysis.dominant_hue,
+            "contrast_level": analysis.contrast_level,
+            "layout_type": analysis.layout.type,
+        }
     }
 
 
-def cmd_vectorize(args) -> int:
-    """벡터화 실행"""
-    input_path = args.input
-    output_path = args.output
-    preset = args.preset
-    remove_text = getattr(args, 'remove_text', False)
-    detect_icons = getattr(args, 'detect_icons', False)
-    remove_icons = getattr(args, 'remove_icons', False)
-    icon_min_size = getattr(args, 'icon_min_size', 20)
-    icon_max_size = getattr(args, 'icon_max_size', 300)
-
-    # 입력 확인
-    if not Path(input_path).exists():
-        print(f"Error: 파일/디렉토리를 찾을 수 없습니다 - {input_path}")
-        return 1
-
-    # 커스텀 옵션 수집
-    custom_options = {}
-    if args.color_precision is not None:
-        custom_options['color_precision'] = args.color_precision
-    if args.corner_threshold is not None:
-        custom_options['corner_threshold'] = args.corner_threshold
-    if args.filter_speckle is not None:
-        custom_options['filter_speckle'] = args.filter_speckle
-    if args.mode is not None:
-        custom_options['mode'] = args.mode
-
-    # 디렉토리 처리
-    if Path(input_path).is_dir():
-        if not output_path:
-            output_path = str(Path(input_path) / 'svg')
-
-        print(f"디렉토리 변환: {input_path}")
-        print(f"출력 디렉토리: {output_path}")
-        print(f"프리셋: {preset or 'auto'}")
-        print()
-
-        results = vectorize_directory(input_path, output_path, preset)
-
-        success = sum(1 for v in results.values() if not v.startswith('Error'))
-        failed = len(results) - success
-
-        print(f"\n결과: {success}개 성공, {failed}개 실패")
-        for src, dst in results.items():
-            status = "✓" if not dst.startswith('Error') else "✗"
-            print(f"  {status} {Path(src).name} → {Path(dst).name if not dst.startswith('Error') else dst}")
-
-        return 0 if failed == 0 else 1
-
-    # 단일 파일 처리
-    if not output_path:
-        output_path = str(Path(input_path).with_suffix('.svg'))
-
-    # 자동 프리셋 감지
-    detected_preset = preset or detect_preset(input_path)
-
-    print(f"이미지 변환: {input_path}")
-    print(f"출력: {output_path}")
-    print(f"프리셋: {detected_preset}" + (" (자동)" if not preset else ""))
-
-    # 이미지 정보
-    info = get_image_info(input_path)
-    if 'error' not in info:
-        print(f"크기: {info['width']}x{info['height']} ({info.get('format', 'unknown')})")
-    print()
-
-    # 플레이스홀더 수집
-    all_placeholders = []
-    actual_input = input_path
-
-    # 텍스트 제거 옵션
-    if remove_text:
-        print("[전처리] 텍스트 제거 중...")
-        try:
-            result = remove_text_from_image(input_path)
-            actual_input = result['image_path']
-            all_placeholders.extend(result['placeholders'])
-            print(f"  텍스트 {len(result['placeholders'])}개 감지/제거됨")
-            print(f"  임시 파일: {actual_input}")
-        except ImportError as e:
-            print(f"  경고: {e}")
-            print("  텍스트 제거 생략 (opencv-python, easyocr 필요)")
-        except Exception as e:
-            print(f"  경고: 텍스트 제거 실패 - {e}")
-
-    # 아이콘 감지 옵션 (감지만)
-    if detect_icons and not remove_icons:
-        print("[전처리] 아이콘 감지 중...")
-        try:
-            icons = detect_icons_by_color(input_path)
-            all_placeholders.extend(icons)
-            print(f"  아이콘 {len(icons)}개 감지됨")
-        except Exception as e:
-            print(f"  경고: 아이콘 감지 실패 - {e}")
-
-    # 아이콘 제거 옵션 (감지 + 제거)
-    if remove_icons:
-        print(f"[전처리] 아이콘 제거 중... (크기: {icon_min_size}-{icon_max_size}px)")
-        try:
-            result = remove_icons_from_image(actual_input, min_size=icon_min_size, max_size=icon_max_size)
-            actual_input = result['image_path']
-            all_placeholders.extend(result['placeholders'])
-            print(f"  아이콘 {len(result['placeholders'])}개 감지/제거됨")
-            if result['placeholders']:
-                print(f"  임시 파일: {actual_input}")
-        except ImportError as e:
-            print(f"  경고: {e}")
-            print("  아이콘 제거 생략 (opencv-python 필요)")
-        except Exception as e:
-            print(f"  경고: 아이콘 제거 실패 - {e}")
-
-    # 변환 실행
-    step = 1
-    total_steps = 2 + (1 if all_placeholders else 0)
-
-    print(f"[{step}/{total_steps}] 벡터화 중...")
-    try:
-        svg_str = vectorize_image(
-            actual_input,
-            output_path,
-            preset=detected_preset,
-            options=custom_options if custom_options else None
-        )
-    except Exception as e:
-        print(f"Error: 변환 실패 - {e}")
-        return 1
-
-    step += 1
-    print(f"[{step}/{total_steps}] 완료!")
-    stats = get_svg_stats(svg_str)
-    print(f"  SVG 크기: {stats['size_kb']} KB")
-    print(f"  경로 수: {stats['path_count']}")
-    print(f"  총 요소: {stats['total_elements']}")
-
-    # 플레이스홀더 YAML 출력
-    if all_placeholders:
-        step += 1
-        yaml_path = str(Path(output_path).with_suffix('.placeholders.yaml'))
-        print(f"[{step}/{total_steps}] 플레이스홀더 저장 중...")
-
-        import yaml
-        placeholder_data = {
-            'source_image': input_path,
-            'svg_output': output_path,
-            'original_size': info if 'error' not in info else {},
-            'placeholders': all_placeholders,
-        }
-
-        with open(yaml_path, 'w', encoding='utf-8') as f:
-            yaml.dump(placeholder_data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-
-        print(f"  플레이스홀더: {len(all_placeholders)}개")
-        print(f"  저장됨: {yaml_path}")
-
-        # 플레이스홀더 미리보기
-        print("\n플레이스홀더 미리보기:")
-        for i, ph in enumerate(all_placeholders[:5]):  # 최대 5개만 표시
-            bbox = ph['bbox_percent']
-            content = ph.get('content', '')[:30] if ph.get('content') else ''
-            print(f"  [{i+1}] {ph['type']}: ({bbox['x']:.1f}%, {bbox['y']:.1f}%) "
-                  f"{bbox['width']:.1f}x{bbox['height']:.1f}% "
-                  f"{'- ' + content if content else ''}")
-        if len(all_placeholders) > 5:
-            print(f"  ... 외 {len(all_placeholders) - 5}개")
-
-    print()
-    print(f"저장됨: {output_path}")
-
-    # 임시 파일 정리
-    if remove_text and actual_input != input_path:
-        try:
-            Path(actual_input).unlink()
-            print(f"임시 파일 삭제됨: {actual_input}")
-        except:
-            pass
-
-    return 0
-
-
-def cmd_presets(args) -> int:
-    """프리셋 목록 출력"""
-    print("사용 가능한 프리셋:\n")
-
-    for name, options in PRESETS.items():
-        print(f"  {name}:")
-        print(f"    mode: {options.get('mode', 'spline')}")
-        print(f"    color_precision: {options.get('color_precision', 6)}")
-        print(f"    corner_threshold: {options.get('corner_threshold', 60)}")
-        print(f"    filter_speckle: {options.get('filter_speckle', 4)}")
-        print()
-
-    return 0
+def dataclass_to_dict(obj) -> Any:
+    """dataclass를 dict로 변환"""
+    if hasattr(obj, '__dataclass_fields__'):
+        return {k: dataclass_to_dict(v) for k, v in asdict(obj).items()}
+    elif isinstance(obj, list):
+        return [dataclass_to_dict(item) for item in obj]
+    elif isinstance(obj, dict):
+        return {k: dataclass_to_dict(v) for k, v in obj.items()}
+    elif isinstance(obj, tuple):
+        return list(obj)
+    else:
+        return obj
 
 
 def main():
-    if not HAS_VTRACER:
-        print("Error: vtracer가 필요합니다.")
-        print("  pip install vtracer")
-        print()
-        print("VTracer는 Rust 기반으로 빠르고 고품질 벡터화를 제공합니다.")
-        return 1
-
     parser = argparse.ArgumentParser(
-        description='이미지를 SVG로 변환 (VTracer 기반)',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  # 기본 변환 (자동 프리셋)
-  python image-vectorizer.py icon.png
-
-  # 아이콘 프리셋
-  python image-vectorizer.py logo.png --preset icon --output logo.svg
-
-  # 다이어그램 프리셋
-  python image-vectorizer.py flowchart.png --preset diagram
-
-  # 배치 변환
-  python image-vectorizer.py ./images/ --output ./svgs/
-
-  # 프리셋 목록
-  python image-vectorizer.py --list-presets
-        """
+        description="이미지에서 디자인 스타일 추출"
     )
-
-    parser.add_argument('input', nargs='?', help='입력 이미지 또는 디렉토리')
-    parser.add_argument('--output', '-o', help='출력 SVG 파일 또는 디렉토리')
-    parser.add_argument('--preset', '-p',
-                        choices=list(PRESETS.keys()),
-                        help='프리셋 (icon, logo, diagram, chart, default)')
-    parser.add_argument('--list-presets', action='store_true',
-                        help='프리셋 목록 출력')
-
-    # 전처리 옵션
-    preprocess = parser.add_argument_group('전처리 옵션')
-    preprocess.add_argument('--remove-text', action='store_true',
-                            help='텍스트 감지 및 제거 (위치 정보 YAML 출력)')
-    preprocess.add_argument('--remove-icons', action='store_true',
-                            help='흰색 아이콘 감지 및 제거 (위치 정보 YAML 출력)')
-    preprocess.add_argument('--icon-min-size', type=int, default=20,
-                            help='아이콘 최소 크기 (픽셀, 기본값: 20)')
-    preprocess.add_argument('--icon-max-size', type=int, default=300,
-                            help='아이콘 최대 크기 (픽셀, 기본값: 300)')
-    preprocess.add_argument('--detect-icons', action='store_true',
-                            help='아이콘 영역 감지 (위치 정보 YAML 출력)')
-
-    # 고급 옵션
-    advanced = parser.add_argument_group('고급 옵션')
-    advanced.add_argument('--color-precision', type=int, choices=range(1, 9),
-                          help='색상 정밀도 (1-8, 높을수록 정밀)')
-    advanced.add_argument('--corner-threshold', type=int, choices=range(0, 181),
-                          help='코너 감지 임계값 (0-180, 높을수록 둥글게)')
-    advanced.add_argument('--filter-speckle', type=int,
-                          help='노이즈 제거 크기 (작을수록 디테일 보존)')
-    advanced.add_argument('--mode', choices=['spline', 'polygon', 'none'],
-                          help='경로 모드 (spline: 곡선, polygon: 직선)')
+    parser.add_argument("input", help="입력 이미지 파일")
+    parser.add_argument("--output", "-o", help="출력 파일 (YAML 또는 JSON)")
+    parser.add_argument("--analyze-only", action="store_true", help="분석 결과만 출력")
+    parser.add_argument("--name", help="테마 이름 (기본: 파일명)")
+    parser.add_argument("--colors", type=int, default=8, help="추출할 색상 개수")
 
     args = parser.parse_args()
 
-    if args.list_presets:
-        return cmd_presets(args)
+    if not HAS_DEPS:
+        print("Error: 필요한 패키지를 설치하세요:")
+        print("  pip install Pillow numpy scikit-learn")
+        sys.exit(1)
 
-    if not args.input:
-        parser.print_help()
-        return 0
+    input_path = Path(args.input)
+    if not input_path.exists():
+        print(f"Error: 파일을 찾을 수 없습니다: {args.input}")
+        sys.exit(1)
 
-    return cmd_vectorize(args)
+    try:
+        analysis = analyze_image(input_path)
+
+        if args.analyze_only:
+            print(json.dumps(dataclass_to_dict(analysis), indent=2, ensure_ascii=False))
+        else:
+            name = args.name or input_path.stem
+            theme = analysis_to_theme(analysis, name)
+
+            if args.output:
+                output_path = Path(args.output)
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+
+                if output_path.suffix in ['.yaml', '.yml'] and HAS_YAML:
+                    with open(output_path, 'w', encoding='utf-8') as f:
+                        yaml.dump(theme, f, allow_unicode=True, default_flow_style=False)
+                else:
+                    json_path = output_path.with_suffix('.json') if not output_path.suffix == '.json' else output_path
+                    with open(json_path, 'w', encoding='utf-8') as f:
+                        json.dump(theme, f, indent=2, ensure_ascii=False)
+
+                print(f"저장됨: {output_path}")
+            else:
+                print(json.dumps(theme, indent=2, ensure_ascii=False))
+
+            # 요약 출력
+            print(f"\n분석 결과:")
+            print(f"  분위기: {analysis.style.mood}")
+            print(f"  색조: {analysis.dominant_hue}")
+            print(f"  대비: {analysis.contrast_level}")
+            print(f"  레이아웃: {analysis.layout.type}")
+            print(f"  주요 색상: {', '.join(c.hex for c in analysis.colors[:4])}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
 
 
-if __name__ == '__main__':
-    sys.exit(main())
+if __name__ == "__main__":
+    main()

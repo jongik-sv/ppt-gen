@@ -1,180 +1,137 @@
 ---
 name: ppt-extract
-description: "PPT 템플릿/에셋 추출 서비스. Use when: (1) 슬라이드에서 콘텐츠/오브젝트 추출, (2) PPTX에서 문서 양식/슬라이드 마스터 추출, (3) 이미지에서 테마/스타일 추출, (4) 온라인 슬라이드 크롤링"
-user-invocable: true
+description: |
+  PPT 템플릿과 에셋 추출 스킬. PPTX에서 문서 양식, 테마, 콘텐츠 디자인을 추출하여 재사용 가능한 템플릿으로 저장.
+
+  트리거:
+  - 문서 양식 추출: "이 PPT를 양식으로 등록해줘", "양식 업데이트해줘", "양식 지워줘"
+  - 테마 추출: "이 이미지 스타일로", "색상 팔레트 추출해줘"
+  - 콘텐츠 추출: "이 슬라이드 저장해줘", "이 디자인 저장해줘"
+  - 콘텐츠 생성: "간트차트 템플릿 만들어줘" (라이브러리 기반)
+
+  ppt-gen 스킬과 함께 사용. 추출된 템플릿은 templates/ 폴더에 저장됨.
 ---
 
-# PPT Template Extraction Service
+# ppt-extract 스킬
 
-PPTX, 이미지에서 재사용 가능한 템플릿과 에셋을 추출합니다. PPT 생성 파이프라인(ppt-gen)과 독립적으로 실행됩니다.
+PPT 생성 파이프라인과 독립적으로 실행되는 추출 스킬.
 
-## Workflow Selection
+## 워크플로우
 
-| 요청 유형 | 워크플로우 | 가이드 |
-|----------|-----------|--------|
-| "콘텐츠 추출해줘", "슬라이드 저장" | content-extract | [workflows/content-extract.md](workflows/content-extract.md) |
-| "문서 양식 추출해줘", "템플릿 등록" | document-extract | [workflows/document-extract.md](workflows/document-extract.md) |
-| "이 이미지 스타일로" | style-extract | [workflows/style-extract.md](workflows/style-extract.md) |
-| "이미지를 SVG로", "벡터화" | image-vectorize | 아래 Scripts 섹션 참조 |
+| 워크플로우 | 트리거 | 입력 | 출력 |
+|-----------|--------|------|------|
+| `document-extract` | "이 PPT를 양식으로 등록해줘" | PPTX | 문서 템플릿 YAML, OOXML, 에셋 |
+| `document-update` | "양식 업데이트해줘" | PPTX | 기존 문서 덮어쓰기 |
+| `document-delete` | "양식 지워줘" | 문서 ID | 문서 + 연관 콘텐츠 삭제 |
+| `style-extract` | "이 이미지 스타일로" | 이미지 | 테마 YAML |
+| `content-extract` | "이 슬라이드 저장해줘" | PPTX | YAML + HTML + OOXML |
+| `content-create` | "간트차트 템플릿 만들어줘" | 라이브러리/코드 | 직접 생성된 템플릿 |
 
-## Output Structure
-
-추출 결과물은 `templates/` 폴더에 저장됩니다:
+## 저장 구조
 
 ```
-C:/project/docs/templates/
-├── themes/                  # 테마 정의 (style-extract 출력)
-│   └── {theme-id}.yaml
-├── contents/                # 콘텐츠 템플릿 (content-extract 출력)
-│   ├── templates/{category}/
-│   ├── objects/
-│   └── registry.yaml
-└── documents/               # 문서 템플릿 (document-extract 출력)
-    └── {group}/
-        ├── config.yaml
-        ├── registry.yaml
-        └── {양식}.yaml
+templates/
+├── documents/{group}/{template}/   # 문서 양식
+│   ├── template.yaml
+│   ├── ooxml/
+│   └── assets/
+├── themes/{theme_id}/theme.yaml    # 테마
+├── contents/{category}/{id}/       # 콘텐츠
+│   ├── template.yaml
+│   ├── template.html
+│   ├── template.ooxml
+│   └── thumbnail.png
+└── objects/{category}/{id}/        # 오브젝트 (자동 추출)
 ```
 
-## Dependencies
-
-**Python:**
-- python-pptx: PPTX 분석
-- pyyaml: YAML 생성
-- colorthief: 이미지 색상 추출
-- Pillow: 이미지 처리
-- defusedxml: XML 파싱
-- vtracer: 이미지 벡터화 (Rust 기반, 빠름)
-
-**System:**
-- LibreOffice (`soffice`): 썸네일 생성용
-
-## Scripts
+## 스크립트
 
 | 스크립트 | 용도 |
 |---------|------|
-| `scripts/content-analyzer.py` | 슬라이드 콘텐츠 OOXML 완전 추출 (NEW) |
-| `scripts/template-analyzer.py` | 문서 템플릿 (slideLayouts) 분석 |
-| `scripts/style-extractor.py` | 이미지 색상 추출 |
-| `scripts/slide-crawler.py` | 온라인 슬라이드 크롤링 |
-| `scripts/image-vectorizer.py` | 이미지 → SVG 벡터화 |
+| `scripts/slide-crawler.py` | PPTX 슬라이드 파싱, 도형/텍스트 추출 |
+| `scripts/style-extractor.py` | 색상 팔레트, 폰트 추출 |
+| `scripts/content-analyzer.py` | 콘텐츠 영역 감지, 플레이스홀더 후보 탐지 |
+| `scripts/template-analyzer.py` | 패턴 시그니처, 유사 템플릿 통합 |
+| `scripts/font-manager.py` | 폰트 대체 매핑 |
+| `scripts/image-vectorizer.py` | 이미지에서 색상/스타일 추출 |
+| `scripts/thumbnail.py` | 썸네일 생성 |
 
-### Content Analyzer (콘텐츠 분석기) - v4.0 NEW
+## 실행 예시
 
-슬라이드의 모든 요소(도형, 이미지, 연결선, SmartArt)를 완전히 추출합니다.
-
-**사용법:**
-```bash
-# 단일 슬라이드 분석
-python .claude/skills/ppt-extract/scripts/content-analyzer.py input.pptx --slide 11
-
-# 파일로 저장
-python .claude/skills/ppt-extract/scripts/content-analyzer.py input.pptx --slide 11 -o result.yaml
-
-# 모든 슬라이드 요약
-python .claude/skills/ppt-extract/scripts/content-analyzer.py input.pptx --all --summary
-```
-
-**추출 요소:**
-- `p:sp` - 도형 (preset, fill, stroke, effects, text)
-- `p:pic` - 이미지/SVG 아이콘
-- `p:cxnSp` - 연결선 (dash, arrow)
-- `p:grpSp` - 그룹 도형
-- `p:graphicFrame` - SmartArt/차트
-
-### Image Vectorizer (이미지 벡터화)
-
-래스터 이미지(PNG, JPG)를 벡터 그래픽(SVG)으로 변환합니다. VTracer 기반으로 빠르고 고품질.
-
-**설치:**
-```bash
-pip install vtracer
-```
-
-**사용법:**
-```bash
-# 기본 변환 (자동 프리셋)
-python .claude/skills/ppt-extract/scripts/image-vectorizer.py icon.png
-
-# 프리셋 지정
-python .claude/skills/ppt-extract/scripts/image-vectorizer.py logo.png --preset icon --output logo.svg
-
-# 배치 변환 (디렉토리)
-python .claude/skills/ppt-extract/scripts/image-vectorizer.py ./images/ --output ./svgs/
-
-# 프리셋 목록
-python .claude/skills/ppt-extract/scripts/image-vectorizer.py --list-presets
-```
-
-**프리셋:**
-| 프리셋 | 용도 | 특징 |
-|-------|------|------|
-| `icon` | 아이콘 | 최고 품질, 세밀한 디테일 보존 |
-| `logo` | 로고 | 선명한 엣지, 날카로운 코너 |
-| `diagram` | 다이어그램 | 직선/곡선 혼합, 부드러운 곡선 |
-| `chart` | 차트 | 직각 보존, 다각형 모드 |
-| `default` | 기본 | 균형 잡힌 설정 |
-
-**예상 품질:**
-- 단색 아이콘: 95-99%
-- 플랫 로고: 90-95%
-- 다이어그램: 85-95%
-- 차트: 85-90%
-
-## Shared Resources (ppt-gen에서 공유)
-
-추출 작업에 필요한 공유 스크립트:
-- `ppt-gen/ooxml/scripts/unpack.py`: PPTX 언팩
-- `ppt-gen/scripts/thumbnail.py`: 썸네일 생성
-- `ppt-gen/scripts/asset-manager.py`: 에셋 관리/크롤링
-
-## References
-
-- [ppt-gen/references/content-schema.md](../ppt-gen/references/content-schema.md): 콘텐츠 템플릿 v4.0 스키마 (공유)
-- [references/font-mappings.yaml](references/font-mappings.yaml): 폰트 매핑 정의
-
----
-
-## 완료 후 정리 (MANDATORY)
-
-**중요**: 추출 작업 완료 시 생성한 임시 파일을 반드시 삭제합니다.
-
-### 삭제 대상
-
-1. **언팩된 PPTX 폴더**:
-   - `workspace/unpacked/` 전체 폴더
-   - `workspace/template-preview/` 폴더
-
-2. **임시 스크립트** (프로젝트 루트에 생성된 경우):
-   - `extract_*.py`
-   - `analyze_*.py`
-   - `*_temp*.py`
-
-3. **임시 작업 파일**:
-   - `workspace/analysis/` 폴더 (분석 결과 YAML)
-   - 임시 `.pdf` 파일
-   - 크롤링 임시 이미지 (`templates/` 외부)
-
-### 보존 대상 (삭제 금지)
-
-- `templates/` 하위 모든 파일 (추출 결과물)
-- `registry.yaml` 파일들
-- 사용자가 명시적으로 요청한 출력물
-
-### 정리 명령어
+### content-extract
 
 ```bash
-# 언팩 폴더 삭제
-rm -rf workspace/unpacked workspace/template-preview workspace/analysis
+# 1. 슬라이드 파싱
+python scripts/slide-crawler.py input.pptx --slide 3 --output working/parsed.json
 
-# 프로젝트 루트 임시 스크립트 삭제
-rm -f extract_*.py analyze_*.py *_temp*.py
+# 2. 콘텐츠 영역 분석
+python scripts/content-analyzer.py working/parsed.json --output working/analysis.json
+
+# 3. LLM 플레이스홀더 판단 (Claude가 직접 수행)
+# → 텍스트 그룹핑 확인, 플레이스홀더 이름 부여
+
+# 4. 템플릿 저장 (Claude가 직접 수행)
+# → template.yaml, template.html, template.ooxml 생성
 ```
 
-### 정리 체크리스트
+### style-extract
 
-추출 완료 전 다음을 확인:
-- [ ] `templates/` 에 결과물 저장됨
-- [ ] `registry.yaml` 업데이트됨
-- [ ] 썸네일 생성됨 (`thumbnails/`)
-- [ ] 임시 폴더 삭제됨 (`workspace/`)
+```bash
+# 이미지에서 색상 추출
+python scripts/image-vectorizer.py reference.png --output themes/new-theme/theme.yaml
+```
+
+## 워크플로우 상세
+
+각 워크플로우의 상세 절차:
+- [document-extract.md](workflows/document-extract.md) - 문서 양식 추출
+- [style-extract.md](workflows/style-extract.md) - 테마 추출
+- [content-extract.md](workflows/content-extract.md) - 콘텐츠 추출
+
+## 영역 감지 규칙
+
+```
+┌──────────────────────────────────────┐
+│ TITLE ZONE (상단 ~22%)                │
+├──────────────────────────────────────┤
+│        CONTENT ZONE (22% ~ 90%)      │
+├──────────────────────────────────────┤
+│ FOOTER ZONE (하단 ~8%)                │
+└──────────────────────────────────────┘
+```
+
+- **Title Zone**: 플레이스홀더 타입(TITLE) 또는 이름에 "title" 포함
+- **Footer Zone**: 플레이스홀더 타입(FOOTER, SLIDE_NUMBER) 또는 하단 10%
+- **Content Zone**: Title 하단 + 2% ~ Footer 상단 - 2%
+
+## 오브젝트 자동 추출 조건
+
+content-extract 중 LLM이 아래 조건 감지 시 objects/로 분리 저장:
+
+| 조건 | 예시 |
+|------|------|
+| 도형 그룹 5개 이상 | 순환도 6단계, 허니콤 7개 |
+| 비선형 배치 | 원형, 방사형, 지그재그 |
+| 커넥터 포함 | 플로우차트, 프로세스 |
+| 수치 데이터 시각화 | 막대, 선, 파이 차트 |
+
+## 패턴 통합 규칙
+
+같은 문서 템플릿 내에서 유사한 슬라이드는 하나의 가변 템플릿으로 통합:
+
+```yaml
+# 통합된 템플릿
+variants:
+  - count: 3
+    layout: { columns: 3, gap: "4%" }
+  - count: 4
+    layout: { columns: 4, gap: "3%" }
+```
+
+**통합 기준**: 같은 출처 + 같은 구조 유형 + 같은 카드 구성 + 유사한 스타일
+
+## 폰트 처리
+
+시스템 확인 → 다운로드 시도 → 실패 시 대체 폰트 적용
+
+대체 매핑: [references/font-mappings.yaml](references/font-mappings.yaml)

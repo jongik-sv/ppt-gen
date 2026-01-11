@@ -1,229 +1,143 @@
-# Document Template Extraction Workflow
+# document-extract 워크플로우
 
-전체 문서의 구조와 테마를 분석하여 문서 템플릿(회사/브랜드)으로 저장합니다.
+문서 양식(슬라이드 마스터, 로고, 레이아웃) 추출.
 
-## Triggers
+## 트리거
 
-- "문서 양식 추출해줘"
-- "이 PPT를 템플릿으로 등록"
-- "회사 양식으로 저장"
+- "이 PPT를 양식으로 등록해줘"
+- "동국제강 양식 등록해줘"
 
-## Workflow
+## 입력
 
-### 1. User Input (REQUIRED)
+- PPTX 파일
 
-**AskUserQuestion 도구를 사용하여 다음 정보를 수집:**
+## 출력
 
-| 질문 | 설명 | 예시 |
-|------|------|------|
-| 회사/그룹명 | 템플릿이 속할 회사 또는 브랜드명 | "동국제강", "삼성전자" |
-| 폴더 ID | 영문 소문자 폴더명 (자동 제안 가능) | "dongkuk", "samsung" |
-| 양식 이름 | 이 특정 양식의 이름 | "기본양식", "제안서", "보고서" |
+- `templates/documents/{group}/{template}/`
+  - `template.yaml` - 메타데이터
+  - `ooxml/` - 슬라이드 마스터, 레이아웃, 테마
+  - `assets/` - 로고, 이미지
 
-```
-AskUserQuestion:
-  questions:
-    - header: "회사명"
-      question: "이 템플릿이 속할 회사/브랜드명은 무엇인가요?"
-      options:
-        - label: "{PPT에서 감지된 이름}"
-          description: "PPT 테마에서 추출된 이름"
-        - label: "직접 입력"
-          description: "다른 회사명 사용"
+## 프로세스
 
-    - header: "폴더 ID"
-      question: "템플릿을 저장할 폴더 ID를 선택하세요 (영문 소문자)"
-      options:
-        - label: "{자동 생성된 ID}"
-          description: "templates/documents/{id}/ 에 저장"
-        - label: "직접 입력"
-          description: "커스텀 폴더명 사용"
-
-    - header: "양식 이름"
-      question: "이 양식의 이름은 무엇인가요?"
-      options:
-        - label: "기본양식"
-          description: "범용 기본 템플릿"
-        - label: "제안서"
-          description: "제안/영업용 템플릿"
-        - label: "보고서"
-          description: "내부 보고용 템플릿"
-```
-
-### 2. Generate Thumbnails
+### 1. 파일 분석
 
 ```bash
-# ppt-gen의 thumbnail.py 사용
-python .claude/skills/ppt-gen/scripts/thumbnail.py input.pptx workspace/template-preview
+# 슬라이드 구조 파싱
+python scripts/slide-crawler.py input.pptx --all --output working/parsed.json
 ```
 
-### 3. Analyze Theme, Layouts, and Placeholders
+### 2. 레이아웃 분류 (LLM)
 
-```bash
-# PPTX 언팩 (ppt-gen의 ooxml 스크립트 사용)
-python .claude/skills/ppt-gen/ooxml/scripts/unpack.py input.pptx workspace/unpacked
+LLM이 슬라이드를 분류:
+- **표지** (cover): 타이틀만 있는 첫 슬라이드
+- **목차** (toc): 목록/인덱스 형태
+- **섹션** (section): 구분 슬라이드
+- **내지** (body): 콘텐츠 슬라이드
+
+내지 유형 분류:
+- 제목만
+- 제목+액션타이틀
+- 2단 레이아웃
+- 이미지+텍스트
+
+### 3. OOXML 추출
+
+각 레이아웃 타입별로 대표 1개씩 추출:
+
+```
+ppt/
+├── slideMaster1.xml      → ooxml/slideMaster1.xml
+├── slideLayouts/
+│   ├── slideLayout1.xml  → ooxml/slideLayout1.xml (표지)
+│   ├── slideLayout2.xml  → ooxml/slideLayout2.xml (목차)
+│   └── ...
+└── theme/theme1.xml      → ooxml/theme1.xml
 ```
 
-**분석 항목:**
+### 4. 에셋 추출
 
-#### 3.1 테마 분석
-- **테마 파일**: `ppt/theme/theme1.xml` → 색상/폰트 추출
-
-#### 3.2 플레이스홀더 추출
-
-**슬라이드 레이아웃 파일**: `ppt/slideLayouts/slideLayout*.xml`
-
-```xml
-<!-- 플레이스홀더 예시 -->
-<p:sp>
-  <p:nvSpPr>
-    <p:nvPr>
-      <p:ph type="title" idx="0"/>  <!-- type과 idx로 역할 식별 -->
-    </p:nvPr>
-  </p:nvSpPr>
-  <p:spPr>
-    <a:xfrm>
-      <a:off x="457200" y="274638"/>   <!-- 위치 (EMU 단위) -->
-      <a:ext cx="8229600" cy="1143000"/> <!-- 크기 (EMU 단위) -->
-    </a:xfrm>
-  </p:spPr>
-</p:sp>
+```
+ppt/media/
+├── image1.png (로고)     → assets/media/logo.png
+├── image2.jpg (배경)     → assets/media/background.jpg
+└── ...
 ```
 
-**EMU → % 변환:**
-```python
-# 슬라이드 크기 (기본: 9144000 x 6858000 EMU = 10" x 7.5")
-slide_width = 9144000
-slide_height = 6858000
+### 5. 콘텐츠 영역 계산
 
-x_percent = (x_emu / slide_width) * 100
-y_percent = (y_emu / slide_height) * 100
-width_percent = (cx_emu / slide_width) * 100
-height_percent = (cy_emu / slide_height) * 100
-```
+각 레이아웃의 `content_zone` 계산:
 
-#### 3.3 슬라이드 카테고리 분류
-각 슬라이드의 플레이스홀더 구성으로 카테고리 추론
-
-### 4. Create Group Folder and YAML
-
-`templates/documents/{그룹}/` 폴더 생성:
-
-**config.yaml** (테마 정보):
 ```yaml
-group:
-  id: new-company
-  name: New Company
-
-theme:
-  colors:
-    primary: "#002452"
-    secondary: "#C51F2A"
-  fonts:
-    title: "본고딕 Bold"
-    body: "본고딕 Normal"
-
-companies:
-  - id: new-company
-    name: New Company
+layouts:
+  - index: 3
+    name: "내지 (제목+액션타이틀)"
+    content_zone:
+      position: { x: 3%, y: 24%, width: 94%, height: 72% }
 ```
 
-**{양식}.yaml** (레이아웃 + 플레이스홀더 정보):
+### 6. 메타데이터 생성
+
 ```yaml
-template:
-  id: 제안서1
-  name: 제안서 (기본)
-  source: input.pptx
+# template.yaml
+document:
+  id: "dongkuk-standard"
+  name: "동국그룹 기본양식"
+  group: "동국그룹"
+  source_file: "원본.pptx"
+  extracted_at: "2026-01-10"
 
 layouts:
   - index: 0
-    category: cover
-    name: 표지
+    name: "표지"
+    type: cover
+    ooxml_file: "ooxml/slideLayout1.xml"
     placeholders:
-      - type: title
-        role: "메인 제목"
-        position: {x: 10%, y: 35%, width: 80%, height: 15%}
-      - type: subtitle
-        role: "부제목/슬로건"
-        position: {x: 10%, y: 52%, width: 80%, height: 8%}
-      - type: picture
-        role: "배경 이미지"
-        position: {x: 0%, y: 0%, width: 100%, height: 100%}
-        z_order: -1
+      - id: "title"
+        type: ctrTitle
+        position: { x: 5%, y: 35%, width: 90%, height: 15% }
 
-  - index: 1
-    category: toc
-    name: 목차
-    placeholders:
-      - type: title
-        role: "목차 제목"
-        position: {x: 5%, y: 8%, width: 90%, height: 10%}
-      - type: body
-        role: "목차 항목 리스트"
-        position: {x: 10%, y: 25%, width: 80%, height: 65%}
+master:
+  ooxml_file: "ooxml/slideMaster1.xml"
+  common_elements:
+    - id: "logo"
+      file: "assets/media/logo.png"
+      position: { x: 90%, y: 2%, width: 8%, height: 6% }
 
-  - index: 2
-    category: content_bullets
-    name: 본문 (불릿)
-    placeholders:
-      - type: title
-        role: "슬라이드 제목"
-        position: {x: 5%, y: 5%, width: 90%, height: 12%}
-      - type: body
-        role: "본문 내용 (불릿 포인트)"
-        position: {x: 5%, y: 20%, width: 90%, height: 70%}
+theme:
+  ooxml_file: "ooxml/theme1.xml"
 ```
 
-### Placeholder Types (PPTX 표준)
+### 7. 썸네일 생성
 
-| type | idx | 역할 |
-|------|-----|------|
-| `title` | 0 | 슬라이드 제목 |
-| `body` | 1 | 본문 텍스트 |
-| `subtitle` | - | 부제목 |
-| `ctrTitle` | - | 중앙 제목 (표지용) |
-| `picture` | - | 이미지 영역 |
-| `chart` | - | 차트 영역 |
-| `table` | - | 표 영역 |
-| `dgm` | - | 다이어그램 (SmartArt) |
-| `footer` | 10 | 바닥글 |
-| `sldNum` | 12 | 슬라이드 번호 |
-| `dt` | 11 | 날짜/시간 |
-
-### 5. Update Registry
-
-`templates/documents/{그룹}/registry.yaml`:
-
-```yaml
-templates:
-  - id: 제안서1
-    name: 제안서 (기본)
-    file: 제안서1.yaml
-    type: proposal
-    description: "표지 + 목차 + 본문(불릿) + 마무리 구성"
+```bash
+python scripts/thumbnail.py input.pptx --all --output-dir templates/documents/{group}/{id}/thumbnails/ --size document
 ```
 
-### 6. User Confirmation
+## 업데이트 정책
 
-- 생성된 썸네일 표시
-- 템플릿 정보 요약 제공
+같은 `source_file`로 재등록 시:
+1. 기존 콘텐츠 삭제 확인 프롬프트
+2. 새로 추출/등록
 
-## Auto Layout Classification
+```bash
+# --force: 확인 없이 덮어쓰기
+# --new: 기존 유지, 새 ID로 등록
+```
 
-| 카테고리 | 감지 조건 |
-|----------|----------|
-| `cover` | 첫 슬라이드, 큰 제목만 |
-| `toc` | 번호+텍스트 반복 패턴 |
-| `section` | 제목만, 배경색 있음 |
-| `content_bullets` | BODY placeholder + 불릿 |
-| `content_free` | 제목만, 넓은 빈 공간 |
-
-## Output Structure
+## 삭제 정책
 
 ```
-templates/documents/{그룹}/
-├── config.yaml          # 테마 정보
-├── registry.yaml        # 양식 목록
-├── assets/              # 에셋 (로고 등)
-└── {양식}.yaml          # 각 양식 정의
+"동국시스템즈 양식을 지워줘"
+    │
+    ▼
+삭제 대상:
+├── documents/dongkuk/dongkuk-systems/  # 문서 양식
+├── contents/*/dongkuk-systems-*        # 연관 콘텐츠
+└── thumbnails/... (연관 항목)
 ```
+
+옵션:
+- `--cascade`: 연관 콘텐츠 모두 삭제
+- `--keep-contents`: 문서 양식만 삭제
+- `--dry-run`: 삭제 대상만 표시
