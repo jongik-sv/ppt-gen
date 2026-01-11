@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=1920, height=1080">
   <title>{{title}} - Divider</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;500&display=swap');
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -27,25 +27,30 @@
       justify-content: center;
     }
 
+    /* 버전 그룹 (한 줄) */
+    .version-group {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
     /* VERSION. 라벨 */
     .version-label {
-      font-size: 24px;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 42px;
       color: var(--primary);
-      letter-spacing: 6px;
-      font-weight: 400;
-      margin-bottom: 0;
+      letter-spacing: 12px;
+      font-weight: 500;
     }
 
     /* 버전 숫자 */
     .version-number {
-      font-size: 72px;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 42px;
       color: var(--primary);
-      font-weight: 300;
-      line-height: 1;
-      letter-spacing: -2px;
-      margin-bottom: 0;
-      position: relative;
-      z-index: 2;
+      font-weight: 500;
+      letter-spacing: 2px;
     }
 
     /* 장식선 - 양 끝에 점 */
@@ -53,8 +58,8 @@
       display: flex;
       align-items: center;
       gap: 0;
-      margin-top: -20px;
-      margin-bottom: 30px;
+      margin-top: -10px;
+      margin-bottom: 40px;
     }
 
     .deco-dot {
@@ -65,7 +70,7 @@
     }
 
     .deco-line {
-      width: 280px;
+      width: 420px;
       height: 1px;
       background: var(--primary);
     }
@@ -100,8 +105,10 @@
 </head>
 <body>
   <div class="slide">
-    <p class="version-label">VERSION.</p>
-    <p class="version-number">{{version}}</p>
+    <div class="version-group">
+      <span class="version-label">VERSION.</span>
+      <span class="version-number">{{version}}</span>
+    </div>
 
     <div class="deco-line-container">
       <div class="deco-dot"></div>

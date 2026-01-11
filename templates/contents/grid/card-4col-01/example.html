@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1920, height=1080">
@@ -7,7 +8,11 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     :root {
       /* Primary colors */
@@ -32,6 +37,8 @@
       /* Backgrounds */
       --bg-light: #DCF0EF;
       --bg-neutral: #E8E8E8;
+      /* Card */
+      --card-border: #D0D0D0;
     }
 
     /* 콘텐츠 영역만 (1920x734px) */
@@ -64,91 +71,99 @@
     .card-row {
       display: flex;
       justify-content: space-around;
-      height: 45%;
+      height: 60%;
     }
 
     .card {
       width: 22%;
-      background: var(--bg-light);
+      background: white;
+      border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 24px;
       position: relative;
     }
 
-    /* 카드별로 다른 배경색 */
-    .card:nth-child(1) { background: var(--muted-7); }
-    .card:nth-child(2) { background: var(--muted-6); }
-    .card:nth-child(3) { background: var(--muted-5); }
-    .card:nth-child(4) { background: var(--bg-light); }
-
     .card-description {
-      font-size: 14px;
-      color: var(--muted-1);
-      line-height: 1.8;
+      font-size: 13px;
+      color: #333;
+      line-height: 1.9;
     }
 
     .number-row {
       display: flex;
       justify-content: space-around;
-      margin-top: 48px;
+      margin-top: -24px;
+      position: relative;
+      z-index: 1;
     }
 
     .card-number {
       width: 22%;
       display: flex;
       justify-content: center;
+      height: 24px;
+      overflow: hidden;
     }
 
     .number-badge {
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      color: white;
+      background: var(--muted-7);
+      color: var(--secondary);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
       font-weight: 600;
     }
-
-    /* 번호 뱃지 색상 그라데이션 */
-    .card-number:nth-child(1) .number-badge { background: var(--gradient-1); }
-    .card-number:nth-child(2) .number-badge { background: var(--gradient-2); }
-    .card-number:nth-child(3) .number-badge { background: var(--gradient-3); }
-    .card-number:nth-child(4) .number-badge { background: var(--primary); }
   </style>
 </head>
+
 <body>
   <!-- 콘텐츠 영역만 (헤더 제외) -->
   <div class="content">
     <div class="title-row">
-      <div class="card-title">텍스트 입력</div>
-      <div class="card-title">텍스트 입력</div>
-      <div class="card-title">텍스트 입력</div>
-      <div class="card-title">텍스트 입력</div>
+      <div class="card-title">제목</div>
+      <div class="card-title">제목</div>
+      <div class="card-title">제목</div>
+      <div class="card-title">제목</div>
     </div>
 
     <div class="card-row">
       <div class="card">
-        <p class="card-description">내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마</p>
+        <p class="card-description">내가 바람 펴도 너는 절대 피지마, Baby<br>나는 너를 잊어도 넌 나를 잊지마<br>Lady<br>가끔 내가 연락이 없고 술을 마셔도<br>혹시
+          내가 다른 여면 여자와<br>잠시 눈을 맞춰도 넌 나만 바라봐</p>
       </div>
       <div class="card">
-        <p class="card-description">내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마</p>
+        <p class="card-description">내가 바람 펴도 너는 절대 피지마, Baby<br>나는 너를 잊어도 넌 나를 잊지마<br>Lady<br>가끔 내가 연락이 없고 술을 마셔도<br>혹시
+          내가 다른 여면 여자와<br>잠시 눈을 맞춰도 넌 나만 바라봐</p>
       </div>
       <div class="card">
-        <p class="card-description">내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마</p>
+        <p class="card-description">내가 바람 펴도 너는 절대 피지마, Baby<br>나는 너를 잊어도 넌 나를 잊지마<br>Lady<br>가끔 내가 연락이 없고 술을 마셔도<br>혹시
+          내가 다른 여면 여자와<br>잠시 눈을 맞춰도 넌 나만 바라봐</p>
       </div>
       <div class="card">
-        <p class="card-description">내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마</p>
+        <p class="card-description">내가 바람 펴도 너는 절대 피지마, Baby<br>나는 너를 잊어도 넌 나를 잊지마<br>Lady<br>가끔 내가 연락이 없고 술을 마셔도<br>혹시
+          내가 다른 여면 여자와<br>잠시 눈을 맞춰도 넌 나만 바라봐</p>
       </div>
     </div>
 
     <div class="number-row">
-      <div class="card-number"><div class="number-badge">01</div></div>
-      <div class="card-number"><div class="number-badge">02</div></div>
-      <div class="card-number"><div class="number-badge">03</div></div>
-      <div class="card-number"><div class="number-badge">04</div></div>
+      <div class="card-number">
+        <div class="number-badge">01</div>
+      </div>
+      <div class="card-number">
+        <div class="number-badge">02</div>
+      </div>
+      <div class="card-number">
+        <div class="number-badge">03</div>
+      </div>
+      <div class="card-number">
+        <div class="number-badge">04</div>
+      </div>
     </div>
   </div>
 </body>
+
 </html>

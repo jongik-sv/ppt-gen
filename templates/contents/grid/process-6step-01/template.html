@@ -41,42 +41,43 @@
       background: white;
       position: relative;
       font-family: 'Noto Sans KR', sans-serif;
-      padding: 40px 3%;
+      padding: 20px 2%;
     }
 
     .center-line {
       position: absolute;
       top: 50%;
-      left: 2.4%;
-      right: 2.4%;
+      left: 547px;
+      right: 447px;
       height: 2px;
       background: var(--primary);
     }
 
     .top-row {
       position: absolute;
-      top: 5%;
-      left: 0;
-      right: 0;
-      height: 40%;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 35%;
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
+      gap: 40px;
     }
 
     .bottom-row {
       position: absolute;
-      bottom: 5%;
-      left: 0;
-      right: 0;
-      height: 40%;
+      bottom: 8%;
+      left: calc(50% + 100px);
+      transform: translateX(-50%);
+      height: 35%;
       display: flex;
-      justify-content: space-around;
-      padding: 0 15%;
+      justify-content: center;
+      gap: 40px;
     }
 
     .step-item {
       position: relative;
-      width: 28%;
+      width: 320px;
     }
 
     .step-number {
@@ -93,25 +94,20 @@
       z-index: 10;
     }
 
-    /* 각 숫자 뱃지 다른 색상 */
-    .top-row .step-item:nth-child(1) .step-number { background: var(--gradient-1); }
-    .bottom-row .step-item:nth-child(1) .step-number { background: var(--gradient-2); }
-    .top-row .step-item:nth-child(2) .step-number { background: var(--gradient-3); }
-    .bottom-row .step-item:nth-child(2) .step-number { background: var(--gradient-4); }
-    .top-row .step-item:nth-child(3) .step-number { background: var(--gradient-5); }
-    .bottom-row .step-item:nth-child(3) .step-number { background: var(--muted-6); }
+    /* 숫자 뱃지 색상 */
+    .step-number { background: var(--primary); }
 
-    .top-row .step-number {
-      bottom: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+    .step-number { transform: translateX(-50%); }
+    .top-row .step-number { bottom: -71px; }
+    .bottom-row .step-number { top: -71px; }
 
-    .bottom-row .step-number {
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+    /* 1~6 균등 배치 (1번 1/3 ~ 6번 2/3) */
+    .top-row .step-item:nth-child(1) .step-number { left: calc(50% - 53px); }
+    .bottom-row .step-item:nth-child(1) .step-number { left: calc(50% + 32px); }
+    .top-row .step-item:nth-child(2) .step-number { left: calc(50% - 43px); }
+    .bottom-row .step-item:nth-child(2) .step-number { left: calc(50% + 43px); }
+    .top-row .step-item:nth-child(3) .step-number { left: calc(50% - 32px); }
+    .bottom-row .step-item:nth-child(3) .step-number { left: calc(50% + 53px); }
 
     .step-card {
       border-radius: 16px;
@@ -131,30 +127,19 @@
       position: absolute;
       width: 0;
       height: 0;
-      left: 50%;
       transform: translateX(-50%);
     }
 
-    .top-row .step-item:nth-child(1) .step-arrow { bottom: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--muted-6); }
-    .bottom-row .step-item:nth-child(1) .step-arrow { top: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--muted-7); }
-    .top-row .step-item:nth-child(2) .step-arrow { bottom: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--bg-light); }
-    .bottom-row .step-item:nth-child(2) .step-arrow { top: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--muted-6); }
-    .top-row .step-item:nth-child(3) .step-arrow { bottom: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--muted-7); }
-    .bottom-row .step-item:nth-child(3) .step-arrow { top: -30px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--bg-light); }
+    /* 삼각형도 숫자와 동일 위치 */
+    .top-row .step-item:nth-child(1) .step-arrow { left: calc(50% - 53px); bottom: -24px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--muted-6); }
+    .bottom-row .step-item:nth-child(1) .step-arrow { left: calc(50% + 32px); top: -24px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--muted-7); }
+    .top-row .step-item:nth-child(2) .step-arrow { left: calc(50% - 43px); bottom: -24px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--bg-light); }
+    .bottom-row .step-item:nth-child(2) .step-arrow { left: calc(50% + 43px); top: -24px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--muted-6); }
+    .top-row .step-item:nth-child(3) .step-arrow { left: calc(50% - 32px); bottom: -24px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 24px solid var(--muted-7); }
+    .bottom-row .step-item:nth-child(3) .step-arrow { left: calc(50% + 53px); top: -24px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 24px solid var(--bg-light); }
 
-    .step-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--secondary);
-      margin-bottom: 12px;
-    }
-
-    .step-description {
-      font-size: 14px;
-      color: var(--muted-1);
-      line-height: 1.6;
-      white-space: pre-line;
-    }
+    .step-title { font-size: 18px; font-weight: 600; color: var(--secondary); margin-bottom: 12px; }
+    .step-description { font-size: 14px; color: var(--muted-1); line-height: 1.6; white-space: pre-line; }
   </style>
 </head>
 <body>
