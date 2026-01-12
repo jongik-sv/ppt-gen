@@ -2,6 +2,15 @@ id: connector-2row-01
 name: 커넥터 연결 2행 레이아웃
 category: timeline
 description: 좌측 그래픽에서 우측 2개 항목으로 커넥터가 연결되는 레이아웃
+
+layout:
+  type: timeline
+  structure: connector-2row
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
 keywords:
   - 타임라인
   - 커넥터

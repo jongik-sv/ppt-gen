@@ -17,6 +17,9 @@ layout:
   type: chart
   structure: single-chart
   content_only: true  # 콘텐츠 영역만 (헤더 제외)
+  dimensions:
+    width: 1920px
+    height: 734px
 
 placeholders:
   - name: chart_data

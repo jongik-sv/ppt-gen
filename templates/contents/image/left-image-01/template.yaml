@@ -13,6 +13,14 @@ source:
 quality: medium
 render_method: html
 
+layout:
+  type: image
+  structure: left-image-right-text
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
 schema:
   type: object
   properties:

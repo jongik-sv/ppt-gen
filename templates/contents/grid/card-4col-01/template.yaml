@@ -15,7 +15,10 @@ theme: deep-green
 layout:
   type: grid
   structure: 4-column
-  header_height: "22%"
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
 
 placeholders:
   - name: page_title

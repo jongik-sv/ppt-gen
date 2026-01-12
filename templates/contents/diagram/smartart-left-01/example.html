@@ -2,58 +2,94 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1920, height=1080">
-  <title>SmartArt Left Diagram - Content Only</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전략적 의사결정 매트릭스</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      /* Primary colors */
-      --primary: #22523B;
-      --secondary: #153325;
-      --accent: #479374;
-      /* Grid box colors (from original) - 더 정확한 색상 */
-      --box-1: #5A7268;  /* 좌상 - 짙은 회녹색 */
-      --box-2: #7A9A8A;  /* 우상 - 중간 녹색 */
-      --box-3: #9ECEC8;  /* 좌하 - 연한 청록색 */
-      --box-4: #B0DCD6;  /* 우하 - 연한 청록색 */
-      /* Muted scale */
-      --muted-1: #6F886A;
-      --muted-2: #83A99B;
-      /* Arrow color - 회색 */
-      --arrow-color: #888888;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* 콘텐츠 영역만 (1920x734px) */
-    .content {
-      width: 1920px;
-      height: 734px;
-      background: white;
-      position: relative;
-      font-family: 'Noto Sans KR', sans-serif;
+    body {
+      width: 100vw;
+      height: 100vh;
       display: flex;
       align-items: center;
-      padding: 40px 80px;
+      justify-content: center;
+      background: #e2e8f0;
+      font-family: 'Noto Sans KR', sans-serif;
     }
 
-    .diagram-area {
-      width: 35%;
+    .canvas {
+      width: 1280px;
+      height: 720px;
+      background: #f8fafc;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+    }
+
+    /* Abstract Background Blobs */
+    .canvas::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(67, 160, 71, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .canvas::after {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      left: -150px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(77, 182, 172, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 100px;
+      position: relative;
+      z-index: 1;
+      gap: 0;
+    }
+
+    /* === LEFT SECTION: MATRIX === */
+    .matrix-section {
+      width: 380px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
     }
 
-    /* 2x2 그리드 매트릭스 */
     .matrix-grid {
-      width: 100%;
-      max-width: 340px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
-      gap: 16px;
+      gap: 15px;
+      width: 100%;
       aspect-ratio: 1;
       position: relative;
     }
@@ -62,54 +98,55 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 24px;
       color: white;
-      font-weight: 500;
-      font-size: 17px;
+      font-weight: bold;
+      font-size: 16px;
       text-align: center;
       padding: 20px;
-      line-height: 1.5;
-      border-radius: 6px;
+      line-height: 1.4;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     .matrix-box:nth-child(1) {
-      background: var(--box-1);
+      background: #5A7268; /* 좌상 - 짙은 회녹색 */
     }
 
     .matrix-box:nth-child(2) {
-      background: var(--box-2);
+      background: #7A9A8A; /* 우상 - 중간 녹색 */
     }
 
     .matrix-box:nth-child(3) {
-      background: var(--box-3);
-      color: #3A5A4A;
+      background: #9ECEC8; /* 좌하 - 연한 청록색 */
+      color: #3A5A4A; /* 어두운 텍스트 */
     }
 
     .matrix-box:nth-child(4) {
-      background: var(--box-4);
-      color: #3A5A4A;
+      background: #B0DCD6; /* 우하 - 연한 청록색 */
+      color: #3A5A4A; /* 어두운 텍스트 */
     }
 
-    /* 중앙 화살표 컨테이너 - 그리드보다 크게 */
-    .center-arrows {
+    /* Overlay Arrows - Cross Axes */
+    .arrow-overlay {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 120%;
-      height: 120%;
-      z-index: 10;
+      width: 115%;
+      height: 115%;
       pointer-events: none;
+      z-index: 10;
     }
 
-    /* 가로 화살표 - 박스 밖으로 튀어나옴 */
+    /* Horizontal Arrow */
     .arrow-horizontal {
       position: absolute;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: calc(100% - 30px);
-      height: 10px;
-      background: var(--arrow-color);
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #1e293b;
+      transform: translateY(-50%);
     }
 
     .arrow-horizontal::before,
@@ -117,30 +154,34 @@
       content: '';
       position: absolute;
       top: 50%;
-      border: solid var(--arrow-color);
-      border-width: 0 10px 10px 0;
-      padding: 10px;
+      width: 0;
+      height: 0;
+      border-style: solid;
     }
 
     .arrow-horizontal::before {
-      left: -4px;
-      transform: translateY(-50%) rotate(135deg);
+      left: -8px;
+      transform: translateY(-50%);
+      border-width: 6px 8px 6px 0;
+      border-color: transparent #1e293b transparent transparent;
     }
 
     .arrow-horizontal::after {
-      right: -4px;
-      transform: translateY(-50%) rotate(-45deg);
+      right: -8px;
+      transform: translateY(-50%);
+      border-width: 6px 0 6px 8px;
+      border-color: transparent transparent transparent #1e293b;
     }
 
-    /* 세로 화살표 - 박스 밖으로 튀어나옴 */
+    /* Vertical Arrow */
     .arrow-vertical {
       position: absolute;
-      top: 50%;
+      top: 0;
+      bottom: 0;
       left: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px;
-      height: calc(100% - 30px);
-      background: var(--arrow-color);
+      width: 3px;
+      background: #1e293b;
+      transform: translateX(-50%);
     }
 
     .arrow-vertical::before,
@@ -148,93 +189,155 @@
       content: '';
       position: absolute;
       left: 50%;
-      border: solid var(--arrow-color);
-      border-width: 0 10px 10px 0;
-      padding: 10px;
+      width: 0;
+      height: 0;
+      border-style: solid;
     }
 
     .arrow-vertical::before {
-      top: -4px;
-      transform: translateX(-50%) rotate(-135deg);
+      top: -8px;
+      transform: translateX(-50%);
+      border-width: 0 6px 8px 6px;
+      border-color: transparent transparent #1e293b transparent;
     }
 
     .arrow-vertical::after {
-      bottom: -4px;
-      transform: translateX(-50%) rotate(45deg);
+      bottom: -8px;
+      transform: translateX(-50%);
+      border-width: 8px 6px 0 6px;
+      border-color: #1e293b transparent transparent transparent;
     }
 
-    /* 도형과 텍스트 영역 사이 구분선 - 그리드 높이와 동일 */
+    /* Center Circle */
+    .center-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      background: #1e293b;
+      border-radius: 50%;
+      border: 2px solid #f8fafc;
+    }
+
+    /* === CENTER SECTION: DIVIDER === */
     .divider {
-      width: 4px;
-      align-self: center;
-      height: 340px;
-      background: var(--primary);
-      margin: 0 40px;
+      width: 2px;
+      height: 60%;
+      background: #43a047;
+      opacity: 0.6;
+      margin: 0 60px;
       flex-shrink: 0;
-      position: relative;
-      left: -120px;
     }
 
-    .text-area {
+    /* === RIGHT SECTION: CONTENT === */
+    .content-section {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding-right: 60px;
-      position: relative;
-      left: -100px;
       max-width: 550px;
     }
 
-    .content-title {
-      font-size: 26px;
+    .main-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 32px;
       font-weight: 700;
-      color: var(--secondary);
-      margin-bottom: 16px;
+      color: #1e293b;
+      line-height: 1.2;
+      margin-bottom: 48px;
+      letter-spacing: -0.5px;
     }
 
-    .content-description {
-      font-size: 13px;
-      color: var(--muted-1);
-      line-height: 1.8;
-      margin-bottom: 20px;
+    .content-block {
+      margin-bottom: 32px;
     }
 
-    .content-description:last-of-type {
+    .content-block:last-child {
       margin-bottom: 0;
     }
 
-    .source {
-      font-size: 12px;
-      color: var(--muted-2);
-      margin-top: 4px;
+    .block-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .block-title i {
+      color: #43a047;
+      font-size: 22px;
+    }
+
+    .block-text {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #475569;
+    }
+
+    .highlight {
+      color: #43a047;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
-  <!-- 콘텐츠 영역만 (헤더 제외) -->
-  <div class="content">
-    <div class="diagram-area">
-      <div class="matrix-grid">
-        <div class="matrix-box">제목을<br>입력해주세<br>요.</div>
-        <div class="matrix-box">제목을<br>입력해 주세<br>요.</div>
-        <div class="matrix-box">제목을<br>입력해 주세<br>요.</div>
-        <div class="matrix-box">제목을<br>입력해 주세<br>요.</div>
-        <!-- 중앙 양방향 화살표 -->
-        <div class="center-arrows">
-          <div class="arrow-horizontal"></div>
-          <div class="arrow-vertical"></div>
+  <div class="canvas">
+    <div class="container">
+      
+      <!-- LEFT: MATRIX -->
+      <div class="matrix-section">
+        <div class="matrix-grid">
+          <div class="matrix-box">긴급성<br>높음</div>
+          <div class="matrix-box">중요도<br>높음</div>
+          <div class="matrix-box">긴급성<br>낮음</div>
+          <div class="matrix-box">중요도<br>낮음</div>
+          
+          <!-- Arrow Overlay -->
+          <div class="arrow-overlay">
+            <div class="arrow-horizontal"></div>
+            <div class="arrow-vertical"></div>
+            <div class="center-circle"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 도형과 텍스트 영역 구분선 -->
-    <div class="divider"></div>
+      <!-- CENTER: DIVIDER -->
+      <div class="divider"></div>
 
-    <div class="text-area">
-      <h2 class="content-title">제목을 입력하세요.</h2>
-      <p class="content-description">영화 미비포유의 줄거리… 이별을 준비하는 마지막에 나타난 짜증나는 여자 내 평생 최고의 6개월을 선물했다 6년 동안이나 일하던 카페가 문을 닫게 되자 바람에 백수가 된 루이자(에밀리아 클라크)는 새 직장을 찾던 중 촉망 받던 젊은 사업가였던 전신 마비 환자 윌(샘 클라플린)의 6개월 임시 간병인이 된다. 루이자의 우스꽝스러운 옷, 썰렁한 농담, 속마음을 그대로 드러내는 얼굴 표정이 신경 쓰이는 윌 면 멍청이 보통 두 살짜리처럼 취급하고 개망나니처럼 구는 윌이 치사하기만 한 루이자. 그렇게 둘은 서로의 인생을 향해 차츰 걸어 들어가는데… <span class="source">- 네이버영화</span></p>
-      <p class="content-description">영화 미드나잇 선의 줄거리… XP(색소성건피증)라는 희귀병으로 태양을 피해야만 하는 케이티. 오직 밤에만 외출이 허락된 그녀에게는 어머니가 남겨준 기타와 창문 너머로 10년째 짝사랑해온 '찰리'가 세상의 빛이다. 어느 날 작은 기차역에서 한밤의 버스킹을 하던 '케이티'의 앞에 '찰리'가 나타나고, 두 사람은 매일 밤마다 모두가 부러워하는 완벽한 데이트를 이어간다. 처음으로 함께 여행을 떠난 날, 꿈 같은 시간을 보내던 '케이티'는 그만 지켜야만 하는 규칙을 어기게 되고 결국 피할 수 없는 선택을 해야만 하는데… 너에게 하고 싶은 진짜 사랑 고백 태양이 뜬 뒤에도 내 곁에 있어줄래? <span class="source">- 네이버영화</span></p>
+      <!-- RIGHT: CONTENT -->
+      <div class="content-section">
+        <h1 class="main-title">전략적 의사결정<br>우선순위 매트릭스</h1>
+        
+        <div class="content-block">
+          <div class="block-title">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>포트폴리오 분석</span>
+          </div>
+          <p class="block-text">
+            프로젝트와 업무를 <span class="highlight">긴급성과 중요도</span>라는 두 가지 차원으로 분류하여, 
+            자원 배분의 우선순위를 명확히 설정합니다. 이를 통해 조직의 
+            <span class="highlight">전략적 목표</span>에 부합하는 업무에 집중할 수 있습니다.
+          </p>
+        </div>
+
+        <div class="content-block">
+          <div class="block-title">
+            <i class="fa-solid fa-bullseye"></i>
+            <span>실행 전략 도출</span>
+          </div>
+          <p class="block-text">
+            각 사분면에 배치된 항목에 대해 <span class="highlight">차별화된 실행 전략</span>을 수립합니다. 
+            긴급하고 중요한 업무는 즉시 실행하고, 중요하지만 긴급하지 않은 업무는 
+            <span class="highlight">계획적으로 추진</span>하여 장기적 성과를 창출합니다.
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 </body>

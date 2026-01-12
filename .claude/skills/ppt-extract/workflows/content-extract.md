@@ -65,6 +65,47 @@
 
 ---
 
+## ⚠️ 콘텐츠 크기 표준 (필수)
+
+모든 콘텐츠 템플릿은 `layout.dimensions` 필드를 **필수**로 포함해야 합니다.
+
+### 크기 정의
+
+| 추출 범위 | 플래그 | 크기 | 적용 카테고리 |
+|----------|--------|------|--------------|
+| **콘텐츠 영역만** | `content_only: true` | 1920 × 734px | diagram, grid, list, chart, process, timeline, infographic, image |
+| **전체 슬라이드** | `full_slide: true` | 1920 × 1080px | cover, toc, divider, closing |
+
+### template.yaml 필수 형식
+
+```yaml
+layout:
+  type: {카테고리}
+  structure: {구조명}
+  content_only: true       # 또는 full_slide: true
+  dimensions:              # ⚠️ 필수
+    width: 1920px
+    height: 734px          # content_only일 때 (또는 1080px for full_slide)
+```
+
+### template.html CSS 규칙
+
+```css
+/* 콘텐츠 영역만 (content_only: true) */
+.content {
+  width: 1920px;
+  height: 734px;  /* 1080px * 0.68 = 734px */
+}
+
+/* 전체 슬라이드 (full_slide: true) */
+.slide {
+  width: 1920px;
+  height: 1080px;
+}
+```
+
+---
+
 ## 프로세스
 
 ### 1. 슬라이드 파싱
@@ -230,6 +271,9 @@ layout:
   type: grid
   structure: icon-cards
   content_only: true  # 콘텐츠 영역만 (헤더 제외)
+  dimensions:         # ⚠️ 필수: 콘텐츠 크기 명시
+    width: 1920px
+    height: 734px     # 콘텐츠 영역 (1080 * 0.68)
 
 # ⚠️ 헤더 플레이스홀더 없음 (page_title, page_subtitle 없음)
 placeholders:
@@ -243,35 +287,301 @@ placeholders:
       - { name: description, type: text }
 
 semantic_description: |
-  2~6개 동일 크기 카드가 가로 균등 배치.
-  각 카드는 둥근 모서리(16px)와 그림자.
-  헤더(제목/부제목)는 문서 양식에서 관리.
+  2~4개 동일 크기 카드가 가로 균등 배치된 그리드 레이아웃.
 
-match_keywords: [그리드, 카드, 아이콘, 서비스]
+  **캔버스:**
+  - 콘텐츠 영역: 1920 × 734px
+  - 배경: {{theme.background.light}} (밝은 배경)
+
+  **레이아웃 구조 (CSS Grid):**
+  - 그리드: 4열, gap 40px
+  - 카드 너비: 각 22% (약 422px)
+  - 좌우 마진: 3% (약 58px)
+
+  **카드 스타일:**
+  - 크기: 422 × 520px
+  - 배경: {{theme.gradient.primary}} (녹색 계열)
+  - border-radius: 16px
+  - box-shadow: 0 4px 12px rgba(0,0,0,0.08)
+
+  **카드 내부 구성:**
+  1. **상단 아이콘 영역 (25%):**
+     - 배경: {{theme.muted.light}} (연한 색)
+     - 아이콘 크기: 64 × 64px
+  2. **중앙 타이틀 (15%):**
+     - 폰트: {{theme.fonts.heading}}, 20px, bold
+     - 색상: {{theme.colors.secondary}}
+  3. **하단 설명 (50%):**
+     - 폰트: {{theme.fonts.body}}, 14px
+     - 색상: white
+     - line-height: 1.6
+  4. **번호 뱃지 (하단 중앙):**
+     - 원형, 48px
+     - 배경: white
+     - 텍스트: {{theme.colors.primary}}, bold
+
+  **디자인 토큰 매핑:**
+  - 카드 배경: gradient-3 → gradient-6 (좌→우 그라데이션)
+  - 텍스트 강조: muted-1
+  - 구분선: muted-5
+
+match_keywords: [그리드, 카드, 아이콘, 서비스, 4열]
 ```
+
+---
+
+## ⚠️ semantic_description 작성 가이드 (필수)
+
+`semantic_description`은 **HTML/CSS로 재현 가능한 수준**으로 상세하게 작성해야 합니다.
+
+### 필수 포함 항목
+
+| 섹션 | 필수 정보 | 예시 |
+|------|----------|------|
+| **캔버스** | 크기, 배경색 | `1920 × 734px`, `{{theme.background.light}}` |
+| **레이아웃** | 구조, 방향, 간격 | `CSS Grid 4열`, `Flexbox Row`, `gap: 40px` |
+| **각 요소 크기** | 너비, 높이 (px 또는 %) | `카드: 422 × 520px` |
+| **스타일 속성** | border-radius, shadow | `border-radius: 16px` |
+| **색상 (토큰)** | 디자인 토큰 참조 | `{{theme.gradient.primary}}` |
+| **타이포그래피** | 폰트, 크기, 굵기 | `{{theme.fonts.heading}}, 20px, bold` |
+
+### 색상 작성 규칙 (디자인 토큰 필수)
+
+**❌ 하드코딩 금지:**
+```yaml
+# 잘못된 예시
+색상: #22523B
+배경: #153325
+```
+
+**✅ 디자인 토큰 사용:**
+```yaml
+# 올바른 예시
+색상: {{theme.colors.primary}}
+배경: {{theme.gradient.dark}}
+강조: {{theme.muted.aqua}}
+```
+
+### 사용 가능한 디자인 토큰
+
+```yaml
+# 주요 색상
+{{theme.colors.primary}}      # 메인 색상
+{{theme.colors.secondary}}    # 보조 색상
+{{theme.colors.accent}}       # 강조 색상
+
+# 그라데이션 (6단계, 진함→밝음)
+{{theme.gradient.dark}}       # gradient-1
+{{theme.gradient.deep}}       # gradient-2
+{{theme.gradient.primary}}    # gradient-3
+{{theme.gradient.accent}}     # gradient-4
+{{theme.gradient.medium}}     # gradient-5
+{{theme.gradient.light}}      # gradient-6
+
+# 보조색 (7단계, 진함→밝음)
+{{theme.muted.dark}}          # muted-1
+{{theme.muted.green}}         # muted-2
+{{theme.muted.sage}}          # muted-3
+{{theme.muted.mint}}          # muted-4
+{{theme.muted.aqua}}          # muted-5
+{{theme.muted.pale}}          # muted-6
+{{theme.muted.light}}         # muted-7
+
+# 배경
+{{theme.background.dark}}
+{{theme.background.light}}
+{{theme.background.neutral}}
+
+# 폰트
+{{theme.fonts.display}}       # 큰 제목
+{{theme.fonts.heading}}       # 헤딩
+{{theme.fonts.body}}          # 본문
+{{theme.fonts.accent}}        # 강조
+```
+
+### 상세 예시 (매트릭스 다이어그램)
+
+```yaml
+semantic_description: |
+  2x2 매트릭스 다이어그램과 설명 텍스트가 좌우로 배치된 전략 슬라이드.
+
+  **캔버스:**
+  - 콘텐츠 영역: 1920 × 734px
+  - 배경: white
+
+  **레이아웃 구조 (Flexbox Row):**
+
+  1. **좌측 매트릭스 섹션 (45%):**
+     - 2x2 Grid (gap: 15px)
+     - 박스 크기: 180 × 180px, border-radius: 24px
+     - 박스 색상 (좌상→우하):
+       * 좌상: {{theme.muted.dark}} - 흰색 텍스트
+       * 우상: {{theme.muted.green}} - 흰색 텍스트
+       * 좌하: {{theme.muted.aqua}} - {{theme.colors.secondary}} 텍스트
+       * 우하: {{theme.muted.light}} - {{theme.colors.secondary}} 텍스트
+     - **십자 화살표 오버레이:**
+       * 축: 3px, {{theme.colors.secondary}}
+       * 화살표 머리: CSS border로 구현
+       * 중앙 원: 12px, {{theme.colors.secondary}}
+
+  2. **중앙 구분선:**
+     - 너비: 2px, 높이: 60%
+     - 색상: {{theme.colors.accent}}, opacity: 0.6
+     - 마진: 60px
+
+  3. **우측 콘텐츠 섹션 (45%):**
+     - **메인 타이틀:**
+       * 폰트: {{theme.fonts.display}}, 32px, bold
+       * 색상: {{theme.colors.secondary}}
+     - **콘텐츠 블록 (2개):**
+       * 아이콘: FontAwesome, 22px, {{theme.colors.accent}}
+       * 블록 타이틀: {{theme.fonts.heading}}, 20px, bold
+       * 본문: {{theme.fonts.body}}, 15px, line-height: 1.8
+       * 키워드 강조: {{theme.colors.accent}}, font-weight: 500
+```
+
+---
+
+## ⚠️ 테마 교체 가능한 디자인 시스템 (필수)
+
+콘텐츠 템플릿은 **다른 테마로 교체 가능**하도록 설계해야 합니다.
+
+### 핵심 원칙
+
+1. **하드코딩 금지**: 색상, 폰트를 직접 코드에 쓰지 않음
+2. **CSS 변수 사용**: 모든 스타일 값을 CSS 변수로 참조
+3. **Handlebars 바인딩**: 테마 값은 `{{theme.xxx}}`로 주입
+
+### 테마 교체 흐름
+
+```
+테마 파일 (theme.yaml)     템플릿 (template.html)      최종 출력
+┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+│ colors:         │       │ :root {         │       │ :root {         │
+│   primary: "#22 │  ───► │   --primary:    │  ───► │   --primary:    │
+│               ..." │    │     {{theme... }}│       │     #22523B;    │
+└─────────────────┘       └─────────────────┘       └─────────────────┘
+     deep-green                 템플릿                   렌더링 결과
+```
+
+---
 
 #### template.html (콘텐츠 영역만, 734px 높이)
 
+**⚠️ 모든 색상/폰트는 CSS 변수로 정의하고, Handlebars로 테마 값을 주입**
+
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>{{template_name}}</title>
   <style>
+    /* ========================================
+       테마 변수 정의 (Handlebars 바인딩)
+       ⚠️ 색상/폰트를 직접 쓰지 말고 변수 사용
+       ======================================== */
     :root {
-      --primary: {{theme.primary}};
-      --secondary: {{theme.secondary}};
+      /* 주요 색상 */
+      --color-primary: {{theme.colors.primary}};
+      --color-secondary: {{theme.colors.secondary}};
+      --color-accent: {{theme.colors.accent}};
+
+      /* 그라데이션 팔레트 (6단계) */
+      --gradient-1: {{theme.gradient.dark}};
+      --gradient-2: {{theme.gradient.deep}};
+      --gradient-3: {{theme.gradient.primary}};
+      --gradient-4: {{theme.gradient.accent}};
+      --gradient-5: {{theme.gradient.medium}};
+      --gradient-6: {{theme.gradient.light}};
+
+      /* 보조색 팔레트 (7단계) */
+      --muted-1: {{theme.muted.dark}};
+      --muted-2: {{theme.muted.green}};
+      --muted-3: {{theme.muted.sage}};
+      --muted-4: {{theme.muted.mint}};
+      --muted-5: {{theme.muted.aqua}};
+      --muted-6: {{theme.muted.pale}};
+      --muted-7: {{theme.muted.light}};
+
+      /* 배경 */
+      --bg-dark: {{theme.background.dark}};
+      --bg-light: {{theme.background.light}};
+      --bg-neutral: {{theme.background.neutral}};
+
+      /* 폰트 */
+      --font-display: {{theme.fonts.display}};
+      --font-heading: {{theme.fonts.heading}};
+      --font-body: {{theme.fonts.body}};
+      --font-accent: {{theme.fonts.accent}};
+
+      /* 스타일 */
+      --radius: 16px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
-    /* 콘텐츠 영역만 (22% ~ 90%) = 1080 * 0.68 = 734px */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* 콘텐츠 영역 (1920 × 734px) */
     .content {
       width: 1920px;
       height: 734px;
-      background: white;
+      background: var(--bg-light);
+      font-family: var(--font-body), 'Noto Sans KR', sans-serif;
+      position: relative;
     }
+
+    /* ========================================
+       ⚠️ 모든 스타일에서 CSS 변수 사용
+       색상: var(--color-primary), var(--gradient-3)
+       폰트: var(--font-heading)
+       ======================================== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      padding: 60px;
+    }
+
     .card {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      background: var(--gradient-3);  /* ✅ CSS 변수 사용 */
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      color: white;
     }
+
+    .card h3 {
+      font-family: var(--font-heading);  /* ✅ 폰트 변수 */
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .card p {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .card .number {
+      width: 48px;
+      height: 48px;
+      background: white;
+      color: var(--color-primary);  /* ✅ 테마 색상 */
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* 카드별 색상 그라데이션 (좌→우 진함→밝음) */
+    .card:nth-child(1) { background: var(--gradient-3); }
+    .card:nth-child(2) { background: var(--gradient-4); }
+    .card:nth-child(3) { background: var(--gradient-5); }
+    .card:nth-child(4) { background: var(--gradient-6); }
   </style>
 </head>
 <body>
@@ -280,9 +590,12 @@ match_keywords: [그리드, 카드, 아이콘, 서비스]
     <div class="card-grid">
       {{#each items}}
       <div class="card">
-        <img src="{{this.icon}}" />
+        {{#if this.icon}}
+        <img class="icon" src="{{this.icon}}" alt="" />
+        {{/if}}
         <h3>{{this.title}}</h3>
         <p>{{this.description}}</p>
+        <div class="number">{{this.number}}</div>
       </div>
       {{/each}}
     </div>
@@ -290,6 +603,31 @@ match_keywords: [그리드, 카드, 아이콘, 서비스]
 </body>
 </html>
 ```
+
+### CSS 작성 규칙 체크리스트
+
+| 항목 | ❌ 금지 | ✅ 올바른 방법 |
+|------|--------|---------------|
+| 색상 | `color: #22523B;` | `color: var(--color-primary);` |
+| 배경 | `background: #153325;` | `background: var(--gradient-1);` |
+| 폰트 | `font-family: 'Noto Sans';` | `font-family: var(--font-body);` |
+| 그림자 | 인라인 rgba 값 | `box-shadow: var(--shadow);` |
+
+### 테마 교체 테스트
+
+템플릿이 테마 독립적으로 작동하는지 확인:
+
+```bash
+# deep-green 테마로 렌더링
+ppt-gen render template.html --theme deep-green --output preview-green.html
+
+# 다른 테마로 렌더링 (테마 교체 테스트)
+ppt-gen render template.html --theme corporate-blue --output preview-blue.html
+```
+
+두 결과물이 각 테마의 색상/폰트를 올바르게 반영해야 합니다.
+
+---
 
 #### template.ooxml
 

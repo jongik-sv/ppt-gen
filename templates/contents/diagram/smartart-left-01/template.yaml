@@ -2,7 +2,7 @@
 id: diagram-smartart-left-01
 name: 좌측 2x2 매트릭스 다이어그램
 category: diagram
-description: 좌측에 2x2 매트릭스 다이어그램(양방향 화살표 포함), 우측에 제목과 설명 텍스트
+description: 좌측에 2x2 매트릭스 다이어그램(양방향 화살표 포함), 우측에 제목과 설명 텍스트, 아이콘 , jji 수정 본
 
 source:
   file: "깔끔이 딥그린.pptx"
@@ -15,23 +15,64 @@ theme: deep-green
 layout:
   type: diagram
   structure: left-matrix-right-text
-  content_height: "734px"
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
 
 placeholders:
   - name: content_title
     type: text
     required: true
-    sample: "제목을 입력하세요."
+    sample: "전략적 의사결정<br>우선순위 매트릭스"
+
+  - name: content_description_1_title
+    type: text
+    required: true
+    sample: "포트폴리오 분석"
+
+  - name: content_description_1_icon
+    type: text
+    required: false
+    sample: "fa-solid fa-chart-pie"
+    recommended_options:
+      - "fa-solid fa-chart-pie" # 파이 차트
+      - "fa-solid fa-chart-line" # 라인 차트
+      - "fa-solid fa-chart-bar" # 막대 차트
+      - "fa-solid fa-lightbulb" # 아이디어
+      - "fa-solid fa-compass" # 나침반
+      - "fa-solid fa-magnifying-glass-chart" # 분석
+      - "fa-solid fa-briefcase" # 비즈니스
+      - "fa-solid fa-user-tie" # 경영진
 
   - name: content_description_1
     type: text
     required: true
-    sample: "영화 미비포유의 줄거리… 이별을 준비하는 마지막에 나타난 짜증나는 여자"
+    sample: "프로젝트와 업무를 긴급성과 중요도라는 두 가지 차원으로 분류하여, 자원 배분의 우선순위를 명확히 설정합니다."
+
+  - name: content_description_2_title
+    type: text
+    required: true
+    sample: "실행 전략 도출"
+
+  - name: content_description_2_icon
+    type: text
+    required: false
+    sample: "fa-solid fa-bullseye"
+    recommended_options:
+      - "fa-solid fa-bullseye" # 타겟
+      - "fa-solid fa-rocket" # 로켓
+      - "fa-solid fa-flag-checkered" # 목표
+      - "fa-solid fa-trophy" # 트로피
+      - "fa-solid fa-diagram-project" # 프로젝트
+      - "fa-solid fa-gears" # 실행
+      - "fa-solid fa-list-check" # 체크리스트
+      - "fa-solid fa-route" # 경로
 
   - name: content_description_2
     type: text
     required: false
-    sample: "영화 미드나잇 선의 줄거리… XP(색소성건피증)라는 희귀병으로 태양을 피해야만 하는 케이티."
+    sample: "각 사분면에 배치된 항목에 대해 차별화된 실행 전략을 수립합니다."
 
   - name: matrix_items
     type: array
@@ -39,16 +80,65 @@ placeholders:
     min_items: 4
     max_items: 4
     sample:
-      - label: "제목을 입력해주세요."
-      - label: "제목을 입력해 주세요."
-      - label: "제목을 입력해 주세요."
-      - label: "제목을 입력해 주세요."
+      - label: "긴급성<br>높음"
+      - label: "중요도<br>높음"
+      - label: "긴급성<br>낮음"
+      - label: "중요도<br>낮음"
 
 semantic_description: |
-  좌측 2x2 매트릭스 다이어그램 슬라이드.
-  - 좌측 35%: 2x2 그리드 박스 (4개), 중앙에 양방향 십자 화살표
-  - 중앙: 녹색 세로 구분선
-  - 우측: 제목과 2개의 설명 텍스트 단락
-  박스 색상: 좌상(짙은 회녹색), 우상(중간 녹색), 좌하/우하(연한 청록색)
+  현대적인 디자인 시스템을 적용한 2x2 매트릭스 전략 슬라이드.
 
-match_keywords: [다이어그램, SmartArt, 매트릭스, 2x2, 그리드, 사분면]
+  **캔버스 (1280x720px):**
+  - 배경: #f8fafc (light grey-blue)
+  - 추상적 radial-gradient blobs (우측 상단 & 좌측 하단)
+  - 그림자: 0 20px 60px rgba(0,0,0,0.15)
+
+  **레이아웃 구조 (Flexbox Row):**
+
+  1. **좌측 매트릭스 섹션 (380px):**
+     - 2x2 Grid (gap: 15px, aspect-ratio: 1)
+     - 박스 스타일: border-radius 24px, 그림자 효과
+     - 박스 색상:
+       * 좌상: #5A7268 (짙은 회녹색) - 흰색 텍스트
+       * 우상: #7A9A8A (중간 녹색) - 흰색 텍스트
+       * 좌하: #9ECEC8 (연한 청록색) - #3A5A4A 어두운 텍스트
+       * 우하: #B0DCD6 (연한 청록색) - #3A5A4A 어두운 텍스트
+     - **십자 화살표 오버레이 (115% 크기):**
+       * 가로/세로 축: 3px 두께, #1e293b 색상
+       * 양 끝에 화살표 머리 (CSS border로 구현)
+       * 중앙 교차점: 12px 원형, #1e293b, 2px 테두리
+
+  2. **중앙 세로 구분선:**
+     - 2px 너비, 60% 높이, #43a047, opacity 0.6
+     - 좌우 마진: 60px
+
+  3. **우측 콘텐츠 섹션 (max-width: 550px):**
+     - **메인 타이틀:** Poppins 32px, bold, #1e293b
+     - **2개 콘텐츠 블록:**
+       * 블록 타이틀: FontAwesome 아이콘 (22px, #43a047) + 텍스트 (20px, bold)
+       * 블록 본문: 15px, line-height 1.8, #475569
+       * 하이라이트 키워드: #43a047, font-weight 500
+
+  **타이포그래피:**
+  - 제목: 'Poppins' (Google Fonts)
+  - 본문: 'Noto Sans KR' (Google Fonts)
+  - 아이콘: FontAwesome 6.5.1
+
+  **핵심 디자인 원칙:**
+  - 화살표는 박스 영역을 넘어 115% 확장되어 시각적 강조
+  - 부드러운 border-radius (24px)로 모던한 느낌
+  - 미묘한 그림자 효과로 깊이감 표현
+  - 색상 그라데이션: 짙은 색 → 밝은 색 (좌상 → 우하)
+
+match_keywords:
+  [
+    다이어그램,
+    SmartArt,
+    매트릭스,
+    2x2,
+    그리드,
+    사분면,
+    전략,
+    의사결정,
+    우선순위,
+  ]

@@ -16,7 +16,10 @@ render_method: html  # 도트가 300개 이상이므로 HTML로 렌더링
 layout:
   type: infographic
   structure: 3-column-percent
-  header_height: "22%"
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
 
 placeholders:
   - name: page_title

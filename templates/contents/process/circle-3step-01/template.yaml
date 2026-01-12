@@ -16,6 +16,9 @@ layout:
   type: process
   structure: circle-3step-horizontal
   content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
 
 placeholders:
   - name: steps

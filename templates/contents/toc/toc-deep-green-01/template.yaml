@@ -16,6 +16,9 @@ layout:
   type: toc
   structure: 3-column
   full_slide: true
+  dimensions:
+    width: 1920px
+    height: 1080px
 
 placeholders:
   - name: page_title

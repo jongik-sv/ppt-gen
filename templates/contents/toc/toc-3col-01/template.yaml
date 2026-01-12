@@ -6,9 +6,13 @@ source: 깔끔이 딥그린.pptx
 quality: medium
 
 layout:
-  type: grid
+  type: toc
   columns: 3
   structure: header-sections
+  full_slide: true
+  dimensions:
+    width: 1920px
+    height: 1080px
 
 placeholders:
   - name: page_title

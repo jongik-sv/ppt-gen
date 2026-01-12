@@ -15,7 +15,10 @@ theme: deep-green
 layout:
   type: list
   structure: 3-row-disk
-  header_height: "22%"
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
 
 placeholders:
   - name: page_title
