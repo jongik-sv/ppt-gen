@@ -1,23 +1,31 @@
 # ppt-extract
+
 ## 추출 대상
+
 ### 1. 문서 양식
+
 #### 추출 내용
-  - 표지, 목차, 내지, 이미지(로고 포함)이 포함된 슬라이드 마스터의 ooxml 형식
-  - 문서 전용 테마
+
+- 표지, 목차, 내지, 이미지(로고 포함)이 포함된 슬라이드 마스터의 ooxml 형식
+- 문서 전용 테마
+
 #### 추출 목적
-  - 새로운 문서 생성 시 선택한 문서양식에 표지, 목차 기본 사용
-  - 문서양식의 내지(타이틀, 액션타이틀을 보고 선택해야 함)의 콘텐츠 영역에 디자인 된 내용 추가 하여 전체 문서 생성
+
+- 새로운 문서 생성 시 선택한 문서양식에 표지, 목차 기본 사용
+- 문서양식의 내지(타이틀, 액션타이틀을 보고 선택해야 함)의 콘텐츠 영역에 디자인 된 내용 추가 하여 전체 문서 생성
+
 ### 2. 테마
-  - 지금 있는 내용과 동일
+
+- 지금 있는 내용과 동일
+
 ### 3. 콘텐츠
-  - 추출한 문서에서 콘텐츠 영역의 디자인을 추출하여 데이터데이스로 저장
-  - 추출된 콘텐츠는 신규 슬라이드 생성 시 디자인의 재료로 사용 
+
+- 추출한 문서에서 콘텐츠 영역의 디자인을 추출하여 데이터데이스로 저장
+- 추출된 콘텐츠는 신규 슬라이드 생성 시 디자인의 재료로 사용
+
 ### 4. 오브젝트
-  - 추출한 문서에서 복잡한 영역만 따로 오브젝트로 추출
 
-
-
-
+- 추출한 문서에서 복잡한 영역만 따로 오브젝트로 추출
 
 # PPT-GEN
 
@@ -27,8 +35,8 @@
 - 디자인 평가 루프 → [3.2 디자인 평가 루프](PRD_PPT_Skills_Suite.md#디자인-평가-루프)
 - 디자인 가이드라인 → [3.2 디자인 가이드라인](PRD_PPT_Skills_Suite.md#디자인-가이드라인)
 
-
 ## 문서 생성 시 질문 사항
+
 1. 문서 디자인 품질
 2. 문서 종류
 3. 문서 양식 (특정 기업/단체, 양식 없음)
@@ -45,16 +53,19 @@
 > 추출할 원본이 없을 때, 예쁜 콘텐츠를 동적으로 생성하기 위한 라이브러리 기반 템플릿
 
 ### 데이터 시각화
+
 - [ ] Chart.js - 파이/막대/선 차트
 - [ ] Mermaid - 플로우차트, 시퀀스 다이어그램
 - [ ] ApexCharts - 대시보드용 차트
 
 ### 아이콘/일러스트
+
 - [ ] Lucide Icons - 라인 아이콘 (SVG)
 - [ ] unDraw - 일러스트 (커스텀 컬러 SVG)
 - [ ] Storyset - 애니메이션 일러스트
 
 ### 완료된 템플릿
+
 - [x] 간트 차트 (순수 CSS) - `templates/contents/schedule/gantt-yearly/`
 - [x] 간트 차트 Q1 (순수 CSS) - `templates/contents/schedule/gantt-01/`
 
@@ -62,17 +73,19 @@
 
 ## TODO: 스타일 효과 레이어 (2차 개발)
 
-> 📄 **상세 설계**: [research/스타일_효과_레이어_설계.md](./research/스타일_효과_레이어_설계.md)
+> 📄 **상세 설계**: [research/스타일*효과*레이어\_설계.md](./research/스타일_효과_레이어_설계.md)
 >
 > 테마(색상/폰트)와 별개로 **렌더링 방식**을 정의하는 레이어 추가
-> 
+>
 > 목적: "동국시스템즈 양식 + 글래스모피즘 효과" 같은 조합 지원
 
 ### 개념
+
 - 테마 = **무슨 색/폰트**를 쓸지 (파란색, Pretendard)
 - 스타일 효과 = **어떻게 보여줄지** (투명하게, 단색으로, 그라데이션으로)
 
 ### 지원 예정 스타일
+
 - [ ] flat - 단색, 그림자 없음 (기본)
 - [ ] glassmorphism - 투명 + 블러 + 테두리
 - [ ] neumorphism - 내부 그림자 + 돌출
@@ -80,57 +93,60 @@
 - [ ] neon - 발광 효과 (어두운 배경용)
 
 ### PRD 수정 필요 사항
+
 - 저장 위치: `templates/styles/{style_id}/style.yaml`
 - Stage 1 질문에 "스타일 효과" 추가 (품질 medium/low일 때만)
 - 조건: 품질 `high` → 스킵 (OOXML 원본 사용)
 
-
-
 🔧 부분 구현된 항목
-항목	PRD 요구사항	현재 상태	누락된 부분
-LLM 플레이스홀더 판단	스크립트 + LLM 하이브리드	
+항목 PRD 요구사항 현재 상태 누락된 부분
+LLM 플레이스홀더 판단 스크립트 + LLM 하이브리드
 
-_classify_slots_llm()
- 스텁만 존재	실제 LLM 호출 통합 필요
-3가지 포맷 생성	YAML + HTML + OOXML 동시 생성	YAML, HTML 생성됨	OOXML(template.ooxml) 생성 미완성
-영역 감지	Title/Footer/Content Zone 분리	
+\_classify_slots_llm()
+스텁만 존재 실제 LLM 호출 통합 필요
+3가지 포맷 생성 YAML + HTML + OOXML 동시 생성 YAML, HTML 생성됨 OOXML(template.ooxml) 생성 미완성
+영역 감지 Title/Footer/Content Zone 분리
 
 determine_zone()
- 구현됨	PRD 정확한 비율(22%/8%) 미적용
+구현됨 PRD 정확한 비율(22%/8%) 미적용
 
-
-❯ ppt-extract 를 이제 모드 끝낸거야? 
+❯ ppt-extract 를 이제 모드 끝낸거야?
 
 ∴ Thinking…
 
-  사용자가 ppt-extract P0 구현이 완료되었는지 확인하고 있습니다. 이전 세션에서 보여준 미구현 항목 표를 다시   
-  확인해보겠습니다.
+사용자가 ppt-extract P0 구현이 완료되었는지 확인하고 있습니다. 이전 세션에서 보여준 미구현 항목 표를 다시  
+ 확인해보겠습니다.
 
-  P0 항목:
-  1. registry.yaml 자동 업데이트 ✅ 완료
-  2. document-update ✅ 완료
-  3. document-delete ✅ 완료
+P0 항목:
 
-  P1 항목:
-  - content-create ✅ 완료 (content_creator.py, CLI 서브커맨드)
-  - 오브젝트 자동 추출 ✅ 완료 (object_detector.py, object_extractor.py)
-  - 패턴 통합 (variants) ✅ 완료 (pattern_matcher.py)
+1. registry.yaml 자동 업데이트 ✅ 완료
+2. document-update ✅ 완료
+3. document-delete ✅ 완료
 
-  P2 항목:
-  - vmin 좌표 시스템 ❌ 미구현
-  - 이미지 콘텐츠 추출 ❌ 미구현
+P1 항목:
 
-  그리고 워크플로우 파일:
-  - document-update.md ✅ 생성됨 (SKILL.md에 링크 추가됨)
-  - document-delete.md ✅ 생성됨
-  - content-create.md ✅ 생성됨 (SKILL.md에 링크 추가됨)
+- content-create ✅ 완료 (content_creator.py, CLI 서브커맨드)
+- 오브젝트 자동 추출 ✅ 완료 (object_detector.py, object_extractor.py)
+- 패턴 통합 (variants) ✅ 완료 (pattern_matcher.py)
 
-  현재 P0 항목은 모두 완료되었고, P1/P2 항목이 남아있습니다.
+P2 항목:
+
+- vmin 좌표 시스템 ❌ 미구현
+- 이미지 콘텐츠 추출 ❌ 미구현
+
+그리고 워크플로우 파일:
+
+- document-update.md ✅ 생성됨 (SKILL.md에 링크 추가됨)
+- document-delete.md ✅ 생성됨
+- content-create.md ✅ 생성됨 (SKILL.md에 링크 추가됨)
+
+현재 P0 항목은 모두 완료되었고, P1/P2 항목이 남아있습니다.
 
 ● ppt-extract 구현 현황
+
 ```
   ✅ P0 완료
-  
+
   ┌─────────────────────────────┬─────────────────────┐
   │            항목             │        상태         │
   ├─────────────────────────────┼─────────────────────┤
@@ -163,5 +179,6 @@ determine_zone()
 
 다 끝나고 나면 스킬에서 모두 제대로 연결이 되었는지 확인해야함
 
-
 ooxml 없다. 썸네일 없다.
+
+금지 패턴 예 : 인력 구성에 percent-dot-01 사용하면 안됨

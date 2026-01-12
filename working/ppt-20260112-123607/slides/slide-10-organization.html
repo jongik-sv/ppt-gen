@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>조직 및 역할</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      --gradient-1: #153325;
+      --gradient-2: #183C2B;
+      --gradient-3: #22523B;
+      --muted-1: #6F886A;
+      --muted-5: #99C7BF;
+      --muted-6: #A1BFB4;
+      --muted-7: #C4D6D0;
+      --bg-light: #DCF0EF;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 22%;
+      padding: 60px 110px;
+    }
+
+    .header-accent {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .header-accent span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+    }
+
+    .header-accent span:last-child {
+      background: var(--accent);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--muted-1);
+    }
+
+    .content {
+      position: absolute;
+      top: 22%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 40px 6%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      width: 22%;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--secondary);
+      text-align: center;
+    }
+
+    .card-row {
+      display: flex;
+      justify-content: space-around;
+      height: 45%;
+    }
+
+    .card {
+      width: 22%;
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card:nth-child(1) { background: var(--muted-7); }
+    .card:nth-child(2) { background: var(--muted-6); }
+    .card:nth-child(3) { background: var(--muted-5); }
+    .card:nth-child(4) { background: var(--bg-light); }
+
+    .card-description {
+      font-size: 16px;
+      color: var(--muted-1);
+      line-height: 1.8;
+      text-align: center;
+      white-space: pre-line;
+    }
+
+    .number-row {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 48px;
+    }
+
+    .card-number {
+      width: 22%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .number-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .card-number:nth-child(1) .number-badge { background: var(--gradient-1); }
+    .card-number:nth-child(2) .number-badge { background: var(--gradient-2); }
+    .card-number:nth-child(3) .number-badge { background: var(--gradient-3); }
+    .card-number:nth-child(4) .number-badge { background: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <div class="header-accent">
+        <span></span>
+        <span></span>
+      </div>
+      <h1 class="page-title">조직 및 역할</h1>
+      <p class="page-subtitle">R&R (역할과 책임)</p>
+    </div>
+
+    <div class="content">
+      <div class="title-row">
+        <div class="card-title">발주기관 PM</div>
+        <div class="card-title">수행사 PM</div>
+        <div class="card-title">아키텍트</div>
+        <div class="card-title">개발 리더</div>
+      </div>
+
+      <div class="card-row">
+        <div class="card">
+          <p class="card-description">정민호 부장
+프로젝트 총괄, 의사결정</p>
+        </div>
+        <div class="card">
+          <p class="card-description">김철수 차장
+수행 총괄, 품질/위험 관리</p>
+        </div>
+        <div class="card">
+          <p class="card-description">박준형 책임
+시스템 설계, 아키텍처 검토</p>
+        </div>
+        <div class="card">
+          <p class="card-description">최수진 선임
+개발 총괄, 기술 이슈 해결</p>
+        </div>
+      </div>
+
+      <div class="number-row">
+        <div class="card-number">
+          <div class="number-badge">01</div>
+        </div>
+        <div class="card-number">
+          <div class="number-badge">02</div>
+        </div>
+        <div class="card-number">
+          <div class="number-badge">03</div>
+        </div>
+        <div class="card-number">
+          <div class="number-badge">04</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

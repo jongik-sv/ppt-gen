@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>마스터 일정</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      --muted-1: #6F886A;
+      --muted-6: #A1BFB4;
+      --muted-7: #C4D6D0;
+      --bg-light: #DCF0EF;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      padding: 60px 110px;
+    }
+
+    .header-accent {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .header-accent span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+    }
+
+    .header-accent span:last-child {
+      background: var(--accent);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--muted-1);
+    }
+
+    .content {
+      position: absolute;
+      top: 200px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 20px 2%;
+    }
+
+    .center-line {
+      position: absolute;
+      top: 50%;
+      left: 480px;
+      right: 380px;
+      height: 3px;
+      background: var(--primary);
+    }
+
+    .top-row {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 38%;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+    }
+
+    .bottom-row {
+      position: absolute;
+      bottom: 8%;
+      left: calc(50% + 50px);
+      transform: translateX(-50%);
+      height: 38%;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+    }
+
+    .step-item {
+      position: relative;
+      width: 280px;
+    }
+
+    .step-number {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      z-index: 10;
+      background: var(--primary);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-row .step-number { bottom: -72px; }
+    .bottom-row .step-number { top: -72px; }
+
+    .step-card {
+      border-radius: 16px;
+      padding: 20px;
+      height: 100%;
+    }
+
+    .top-row .step-item:nth-child(1) .step-card { background: var(--muted-6); }
+    .bottom-row .step-item:nth-child(1) .step-card { background: var(--muted-7); }
+    .top-row .step-item:nth-child(2) .step-card { background: var(--bg-light); }
+    .bottom-row .step-item:nth-child(2) .step-card { background: var(--muted-6); }
+    .top-row .step-item:nth-child(3) .step-card { background: var(--muted-7); }
+    .bottom-row .step-item:nth-child(3) .step-card { background: var(--bg-light); }
+
+    .step-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-row .step-arrow {
+      bottom: -24px;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+    }
+    .top-row .step-item:nth-child(1) .step-arrow { border-top: 24px solid var(--muted-6); }
+    .top-row .step-item:nth-child(2) .step-arrow { border-top: 24px solid var(--bg-light); }
+    .top-row .step-item:nth-child(3) .step-arrow { border-top: 24px solid var(--muted-7); }
+
+    .bottom-row .step-arrow {
+      top: -24px;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+    }
+    .bottom-row .step-item:nth-child(1) .step-arrow { border-bottom: 24px solid var(--muted-7); }
+    .bottom-row .step-item:nth-child(2) .step-arrow { border-bottom: 24px solid var(--muted-6); }
+    .bottom-row .step-item:nth-child(3) .step-arrow { border-bottom: 24px solid var(--bg-light); }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 12px;
+    }
+
+    .step-period {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .step-description {
+      font-size: 13px;
+      color: var(--muted-1);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <div class="header-accent">
+        <span></span>
+        <span></span>
+      </div>
+      <h1 class="page-title">마스터 일정</h1>
+      <p class="page-subtitle">2025.01 ~ 2025.12 (12개월)</p>
+    </div>
+
+    <div class="content">
+      <div class="center-line"></div>
+
+      <div class="top-row">
+        <div class="step-item">
+          <div class="step-card">
+            <h3 class="step-title">착수</h3>
+            <div class="step-period">01/06 ~ 01/31 (4주)</div>
+            <p class="step-description">킥오프 미팅<br>환경 구축<br>표준 정의</p>
+          </div>
+          <div class="step-arrow"></div>
+          <div class="step-number">1</div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-card">
+            <h3 class="step-title">설계</h3>
+            <div class="step-period">04/01 ~ 05/31 (8주)</div>
+            <p class="step-description">아키텍처 설계<br>화면/DB 설계<br>설계서 작성</p>
+          </div>
+          <div class="step-arrow"></div>
+          <div class="step-number">3</div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-card">
+            <h3 class="step-title">테스트</h3>
+            <div class="step-period">10/01 ~ 11/15 (6주)</div>
+            <p class="step-description">통합 테스트<br>성능 테스트<br>인수 테스트</p>
+          </div>
+          <div class="step-arrow"></div>
+          <div class="step-number">5</div>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-arrow"></div>
+          <div class="step-card">
+            <h3 class="step-title">분석</h3>
+            <div class="step-period">02/01 ~ 03/31 (8주)</div>
+            <p class="step-description">요구사항 확정<br>현행 시스템 분석<br>요구사항정의서</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-arrow"></div>
+          <div class="step-card">
+            <h3 class="step-title">개발</h3>
+            <div class="step-period">06/01 ~ 09/30 (16주)</div>
+            <p class="step-description">코딩<br>단위 테스트<br>코드 리뷰</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">6</div>
+          <div class="step-arrow"></div>
+          <div class="step-card">
+            <h3 class="step-title">이행/안정화</h3>
+            <div class="step-period">11/16 ~ 12/31 (6주)</div>
+            <p class="step-description">시스템 오픈<br>운영 이관<br>안정화 지원</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

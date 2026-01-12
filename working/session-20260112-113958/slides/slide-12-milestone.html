@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>주요 마일스톤</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      --muted: #6F886A;
+      --dot-empty: #E8E8E8;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 22%;
+      padding: 60px 110px;
+    }
+
+    .header-accent {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .header-accent span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+    }
+
+    .header-accent span:last-child {
+      background: var(--accent);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .content {
+      position: absolute;
+      top: 26%;
+      left: 6%;
+      right: 6%;
+      bottom: 8%;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .percent-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 15%;
+    }
+
+    .percent-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 12px;
+    }
+
+    .dot-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--dot-empty);
+    }
+
+    .dot.filled {
+      background: var(--primary);
+    }
+
+    .item-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .item-date {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .item-description {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <div class="header-accent">
+        <span></span>
+        <span></span>
+      </div>
+      <h1 class="page-title">주요 마일스톤</h1>
+      <p class="page-subtitle">6개 주요 마일스톤 및 진척 현황</p>
+    </div>
+
+    <div class="content">
+      <div class="percent-item">
+        <div class="percent-value">M1</div>
+        <div class="dot-grid" id="grid-1"></div>
+        <h3 class="item-title">착수보고</h3>
+        <div class="item-date">01/10</div>
+        <p class="item-description">수행계획서<br>킥오프</p>
+      </div>
+
+      <div class="percent-item">
+        <div class="percent-value">M2</div>
+        <div class="dot-grid" id="grid-2"></div>
+        <h3 class="item-title">요구사항 확정</h3>
+        <div class="item-date">03/31</div>
+        <p class="item-description">요구사항정의서<br>현행분석서</p>
+      </div>
+
+      <div class="percent-item">
+        <div class="percent-value">M3</div>
+        <div class="dot-grid" id="grid-3"></div>
+        <h3 class="item-title">설계 완료</h3>
+        <div class="item-date">05/31</div>
+        <p class="item-description">설계서 일체<br>DB설계서</p>
+      </div>
+
+      <div class="percent-item">
+        <div class="percent-value">M4</div>
+        <div class="dot-grid" id="grid-4"></div>
+        <h3 class="item-title">개발 완료</h3>
+        <div class="item-date">09/30</div>
+        <p class="item-description">소스코드<br>단위테스트</p>
+      </div>
+
+      <div class="percent-item">
+        <div class="percent-value">M5</div>
+        <div class="dot-grid" id="grid-5"></div>
+        <h3 class="item-title">테스트 완료</h3>
+        <div class="item-date">11/15</div>
+        <p class="item-description">테스트결과서<br>인수테스트</p>
+      </div>
+
+      <div class="percent-item">
+        <div class="percent-value">M6</div>
+        <div class="dot-grid" id="grid-6"></div>
+        <h3 class="item-title">시스템 오픈</h3>
+        <div class="item-date">12/01</div>
+        <p class="item-description">오픈보고서<br>운영이관</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const milestones = [
+      { id: 'grid-1', percent: 8 },
+      { id: 'grid-2', percent: 25 },
+      { id: 'grid-3', percent: 42 },
+      { id: 'grid-4', percent: 75 },
+      { id: 'grid-5', percent: 88 },
+      { id: 'grid-6', percent: 92 }
+    ];
+
+    milestones.forEach(m => {
+      const grid = document.getElementById(m.id);
+      const filledCount = Math.round(m.percent / 4);
+      for (let i = 0; i < 25; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i < filledCount ? ' filled' : '');
+        grid.appendChild(dot);
+      }
+    });
+  </script>
+</body>
+</html>

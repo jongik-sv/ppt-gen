@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>기술 스택</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      --gradient-4: #479374;
+      --gradient-5: #578F76;
+      --muted-1: #6F886A;
+      --muted-5: #99C7BF;
+      --muted-6: #A1BFB4;
+      --muted-7: #C4D6D0;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 260px;
+      padding: 60px 110px;
+    }
+
+    .header-accent {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .header-accent span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+    }
+
+    .header-accent span:last-child {
+      background: var(--accent);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--muted-1);
+    }
+
+    .content {
+      position: absolute;
+      top: 260px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .hex-item {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hexagon {
+      width: 320px;
+      height: 276px;
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .hex-main {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .hex-sub {
+      font-size: 14px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    .hex-item:nth-child(1) .hexagon { background: var(--gradient-4); }
+    .hex-item:nth-child(2) .hexagon { background: var(--gradient-5); }
+    .hex-item:nth-child(3) .hexagon { background: var(--muted-5); }
+    .hex-item:nth-child(4) .hexagon { background: var(--muted-6); }
+    .hex-item:nth-child(5) .hexagon { background: var(--muted-7); }
+
+    .hex-title {
+      position: absolute;
+      width: 320px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--secondary);
+      text-align: center;
+    }
+
+    /* 하단 행 (1, 3, 5) - 제목이 위에 */
+    .hex-item:nth-child(1) { left: 8%; top: 45%; }
+    .hex-item:nth-child(1) .hex-title { top: -50px; }
+
+    .hex-item:nth-child(3) { left: 41%; top: 45%; }
+    .hex-item:nth-child(3) .hex-title { top: -50px; }
+
+    .hex-item:nth-child(5) { left: 74%; top: 45%; }
+    .hex-item:nth-child(5) .hex-title { top: -50px; }
+
+    /* 상단 행 (2, 4) - 제목이 아래에 */
+    .hex-item:nth-child(2) { left: 24.5%; top: 8%; }
+    .hex-item:nth-child(2) .hex-title { bottom: -50px; top: auto; }
+
+    .hex-item:nth-child(4) { left: 57.5%; top: 8%; }
+    .hex-item:nth-child(4) .hex-title { bottom: -50px; top: auto; }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <div class="header-accent">
+        <span></span>
+        <span></span>
+      </div>
+      <h1 class="page-title">기술 스택</h1>
+      <p class="page-subtitle">클라우드 네이티브 + MSA 아키텍처</p>
+    </div>
+
+    <div class="content">
+      <div class="hex-item">
+        <p class="hex-title">Frontend</p>
+        <div class="hexagon">
+          <div class="hex-main">Vue.js 3</div>
+          <div class="hex-sub">TypeScript<br>SPA 구조</div>
+        </div>
+      </div>
+
+      <div class="hex-item">
+        <div class="hexagon">
+          <div class="hex-main">Spring Boot</div>
+          <div class="hex-sub">Java 17<br>MSA 구조</div>
+        </div>
+        <p class="hex-title">Backend</p>
+      </div>
+
+      <div class="hex-item">
+        <p class="hex-title">Database</p>
+        <div class="hexagon">
+          <div class="hex-main">PostgreSQL</div>
+          <div class="hex-sub">Redis<br>RDBMS + Cache</div>
+        </div>
+      </div>
+
+      <div class="hex-item">
+        <div class="hexagon">
+          <div class="hex-main">AWS</div>
+          <div class="hex-sub">EKS, RDS, S3<br>클라우드 네이티브</div>
+        </div>
+        <p class="hex-title">Infrastructure</p>
+      </div>
+
+      <div class="hex-item">
+        <p class="hex-title">AI/ML</p>
+        <div class="hexagon">
+          <div class="hex-main">TensorFlow</div>
+          <div class="hex-sub">Python 3.11<br>수요예측, 경로최적화</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

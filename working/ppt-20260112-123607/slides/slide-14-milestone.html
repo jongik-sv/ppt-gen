@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>주요 마일스톤</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      --muted-1: #6F886A;
+      --muted-6: #A1BFB4;
+      --muted-7: #C4D6D0;
+      --bg-light: #DCF0EF;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 22%;
+      padding: 60px 110px;
+    }
+
+    .header-accent {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .header-accent span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+    }
+
+    .header-accent span:last-child {
+      background: var(--accent);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .content {
+      position: absolute;
+      top: 22%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 20px 2%;
+    }
+
+    .center-line {
+      position: absolute;
+      top: 50%;
+      left: 280px;
+      right: 280px;
+      height: 3px;
+      background: var(--primary);
+    }
+
+    .top-row {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 35%;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .bottom-row {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(calc(-50% + 155px));
+      height: 35%;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .step-item {
+      position: relative;
+      width: 280px;
+    }
+
+    .step-number {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      z-index: 10;
+      background: var(--primary);
+      transform: translateX(-50%);
+    }
+
+    .top-row .step-number { bottom: -60px; left: 50%; }
+    .bottom-row .step-number { top: -60px; left: 50%; }
+
+    .step-card {
+      border-radius: 16px;
+      padding: 20px;
+      height: 100%;
+    }
+
+    .top-row .step-item:nth-child(1) .step-card { background: var(--muted-6); }
+    .top-row .step-item:nth-child(2) .step-card { background: var(--bg-light); }
+    .top-row .step-item:nth-child(3) .step-card { background: var(--muted-7); }
+    .bottom-row .step-item:nth-child(1) .step-card { background: var(--muted-7); }
+    .bottom-row .step-item:nth-child(2) .step-card { background: var(--muted-6); }
+    .bottom-row .step-item:nth-child(3) .step-card { background: var(--bg-light); }
+
+    .step-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-row .step-arrow {
+      bottom: -20px;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+    }
+
+    .bottom-row .step-arrow {
+      top: -20px;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+    }
+
+    .top-row .step-item:nth-child(1) .step-arrow { border-top: 20px solid var(--muted-6); }
+    .top-row .step-item:nth-child(2) .step-arrow { border-top: 20px solid var(--bg-light); }
+    .top-row .step-item:nth-child(3) .step-arrow { border-top: 20px solid var(--muted-7); }
+    .bottom-row .step-item:nth-child(1) .step-arrow { border-bottom: 20px solid var(--muted-7); }
+    .bottom-row .step-item:nth-child(2) .step-arrow { border-bottom: 20px solid var(--muted-6); }
+    .bottom-row .step-item:nth-child(3) .step-arrow { border-bottom: 20px solid var(--bg-light); }
+
+    .step-title { font-size: 18px; font-weight: 600; color: var(--secondary); margin-bottom: 10px; }
+    .step-description { font-size: 13px; color: var(--muted-1); line-height: 1.6; white-space: pre-line; }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <div class="header-accent">
+        <span></span>
+        <span></span>
+      </div>
+      <h1 class="page-title">주요 마일스톤</h1>
+    </div>
+
+    <div class="content">
+      <div class="center-line"></div>
+
+      <div class="top-row">
+        <div class="step-item">
+          <div class="step-card">
+            <h3 class="step-title">착수보고</h3>
+            <p class="step-description">2025-01-10
+수행계획서</p>
+          </div>
+          <div class="step-arrow"></div>
+          <div class="step-number">M1</div>
+        </div>
+        <div class="step-item">
+          <div class="step-card">
+            <h3 class="step-title">설계 완료</h3>
+            <p class="step-description">2025-05-31
+설계서 일체</p>
+          </div>
+          <div class="step-arrow"></div>
+          <div class="step-number">M3</div>
+        </div>
+        <div class="step-item">
+          <div class="step-card">
+            <h3 class="step-title">통합테스트</h3>
+            <p class="step-description">2025-11-15
+테스트결과서</p>
+          </div>
+          <div class="step-arrow"></div>
+          <div class="step-number">M5</div>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="step-item">
+          <div class="step-number">M2</div>
+          <div class="step-arrow"></div>
+          <div class="step-card">
+            <h3 class="step-title">요구사항 확정</h3>
+            <p class="step-description">2025-03-31
+요구사항정의서</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">M4</div>
+          <div class="step-arrow"></div>
+          <div class="step-card">
+            <h3 class="step-title">개발 완료</h3>
+            <p class="step-description">2025-09-30
+소스코드</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">M6</div>
+          <div class="step-arrow"></div>
+          <div class="step-card">
+            <h3 class="step-title">시스템 오픈</h3>
+            <p class="step-description">2025-12-01
+오픈보고서</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

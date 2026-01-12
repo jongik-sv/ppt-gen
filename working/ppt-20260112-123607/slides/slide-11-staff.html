@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>투입 인력 현황</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      --muted: #6F886A;
+      --dot-empty: #E8E8E8;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 22%;
+      padding: 60px 110px;
+    }
+
+    .header-accent {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .header-accent span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+    }
+
+    .header-accent span:last-child {
+      background: var(--accent);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .content {
+      position: absolute;
+      top: 26%;
+      left: 6%;
+      right: 6%;
+      bottom: 8%;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .percent-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 28%;
+    }
+
+    .percent-value {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 16px;
+    }
+
+    .dot-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--dot-empty);
+    }
+
+    .dot.filled {
+      background: var(--primary);
+    }
+
+    .item-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .item-description {
+      font-size: 14px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <div class="header-accent">
+        <span></span>
+        <span></span>
+      </div>
+      <h1 class="page-title">투입 인력 현황</h1>
+      <p class="page-subtitle">총 8명, 78MM 투입</p>
+    </div>
+
+    <div class="content">
+      <div class="percent-item">
+        <div class="percent-value">25%</div>
+        <div class="dot-grid" id="grid1"></div>
+        <h3 class="item-title">PM/AA</h3>
+        <p class="item-description">2명 (22MM)</p>
+      </div>
+      <div class="percent-item">
+        <div class="percent-value">50%</div>
+        <div class="dot-grid" id="grid2"></div>
+        <h3 class="item-title">개발</h3>
+        <p class="item-description">4명 (40MM)</p>
+      </div>
+      <div class="percent-item">
+        <div class="percent-value">25%</div>
+        <div class="dot-grid" id="grid3"></div>
+        <h3 class="item-title">DBA/QA</h3>
+        <p class="item-description">2명 (16MM)</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function createDotGrid(gridId, percent) {
+      const grid = document.getElementById(gridId);
+      for (let i = 0; i < 100; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i < percent ? ' filled' : '');
+        grid.appendChild(dot);
+      }
+    }
+    createDotGrid('grid1', 25);
+    createDotGrid('grid2', 50);
+    createDotGrid('grid3', 25);
+  </script>
+</body>
+</html>

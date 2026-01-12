@@ -1,0 +1,259 @@
+session:
+  id: "20260112-smart-logistics"
+  created_at: "2026-01-12T14:00:00"
+  status: "completed"
+
+settings:
+  document_type: "report"
+  document_style: null
+  slide_size: "16:9"
+  audience: "executive"
+  duration: "10min"
+  tone: "formal"
+  quality: "medium"
+  chart_rendering: "native"
+
+slides:
+  - index: 1
+    type: cover
+    status: completed
+    outline:
+      title: "스마트 물류관리 시스템 구축"
+      subtitle: "프로젝트 수행계획 보고"
+      speaker_notes: "착수보고 발표자료입니다."
+    template:
+      id: cover-deep-green-01
+      category: cover
+      match_score: 0.95
+      match_reason: "표지 슬라이드 유일 후보"
+    attempts:
+      - attempt: 1
+        content:
+          tagline: "프로젝트 수행계획 보고"
+          title: "스마트 물류관리 시스템 구축"
+          subtitle: "AI 기반 물류 최적화 및 실시간 추적 시스템"
+          author: "(주)테크솔루션 | PM 김철수"
+        file: "output/slide-01.html"
+        evaluation:
+          scores:
+            layout: 24
+            typography: 19
+            color: 19
+            content_fit: 23
+            visual: 9
+          total: 94
+          passed: true
+    final_attempt: 1
+
+  - index: 2
+    type: content
+    status: completed
+    outline:
+      title: "프로젝트 개요"
+      key_points:
+        - "발주기관: (주)글로벌물류"
+        - "계약금액: 15억원"
+        - "계약기간: 2025.01 ~ 2025.12"
+        - "목표: AI 기반 물류 최적화"
+    template:
+      id: card-4col-01
+      category: grid
+      match_score: 0.92
+      match_reason: "4개 항목 병렬 표시에 적합"
+    attempts:
+      - attempt: 1
+        content:
+          cards:
+            - { number: "01", title: "발주기관", description: "(주)글로벌물류\n국내 Top 5 물류기업" }
+            - { number: "02", title: "계약금액", description: "15억원\n(VAT 별도)" }
+            - { number: "03", title: "계약기간", description: "2025.01 ~ 2025.12\n(총 12개월)" }
+            - { number: "04", title: "핵심목표", description: "AI 기반 물류 최적화\n실시간 추적 시스템" }
+        evaluation:
+          scores:
+            layout: 23
+            typography: 18
+            color: 19
+            content_fit: 22
+            visual: 8
+          total: 90
+          passed: true
+    final_attempt: 1
+
+  - index: 3
+    type: content
+    status: completed
+    outline:
+      title: "현황 및 기대효과"
+      key_points:
+        - "물류 처리 효율 30% 향상"
+        - "재고 정확도 99.5% 달성"
+        - "운영 비용 20% 절감"
+    template:
+      id: percent-dot-01
+      category: infographic
+      match_score: 0.88
+      match_reason: "퍼센트 수치 시각화에 적합"
+      fallback_reason: "percent-dot-01 렌더링 복잡하여 card-4col-01로 대체"
+      actual_used: card-4col-01
+    attempts:
+      - attempt: 1
+        evaluation:
+          total: 90
+          passed: true
+    final_attempt: 1
+
+  - index: 4
+    type: content
+    status: completed
+    outline:
+      title: "시스템 범위"
+      key_points:
+        - "WMS: 창고관리시스템"
+        - "TMS: 배송관리시스템"
+        - "OMS: 주문관리시스템"
+        - "Dashboard: 통합모니터링"
+    template:
+      id: card-4col-01
+      category: grid
+      match_score: 0.94
+      match_reason: "4개 시스템 모듈 병렬 표시에 적합"
+    attempts:
+      - attempt: 1
+        evaluation:
+          total: 91
+          passed: true
+    final_attempt: 1
+
+  - index: 5
+    type: content
+    status: completed
+    outline:
+      title: "추진 전략"
+      key_points:
+        - "단계적 전환: 모듈별 순차 전환"
+        - "애자일 기반: 2주 단위 스프린트"
+        - "현업 밀착: 주 2회 현업 리뷰"
+    template:
+      id: process-circle-3step-01
+      category: process
+      match_score: 0.91
+      match_reason: "3단계 순차 전략 표현에 적합"
+    attempts:
+      - attempt: 1
+        evaluation:
+          total: 89
+          passed: true
+    final_attempt: 1
+
+  - index: 6
+    type: content
+    status: completed
+    outline:
+      title: "마스터 일정"
+      key_points:
+        - "착수: 1월 (4주)"
+        - "분석/설계: 2~5월 (16주)"
+        - "개발: 6~9월 (16주)"
+        - "테스트/이행: 10~12월 (12주)"
+    template:
+      id: connector-2row-01
+      category: timeline
+      match_score: 0.85
+      match_reason: "시간순 일정 표현에 적합"
+      fallback_reason: "4단계라 2행 커넥터 부적합, card-4col-01로 대체"
+      actual_used: card-4col-01
+    attempts:
+      - attempt: 1
+        evaluation:
+          total: 88
+          passed: true
+    final_attempt: 1
+
+  - index: 7
+    type: content
+    status: completed
+    outline:
+      title: "투입 인력"
+      key_points:
+        - "PM: 김철수 차장"
+        - "AA: 박준형 책임"
+        - "개발팀: 4명"
+        - "QA/DBA: 2명"
+    template:
+      id: card-4col-01
+      category: grid
+      match_score: 0.86
+      match_reason: "4개 역할군 표시"
+    attempts:
+      - attempt: 1
+        evaluation:
+          total: 87
+          passed: true
+    final_attempt: 1
+
+  - index: 8
+    type: content
+    status: completed
+    outline:
+      title: "주요 위험 및 대응"
+      key_points:
+        - "요구사항 변경: CCB 통제"
+        - "일정 지연: 주간 진척관리"
+        - "데이터 마이그레이션: 사전 검증"
+    template:
+      id: list-disk-3row-01
+      category: list
+      match_score: 0.90
+      match_reason: "3개 위험항목 리스트 표시에 적합"
+    attempts:
+      - attempt: 1
+        evaluation:
+          total: 91
+          passed: true
+    final_attempt: 1
+
+  - index: 9
+    type: content
+    status: completed
+    outline:
+      title: "협조 요청 사항"
+      key_points:
+        - "환경: 프로젝트 룸, VPN"
+        - "데이터: 테스트용 샘플"
+        - "인프라: AWS 계정"
+        - "참여: 현업 인터뷰, UAT"
+    template:
+      id: card-4col-01
+      category: grid
+      match_score: 0.89
+      match_reason: "4개 요청사항 병렬 표시"
+    attempts:
+      - attempt: 1
+        evaluation:
+          total: 88
+          passed: true
+    final_attempt: 1
+
+  - index: 10
+    type: closing
+    status: completed
+    outline:
+      title: "감사합니다"
+      key_points:
+        - "PM: 김철수"
+        - "(주)테크솔루션"
+    template:
+      id: cover-deep-green-01
+      category: cover
+      match_score: 0.93
+      match_reason: "마무리 슬라이드"
+    attempts:
+      - attempt: 1
+        evaluation:
+          total: 92
+          passed: true
+    final_attempt: 1
+
+output:
+  file: "output/smart-logistics-report.pptx"
+  generated_at: "2026-01-12T14:10:00"

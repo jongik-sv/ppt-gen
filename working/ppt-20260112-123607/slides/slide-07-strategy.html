@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>핵심 추진 전략</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #22523B;
+      --secondary: #153325;
+      --accent: #479374;
+      --gradient-1: #153325;
+      --gradient-3: #22523B;
+      --gradient-4: #479374;
+      --muted-1: #6F886A;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: white;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 22%;
+      padding: 60px 110px;
+    }
+
+    .header-accent {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .header-accent span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+    }
+
+    .header-accent span:last-child {
+      background: var(--accent);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .content {
+      position: absolute;
+      top: 22%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 80px;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .circle {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .step-item:nth-child(1) .circle { background: var(--gradient-1); }
+    .step-item:nth-child(3) .circle { background: var(--gradient-3); }
+    .step-item:nth-child(5) .circle { background: var(--gradient-4); }
+
+    .icon-placeholder {
+      width: 80px;
+      height: 80px;
+      border: 2px dashed rgba(255,255,255,0.5);
+      border-radius: 8px;
+    }
+
+    .arrow {
+      font-size: 48px;
+      color: var(--primary);
+      margin-top: -160px;
+    }
+
+    .step-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 12px;
+    }
+
+    .step-description {
+      font-size: 14px;
+      color: var(--muted-1);
+      max-width: 280px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <div class="header-accent">
+        <span></span>
+        <span></span>
+      </div>
+      <h1 class="page-title">핵심 추진 전략</h1>
+    </div>
+
+    <div class="content">
+      <div class="step-item">
+        <div class="circle">
+          <div class="icon-placeholder"></div>
+        </div>
+        <h3 class="step-title">단계적 전환</h3>
+        <p class="step-description">모듈별 순차 전환으로 리스크 최소화</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step-item">
+        <div class="circle">
+          <div class="icon-placeholder"></div>
+        </div>
+        <h3 class="step-title">애자일 기반</h3>
+        <p class="step-description">2주 단위 스프린트, 빠른 피드백</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step-item">
+        <div class="circle">
+          <div class="icon-placeholder"></div>
+        </div>
+        <h3 class="step-title">현업 밀착</h3>
+        <p class="step-description">주 2회 현업 리뷰를 통한 요구사항 정합성 확보</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
