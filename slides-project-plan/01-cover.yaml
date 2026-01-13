@@ -1,0 +1,16 @@
+title: 표지
+layout: cover
+content:
+  main_title: 스마트 물류관리 시스템 구축
+  subtitle: 프로젝트 수행계획서
+  project_info:
+    project_name: 스마트 물류관리 시스템 구축
+    client: (주)글로벌물류
+    vendor: (주)테크솔루션
+    contract_amount: 15억원 (VAT 별도)
+    period: 2025-01-06 ~ 2025-12-31 (총 12개월)
+  document_info:
+    doc_number: DOC-PRJ-2025-001-001
+    version: 1.0
+    date: 2025-01-03
+    author: 김철수 (PM)

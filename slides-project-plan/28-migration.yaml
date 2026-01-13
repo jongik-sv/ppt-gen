@@ -1,0 +1,39 @@
+title: 데이터 마이그레이션 계획
+layout: timeline
+content:
+  title: 마이그레이션 단계별 일정
+  phases:
+    - name: 1. 분석
+      period: 10월 1~2주차
+      owner: DBA
+      tasks:
+        - 데이터 프로파일링
+        - 품질 분석
+    - name: 2. 설계
+      period: 10월 2~3주차
+      owner: DBA
+      tasks:
+        - 매핑 정의
+        - 변환 규칙 수립
+    - name: 3. 개발
+      period: 10월 3~4주차
+      owner: Dev
+      tasks:
+        - ETL 스크립트 개발
+    - name: 4. 1차 이관
+      period: 11월 1주차
+      owner: DBA
+      tasks:
+        - 마스터 데이터 이관
+        - 검증
+    - name: 5. 2차 이관
+      period: 11월 2주차
+      owner: DBA
+      tasks:
+        - 트랜잭션 데이터 이관
+        - 검증
+    - name: 6. 최종 이관
+      period: 11월 23일
+      owner: 전체
+      tasks:
+        - D-Day 재고 동기화

@@ -20,11 +20,53 @@ Stage 5: 최종 PPTX 생성 [스크립트]
 
 세션 생성 및 사용자 설정 수집.
 
+### ⚠️ 필수 사항 - 사용자 확인 필수
+
+**절대 금지:**
+- 설정을 임의로 추론하여 결정 금지
+- "문서 특성상 ~로 적용합니다" 식의 일방적 결정 금지
+
+**반드시 AskUserQuestion 도구로 사용자에게 확인할 항목:**
+1. 문서 종류 (proposal, bizplan, report, lecture)
+2. 청중 (executive, team, customer, investor, public)
+3. 품질 (high, medium, low)
+
+**기본값 적용 가능 항목 (물어보지 않아도 됨):**
+- 슬라이드 크기: 16:9
+- 문서 양식: 없음 (빈 슬라이드)
+- 톤: 문서 종류에 맞게 추론 (formal 기본)
+- 차트 렌더링: native
+- 발표 시간: 슬라이드 수에 따라 추론
+
+### 사용자 확인 예시
+
+```
+AskUserQuestion 도구 사용:
+
+질문 1 (header: "문서 종류"):
+- proposal (제안서)
+- bizplan (사업계획서)
+- report (보고서)
+- lecture (강의자료)
+
+질문 2 (header: "발표 대상"):
+- executive (경영진)
+- team (내부 팀)
+- customer (고객)
+- public (일반 대중)
+
+질문 3 (header: "품질"):
+- medium (HTML, 테마 적용 가능) ← 권장
+- high (OOXML, 100% 재현)
+- low (시맨틱 HTML)
+```
+
+### 설정 옵션 전체 목록
+
 ```bash
 python scripts/questionnaire.py --list-options
 ```
 
-또는 대화형으로:
 1. 문서 종류 (proposal, bizplan, report, lecture)
 2. 문서 양식 (등록된 양식 또는 빈 슬라이드)
 3. 슬라이드 크기 (16:9, 4:3, 16:10)

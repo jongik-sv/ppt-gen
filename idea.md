@@ -182,3 +182,5 @@ P2 항목:
 ooxml 없다. 썸네일 없다.
 
 금지 패턴 예 : 인력 구성에 percent-dot-01 사용하면 안됨
+
+/home/jji/.config/Code/User/markdown-preview.css

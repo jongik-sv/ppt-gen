@@ -1,0 +1,37 @@
+title: 품질 및 보안 관리
+layout: two-column
+content:
+  left:
+    type: box
+    title: 품질 보증 활동
+    activities:
+      - name: 산출물 검토
+        timing: 단계별 말
+        owner: PM/PL
+        method: 발주 담당자 검토 및 승인
+      - name: 코드 리뷰
+        timing: 개발 기간
+        owner: 개발리더
+        method: GitHub PR 필수, 2인 이상 승인
+      - name: 정적 분석
+        timing: 개발 기간
+        owner: QA
+        method: SonarQube 품질 게이트 적용
+      - name: 테스트
+        timing: 통합/인수
+        owner: QA/현업
+        method: 시나리오 기반 테스트
+  right:
+    type: box
+    title: 보안 관리 계획
+    security:
+      - name: 인적 보안
+        measures: 보안서약서 징구, 보안 교육 실시
+      - name: 물리 보안
+        measures: 통제구역 출입 관리, 반입 장비 통제
+      - name: 기술 보안
+        measures: 소스코드 보안약점 진단, DB 암호화
+        note: OWASP Top 10 점검
+      - name: PC 보안
+        measures: 백신 설치, 화면보호기 설정, 매체제어
+        note: DLP 솔루션 적용

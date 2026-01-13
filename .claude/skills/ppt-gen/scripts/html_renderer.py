@@ -147,6 +147,52 @@ def get_nested_value(obj: dict, path: str):
     return value
 
 
+def inject_css_variables(html: str, theme_path: str) -> str:
+    """CSS 변수에 테마 값 주입.
+
+    템플릿 HTML에서 비어있는 CSS 변수 값을 테마 파일의 값으로 채웁니다.
+
+    Args:
+        html: 렌더링된 HTML 문자열
+        theme_path: 테마 YAML 파일 경로
+
+    Returns:
+        CSS 변수가 주입된 HTML 문자열
+    """
+    with open(theme_path, 'r', encoding='utf-8') as f:
+        theme = yaml.safe_load(f)
+
+    colors = theme.get('colors', {})
+    tokens = colors.get('tokens', {})
+    bg = colors.get('background', {})
+    muted = colors.get('muted', {})
+
+    # tokens: gradient-1 ~ gradient-6 (이미 CSS 변수명과 일치)
+    for var_name, value in tokens.items():
+        # --gradient-1: ; → --gradient-1: #153325;
+        pattern = rf"(--{var_name}:\s*);?"
+        html = re.sub(pattern, f"--{var_name}: {value};", html)
+
+    # background: bg-light, bg-neutral, bg-dark
+    for bg_name, value in bg.items():
+        pattern = rf"(--bg-{bg_name}:\s*);?"
+        html = re.sub(pattern, f"--bg-{bg_name}: {value};", html)
+
+    # muted: muted.dark → --muted-1 등 (순서 매핑)
+    muted_order = ['dark', 'green', 'sage', 'mint', 'aqua', 'pale', 'light']
+    for i, key in enumerate(muted_order, 1):
+        if key in muted:
+            pattern = rf"(--muted-{i}:\s*);?"
+            html = re.sub(pattern, f"--muted-{i}: {muted[key]};", html)
+
+    # muted 변수가 단독으로 사용되는 경우 (--muted: )
+    if 'dark' in muted:
+        pattern = r"(--muted:\s*);?"
+        html = re.sub(pattern, f"--muted: {muted['dark']};", html)
+
+    return html
+
+
 def render_template(
     template_path: str,
     content: dict,
@@ -182,6 +228,12 @@ def render_template(
 
     # 렌더링
     rendered = render_handlebars(template_html, context)
+
+    # CSS 변수 주입 (테마가 지정된 경우)
+    if theme_id:
+        theme_path = Path(themes_dir) / theme_id / "theme.yaml"
+        if theme_path.exists():
+            rendered = inject_css_variables(rendered, str(theme_path))
 
     # 출력
     if output_path:

@@ -16,8 +16,7 @@ import yaml
 # lib 경로 추가
 sys.path.insert(0, str(Path(__file__).parent.parent / "lib"))
 
-from ooxml.scripts.pack import pack_office_file
-from ooxml.scripts.unpack import unpack_office_file
+from ooxml.scripts import pack_office_file, unpack_office_file
 
 
 def merge_html_slides(
@@ -75,11 +74,15 @@ main().catch(console.error);
         temp_js = f.name
 
     try:
+        # NODE_PATH를 설정하여 현재 작업 디렉토리의 node_modules를 찾을 수 있도록 함
+        import os
+        env = os.environ.copy()
+        env["NODE_PATH"] = str(Path.cwd() / "node_modules")
         result = subprocess.run(
             ["node", temp_js],
             capture_output=True,
             text=True,
-            cwd=str(script_dir),
+            env=env,
         )
         if result.returncode != 0:
             raise RuntimeError(f"html2pptx failed: {result.stderr}")

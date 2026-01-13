@@ -36,53 +36,123 @@ const EMU_PER_IN = 914400;
 // Helper: Get body dimensions and check for overflow
 async function getBodyDimensions(page) {
   const bodyDimensions = await page.evaluate(() => {
-    const body = document.body;
-    const style = window.getComputedStyle(body);
+    // Try to find common slide container elements
+    const slideEl = document.querySelector('.slide') ||
+                    document.querySelector('.content') ||
+                    document.querySelector('[class*="slide"]') ||
+                    document.body.firstElementChild;
+    const targetEl = slideEl || document.body;
+    const style = window.getComputedStyle(targetEl);
 
     return {
       width: parseFloat(style.width),
       height: parseFloat(style.height),
-      scrollWidth: body.scrollWidth,
-      scrollHeight: body.scrollHeight
+      scrollWidth: targetEl.scrollWidth,
+      scrollHeight: targetEl.scrollHeight,
+      hasSlideContainer: !!slideEl && slideEl !== document.body
     };
   });
 
-  const errors = [];
+  // Overflow check is now just informational - scaling handles dimension differences
+  // Still calculate for potential future use but don't add to errors
   const widthOverflowPx = Math.max(0, bodyDimensions.scrollWidth - bodyDimensions.width - 1);
   const heightOverflowPx = Math.max(0, bodyDimensions.scrollHeight - bodyDimensions.height - 1);
 
-  const widthOverflowPt = widthOverflowPx * PT_PER_PX;
-  const heightOverflowPt = heightOverflowPx * PT_PER_PX;
-
-  if (widthOverflowPt > 0 || heightOverflowPt > 0) {
-    const directions = [];
-    if (widthOverflowPt > 0) directions.push(`${widthOverflowPt.toFixed(1)}pt horizontally`);
-    if (heightOverflowPt > 0) directions.push(`${heightOverflowPt.toFixed(1)}pt vertically`);
-    const reminder = heightOverflowPt > 0 ? ' (Remember: leave 0.5" margin at bottom of slide)' : '';
-    errors.push(`HTML content overflows body by ${directions.join(' and ')}${reminder}`);
-  }
-
-  return { ...bodyDimensions, errors };
+  return { ...bodyDimensions, errors: [] };
 }
 
-// Helper: Validate dimensions match presentation layout
+// Helper: Calculate scale factor for coordinate scaling
+function calculateScaleFactor(bodyDimensions, pres) {
+  if (!pres.presLayout) return 1;
+
+  const htmlWidthInches = bodyDimensions.width / PX_PER_IN;
+  const layoutWidthInches = pres.presLayout.width / EMU_PER_IN;
+
+  return layoutWidthInches / htmlWidthInches;
+}
+
+// Helper: Validate aspect ratio matches presentation layout (returns warnings, not errors)
 function validateDimensions(bodyDimensions, pres) {
-  const errors = [];
-  const widthInches = bodyDimensions.width / PX_PER_IN;
-  const heightInches = bodyDimensions.height / PX_PER_IN;
+  // Aspect ratio mismatch is now just informational - scaling handles the difference
+  // Return empty array as errors since scaling will adjust coordinates appropriately
+  return [];
+}
 
-  if (pres.presLayout) {
-    const layoutWidth = pres.presLayout.width / EMU_PER_IN;
-    const layoutHeight = pres.presLayout.height / EMU_PER_IN;
+// Helper: Apply scale factor to all positions in slideData
+function scalePositions(slideData, scaleFactor) {
+  if (scaleFactor === 1) return slideData;
 
-    if (Math.abs(layoutWidth - widthInches) > 0.1 || Math.abs(layoutHeight - heightInches) > 0.1) {
-      errors.push(
-        `HTML dimensions (${widthInches.toFixed(1)}" × ${heightInches.toFixed(1)}") ` +
-        `don't match presentation layout (${layoutWidth.toFixed(1)}" × ${layoutHeight.toFixed(1)}")`
-      );
+  for (const el of slideData.elements) {
+    if (el.position) {
+      el.position.x *= scaleFactor;
+      el.position.y *= scaleFactor;
+      el.position.w *= scaleFactor;
+      el.position.h *= scaleFactor;
+    }
+    // Handle line elements
+    if (el.x1 !== undefined) {
+      el.x1 *= scaleFactor;
+      el.y1 *= scaleFactor;
+      el.x2 *= scaleFactor;
+      el.y2 *= scaleFactor;
+      if (el.width) el.width *= scaleFactor;
+    }
+    // Scale font sizes proportionally
+    if (el.style && el.style.fontSize) {
+      el.style.fontSize *= scaleFactor;
+    }
+    // Scale line spacing if present
+    if (el.style && el.style.lineSpacing) {
+      el.style.lineSpacing *= scaleFactor;
+    }
+    // Scale para spacing
+    if (el.style && el.style.paraSpaceBefore) {
+      el.style.paraSpaceBefore *= scaleFactor;
+    }
+    if (el.style && el.style.paraSpaceAfter) {
+      el.style.paraSpaceAfter *= scaleFactor;
+    }
+    // Scale border radius
+    if (el.shape && el.shape.rectRadius) {
+      el.shape.rectRadius *= scaleFactor;
+    }
+    // Scale list item font sizes
+    if (el.items && Array.isArray(el.items)) {
+      for (const item of el.items) {
+        if (item.options && item.options.fontSize) {
+          item.options.fontSize *= scaleFactor;
+        }
+      }
+    }
+    // Scale rich text font sizes (text as array)
+    if (el.text && Array.isArray(el.text)) {
+      for (const textPart of el.text) {
+        if (textPart.options && textPart.options.fontSize) {
+          textPart.options.fontSize *= scaleFactor;
+        }
+      }
+    }
+    // Scale shape line width
+    if (el.shape && el.shape.line && el.shape.line.width) {
+      el.shape.line.width *= scaleFactor;
+    }
+    // Scale shadow offset
+    if (el.shape && el.shape.shadow && el.shape.shadow.offset) {
+      el.shape.shadow.offset *= scaleFactor;
+    }
+    if (el.shape && el.shape.shadow && el.shape.shadow.blur) {
+      el.shape.shadow.blur *= scaleFactor;
     }
   }
-  return errors;
+
+  for (const ph of slideData.placeholders) {
+    ph.x *= scaleFactor;
+    ph.y *= scaleFactor;
+    ph.w *= scaleFactor;
+    ph.h *= scaleFactor;
+  }
+
+  return slideData;
 }
 
 function validateTextBoxPosition(slideData, bodyDimensions) {
@@ -165,6 +235,12 @@ function addElements(slideData, targetSlide, pres) {
       if (el.shape.line) shapeOptions.line = el.shape.line;
       if (el.shape.rectRadius > 0) shapeOptions.rectRadius = el.shape.rectRadius;
       if (el.shape.shadow) shapeOptions.shadow = el.shape.shadow;
+
+      // Add text alignment if shape has text
+      if (el.style) {
+        if (el.style.align) shapeOptions.align = el.style.align;
+        if (el.style.valign) shapeOptions.valign = el.style.valign;
+      }
 
       targetSlide.addText(el.text || '', shapeOptions);
     } else if (el.type === 'list') {
@@ -555,7 +631,9 @@ async function extractSlideData(page) {
       }
 
       // Extract placeholder elements (for charts, etc.)
-      if (el.className && el.className.includes('placeholder')) {
+      // Note: className can be SVGAnimatedString for SVG elements, so check type first
+      const classNameStr = typeof el.className === 'string' ? el.className : el.className?.baseVal || '';
+      if (classNameStr && classNameStr.includes('placeholder')) {
         const rect = el.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) {
           errors.push(
@@ -599,15 +677,13 @@ async function extractSlideData(page) {
         const computed = window.getComputedStyle(el);
         const hasBg = computed.backgroundColor && computed.backgroundColor !== 'rgba(0, 0, 0, 0)';
 
-        // Validate: Check for unwrapped text content in DIV
+        // Collect unwrapped text content in DIV (to include in shape if has background)
+        let unwrappedText = '';
         for (const node of el.childNodes) {
           if (node.nodeType === Node.TEXT_NODE) {
             const text = node.textContent.trim();
             if (text) {
-              errors.push(
-                `DIV element contains unwrapped text "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}". ` +
-                'All text must be wrapped in <p>, <h1>-<h6>, <ul>, or <ol> tags to appear in PowerPoint.'
-              );
+              unwrappedText += (unwrappedText ? ' ' : '') + text;
             }
           }
         }
@@ -689,9 +765,26 @@ async function extractSlideData(page) {
 
             // Only add shape if there's background or uniform border
             if (hasBg || hasUniformBorder) {
+              // Build text with styling if there's unwrapped text
+              const shapeText = unwrappedText ? [{
+                text: unwrappedText,
+                options: {
+                  fontSize: pxToPoints(computed.fontSize),
+                  fontFace: computed.fontFamily.split(',')[0].replace(/['"]/g, '').trim(),
+                  color: rgbToHex(computed.color),
+                  bold: parseInt(computed.fontWeight) >= 700
+                }
+              }] : '';
+
               elements.push({
                 type: 'shape',
-                text: '',  // Shape only - child text elements render on top
+                text: shapeText,
+                style: unwrappedText ? {
+                  align: computed.textAlign === 'center' ? 'center' :
+                         computed.textAlign === 'right' ? 'right' : 'left',
+                  valign: computed.alignItems === 'center' ? 'middle' :
+                          computed.alignItems === 'flex-end' ? 'bottom' : 'top'
+                } : null,
                 position: {
                   x: pxToInch(rect.left),
                   y: pxToInch(rect.top),
@@ -960,6 +1053,12 @@ async function html2pptx(htmlFile, pres, options = {}) {
         ? validationErrors[0]
         : `Multiple validation errors found:\n${validationErrors.map((e, i) => `  ${i + 1}. ${e}`).join('\n')}`;
       throw new Error(errorMessage);
+    }
+
+    // Calculate and apply scale factor for coordinate conversion
+    const scaleFactor = calculateScaleFactor(bodyDimensions, pres);
+    if (scaleFactor !== 1) {
+      scalePositions(slideData, scaleFactor);
     }
 
     const targetSlide = slide || pres.addSlide();

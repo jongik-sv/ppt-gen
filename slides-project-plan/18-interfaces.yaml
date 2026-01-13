@@ -1,0 +1,65 @@
+title: 인터페이스 정의
+layout: two-column
+content:
+  left:
+    type: box
+    title: 내부 시스템 인터페이스
+    interfaces:
+      - from: OMS
+        to: WMS
+        content: 출고 지시
+        method: REST API
+        period: 실시간
+      - from: WMS
+        to: OMS
+        content: 출고 완료 통보
+        method: REST API
+        period: 실시간
+      - from: WMS
+        to: TMS
+        content: 배송 요청
+        method: REST API
+        period: 실시간
+      - from: TMS
+        to: OMS
+        content: 배송 상태 업데이트
+        method: REST API
+        period: 실시간
+      - from: WMS
+        to: Dashboard
+        content: 재고 현황
+        method: Event (SQS)
+        period: 실시간
+      - from: TMS
+        to: Dashboard
+        content: 배송 현황
+        method: Event (SQS)
+        period: 실시간
+  right:
+    type: box
+    title: 외부 시스템 인터페이스
+    interfaces:
+      - target: 기존 ERP (SAP)
+        content: 주문 정보 수신
+        method: RFC/BAPI
+        period: 실시간
+      - target: 기존 ERP (SAP)
+        content: 출고/재고 전송
+        method: RFC/BAPI
+        period: 일 1회
+      - target: 쇼핑몰 (자사몰)
+        content: 주문 수집
+        method: REST API
+        period: 실시간
+      - target: 오픈마켓 (쿠팡 등)
+        content: 주문 수집/상태 업데이트
+        method: REST API
+        period: 5분
+      - target: 택배사 (CJ, 한진 등)
+        content: 송장 발급/추적
+        method: REST API
+        period: 실시간
+      - target: 카카오 알림톡
+        content: 배송 알림 발송
+        method: REST API
+        period: 실시간

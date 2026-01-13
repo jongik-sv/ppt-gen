@@ -1,0 +1,35 @@
+title: 프로젝트 범위
+layout: two-column
+content:
+  left:
+    type: box
+    title: 시스템 범위
+    systems:
+      - name: WMS
+        description: 창고관리시스템
+        features: 입출고, 재고, 피킹/패킹
+      - name: TMS
+        description: 배송관리시스템
+        features: 배차, 경로최적화, 추적
+      - name: OMS
+        description: 주문관리시스템
+        features: 주문접수, 할당, 정산
+      - name: Dashboard
+        description: 통합모니터링
+        features: 실시간 현황, KPI, 리포트
+  right:
+    type: box
+    title: 포함/제외 범위
+    include:
+      header: 포함 범위
+      items:
+        - 입고/출고 관리
+        - 재고 관리
+        - 배송 추적
+        - 정산 시스템
+    exclude:
+      header: 제외 범위
+      items:
+        - 회계 시스템 (인터페이스만)
+        - HR 시스템
+        - 기존 ERP 시스템

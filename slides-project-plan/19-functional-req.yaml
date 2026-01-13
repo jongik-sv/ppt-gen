@@ -1,0 +1,49 @@
+title: 시스템 기능 요구사항
+layout: four-column
+content:
+  columns:
+    - title: WMS
+      color: "#3B82F6"
+      features:
+        - 입고 예정 관리
+        - 입고 검수
+        - 로케이션 관리
+        - 적치 지시
+        - 재고 조회
+        - 피킹 지시
+        - 피킹 확정
+        - 패킹 처리
+        - 출고 확정
+    - title: TMS
+      color: "#10B981"
+      features:
+        - 배차 계획
+        - 경로 최적화
+        - 차량 관리
+        - 실시간 추적
+        - 배송 현황
+        - 전자 서명
+        - 운임 계산
+        - 운송사 정산
+        - 배송 알림
+    - title: OMS
+      color: "#F59E0B"
+      features:
+        - 주문 수집
+        - 주문 검증
+        - 창고 할당
+        - 주문 상태 관리
+        - 주문 변경/취소
+        - 분할/병합 배송
+        - 예약 주문
+        - 클레임 관리
+        - 정산 관리
+    - title: Dashboard
+      color: "#8B5CF6"
+      features:
+        - 실시간 현황판
+        - KPI 모니터링
+        - 알림/경보
+        - 리포트 생성
+        - 애드혹 분석
+        - 데이터 내보내기
