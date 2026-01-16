@@ -1,0 +1,76 @@
+# 슬라이드 12: 5단계 화살표 타임라인
+id: arrow-5step
+name: 5단계 화살표 타임라인
+category: timeline
+description: 연도별 5단계 화살표 타임라인과 아이콘
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 12
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: timeline
+  structure: arrow-horizontal
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "수평 화살표 타임라인, 각 단계에 연도/아이콘/설명"
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: steps
+    type: array
+    min: 5
+    max: 5
+    item_schema:
+      - name: year
+        type: text
+      - name: icon
+        type: image
+      - name: description
+        type: text
+      - name: is_current
+        type: boolean
+    sample:
+      - year: "2015"
+        description: "{{본문}}"
+        is_current: false
+      - year: "2016"
+        description: "{{본문}}"
+        is_current: false
+      - year: "2017"
+        description: "{{본문}}"
+        is_current: false
+      - year: "2018"
+        description: "{{본문}}"
+        is_current: false
+      - year: "2019"
+        description: "{{본문}}"
+        is_current: true
+
+theme_colors:
+  arrow_past: "{{theme.background.neutral}}"
+  arrow_current: "{{theme.colors.accent}}"
+  icon_past: "{{theme.background.neutral}}"
+  icon_current: "{{theme.colors.accent}}"
+
+semantic_description: |
+  5단계 화살표 타임라인.
+
+  **구조:**
+  - 수평 화살표: 5개 연결 (회색 → 현재 주황색)
+  - 각 단계: 연도 라벨 + 원형 아이콘 + 설명
+
+keywords: [타임라인, 연혁, 5단계, 화살표, 연도]
+
+use_for:
+  - "회사 연혁"
+  - "프로젝트 타임라인"

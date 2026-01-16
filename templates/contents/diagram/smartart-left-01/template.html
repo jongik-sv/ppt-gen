@@ -250,18 +250,10 @@
             <!-- SmartArt 컨테이너 -->
             <div class="smartart-container">
                 <div class="box-grid">
-                    <div class="smartart-box box-1-top-left" contenteditable="true">
-                        제목을 입력해주세요.
-                    </div>
-                    <div class="smartart-box box-1-top-right" contenteditable="true">
-                        제목을 입력해 주세요.
-                    </div>
-                    <div class="smartart-box box-2-bottom-left" contenteditable="true">
-                        제목을입력해 주세요.
-                    </div>
-                    <div class="smartart-box box-2-bottom-right" contenteditable="true">
-                        제목을 입력해 주세요.
-                    </div>
+                    <div class="smartart-box box-1-top-left">{{boxes.0.text}}</div>
+                    <div class="smartart-box box-1-top-right">{{boxes.1.text}}</div>
+                    <div class="smartart-box box-2-bottom-left">{{boxes.2.text}}</div>
+                    <div class="smartart-box box-2-bottom-right">{{boxes.3.text}}</div>
                 </div>
             </div>
 
@@ -270,12 +262,8 @@
 
             <!-- 우측 섹션 -->
             <div class="right-section">
-                <div class="right-section-title" contenteditable="true">
-                    제목을 입력하세요.
-                </div>
-                <div class="right-section-body" contenteditable="true">
-                    영화 미비포유의 줄거리… 이별을 준비하는 마지막에 나타난 짜증나는 여자 내 평생 최고의
-                </div>
+                <div class="right-section-title">{{right_title}}</div>
+                <div class="right-section-body">{{right_body}}</div>
             </div>
         </div>
     </div>

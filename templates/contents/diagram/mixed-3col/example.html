@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>3열 복합 다이어그램 - 예시</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: #FFFFFF;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 40px; padding: 40px 60px;
+    }
+    .column { border: 1px solid #ddd; padding: 30px; }
+    .column-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; text-align: center; }
+    .item-text { font-size: 13px; line-height: 1.8; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="column">
+      <div class="column-title">{{중제목}}</div>
+      <div class="item-text">{{본문}}</div>
+      <div class="item-text">- 텍스트를 입력하세요 텍스트</div>
+      <div class="item-text">- 텍스트를 입력하세요 텍스트</div>
+      <div class="item-text">- 텍스트를 입력하세요 텍스트</div>
+    </div>
+    <div class="column">
+      <div class="column-title">{{중제목}}</div>
+      <div class="item-text">- 텍스트를 입력하세요 텍스트</div>
+      <div class="item-text">- 텍스트를 입력하세요 텍스트</div>
+      <div class="item-text">- 텍스트를 입력하세요 텍스트</div>
+    </div>
+    <div class="column">
+      <div class="column-title">{{중제목}}</div>
+      <div class="item-text">- 텍스트 입력</div>
+      <div class="item-text">- 텍스트 입력</div>
+    </div>
+  </div>
+</body>
+</html>

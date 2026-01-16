@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divider - Deep Green</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+        }
+
+        .slide {
+            width: 1980px;
+            height: 1080px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            position: relative;
+        }
+
+        .divider-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .version-label {
+            position: absolute;
+            top: 28.4%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32pt;
+            font-weight: bold;
+            color: #22523B;
+            letter-spacing: 0.05em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+        }
+
+        .divider-line {
+            position: absolute;
+            top: 40.8%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 41.2%;
+            height: 1px;
+            background-color: #22523B;
+            border: none;
+        }
+
+        .title-text {
+            position: absolute;
+            top: 46.4%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24.9%;
+            font-size: 20pt;
+            font-weight: normal;
+            color: #22523B;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .description-text {
+            position: absolute;
+            top: 53.4%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44.6%;
+            font-size: 12pt;
+            font-weight: normal;
+            color: #22523B;
+            text-align: center;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        /* Placeholder styles for editing */
+        .placeholder {
+            background: linear-gradient(
+                45deg,
+                #f0f0f0 25%,
+                transparent 25%,
+                transparent 50%,
+                #f0f0f0 50%,
+                #f0f0f0 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 20px 20px;
+            color: #999;
+            padding: 10px;
+            border-radius: 2px;
+        }
+
+        .placeholder:empty::before {
+            content: attr(data-placeholder);
+            color: #999;
+        }
+
+        @media print {
+            .slide {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="divider-container">
+            <div class="version-label">VERSION. 01</div>
+            <div class="divider-line"></div>
+            <div class="title-text">프로젝트 개요</div>
+            <div class="description-text">배경, 목적, 범위 및 기대효과</div>
+        </div>
+    </div>
+</body>
+</html>

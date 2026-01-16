@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>5단계 화살표 타임라인 - 예시</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: #FFFFFF;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px;
+    }
+    .timeline { display: flex; align-items: flex-start; }
+    .step { display: flex; flex-direction: column; align-items: center; width: 200px; }
+    .arrow {
+      width: 180px; height: 40px;
+      background: #C8C8C8;
+      clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 15% 50%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: bold;
+    }
+    .arrow.first { clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%); }
+    .arrow.current { background: #E67E22; color: white; }
+    .connector { width: 2px; height: 40px; background: #C8C8C8; margin: 10px 0; }
+    .connector.current { background: #E67E22; }
+    .icon-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: #C8C8C8;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-circle.current { background: #E67E22; }
+    .description { margin-top: 16px; text-align: center; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="timeline">
+      <div class="step">
+        <div class="arrow first">2015</div>
+        <div class="connector"></div>
+        <div class="icon-circle"></div>
+        <div class="description">{{본문}}</div>
+      </div>
+      <div class="step">
+        <div class="arrow">2016</div>
+        <div class="connector"></div>
+        <div class="icon-circle"></div>
+        <div class="description">{{본문}}</div>
+      </div>
+      <div class="step">
+        <div class="arrow">2017</div>
+        <div class="connector"></div>
+        <div class="icon-circle"></div>
+        <div class="description">{{본문}}</div>
+      </div>
+      <div class="step">
+        <div class="arrow">2018</div>
+        <div class="connector"></div>
+        <div class="icon-circle"></div>
+        <div class="description">{{본문}}</div>
+      </div>
+      <div class="step">
+        <div class="arrow current">2019</div>
+        <div class="connector current"></div>
+        <div class="icon-circle current"></div>
+        <div class="description">{{본문}}</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+# 슬라이드 14: 조직도 (3열 2행)
+id: org-chart-3col
+name: 조직도 3열 2행
+category: diagram
+description: 3열 2행 구조의 조직도/계층 다이어그램
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 14
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: org-chart
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "상단 헤더 + 3열 2행 리스트 구조"
+  quality_score: 8.0
+  visual_balance: symmetric
+  information_density: high
+
+placeholders:
+  - name: header
+    type: text
+    sample: ""
+  - name: columns
+    type: array
+    min: 3
+    max: 3
+    item_schema:
+      - name: title
+        type: text
+      - name: sections
+        type: array
+    sample:
+      - title: "Text"
+        sections:
+          - items: ["텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력"]
+          - items: ["텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력"]
+      - title: "Text"
+        sections:
+          - items: ["텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력"]
+          - items: ["텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력"]
+      - title: "Text"
+        sections:
+          - items: ["텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력"]
+          - items: ["텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력", "텍스트입력"]
+
+theme_colors:
+  header: "{{theme.colors.primary}}"
+  column_title: "{{theme.background.neutral}}"
+
+semantic_description: |
+  3열 2행 조직도/계층 구조.
+
+  **구조:**
+  - 상단: 헤더 바 (네이비)
+  - 3열: 각 열에 제목 + 2개 섹션
+
+keywords: [조직도, 3열, 계층, 구조, 부서]
+
+use_for:
+  - "부서별 업무 분류"
+  - "조직 구조"

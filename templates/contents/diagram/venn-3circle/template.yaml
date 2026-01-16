@@ -1,0 +1,81 @@
+# 콘텐츠 템플릿 정의
+id: venn-3circle
+name: 3원 벤다이어그램
+category: diagram
+description: 3개의 원이 겹치는 벤다이어그램 레이아웃
+
+# 출처 정보
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 3
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: venn-3
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "3개 원이 겹치는 벤다이어그램, 각 원에 3줄 텍스트와 하단 설명"
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: title
+    type: text
+    sample: "{{중제목}}"
+  - name: subtitle
+    type: text
+    sample: "{{본문}}"
+  - name: circles
+    type: array
+    min: 3
+    max: 3
+    item_schema:
+      - name: items
+        type: array
+        description: "원 내부 텍스트 (3줄)"
+    sample:
+      - items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+  - name: bottom_items
+    type: array
+    description: "하단 설명 텍스트"
+    sample: ["{{본문}}", "{{본문}}", "{{본문}}"]
+
+theme_colors:
+  circle_left: "{{theme.muted.light}}"
+  circle_center: "{{theme.colors.primary}}"
+  circle_right: "{{theme.colors.primary}}"
+  connector: "{{theme.colors.primary}}"
+
+semantic_description: |
+  3개 원이 수평으로 배치된 벤다이어그램.
+
+  **캔버스:** 1920 × 734px, {{theme.background.light}}
+
+  **레이아웃:**
+  - 상단 중앙: 제목 + 부제목
+  - 중앙: 3개 원 (좌/중/우)
+  - 하단 중앙: 설명 텍스트
+
+  **원 스타일:**
+  - 크기: 직경 약 200px
+  - 좌측 원: 반원 + 회색/블루 반반 채우기
+  - 중앙 원: 블루 계열
+  - 우측 원: 반원 + 네이비 테두리
+
+  **커넥터:** 좌우 반원형 라인
+
+keywords: [벤다이어그램, 3원, 관계, 교집합, 비교]
+
+use_for:
+  - "3가지 요소의 관계 표현"
+  - "교집합/공통점 강조"

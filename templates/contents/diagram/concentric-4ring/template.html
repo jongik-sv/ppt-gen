@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>동심원 4링 다이어그램</title>
+  <style>
+    :root {
+      --color-primary: {{theme.colors.primary}};
+      --color-secondary: {{theme.colors.secondary}};
+      --color-accent: {{theme.colors.accent}};
+      --muted-light: {{theme.muted.light}};
+      --bg-light: {{theme.background.light}};
+      --bg-neutral: {{theme.background.neutral}};
+      --font-body: {{theme.fonts.body}};
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: var(--bg-light);
+      font-family: var(--font-body), sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; padding: 40px;
+    }
+    .rings-container {
+      position: relative; width: 360px; height: 360px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ring {
+      position: absolute; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: white;
+    }
+    .ring-1 { width: 360px; height: 360px; background: var(--color-primary); }
+    .ring-2 { width: 280px; height: 280px; background: var(--color-accent); }
+    .ring-3 { width: 200px; height: 200px; background: var(--muted-light); color: var(--color-secondary); }
+    .ring-4 { width: 120px; height: 120px; background: var(--color-primary); }
+    .desc-boxes { position: absolute; display: flex; flex-direction: column; gap: 20px; }
+    .desc-boxes.left { left: 80px; }
+    .desc-boxes.right { right: 80px; }
+    .desc-box {
+      width: 200px; padding: 20px;
+      font-size: 13px; line-height: 1.6;
+    }
+    .desc-box.gray { background: var(--bg-neutral); color: var(--color-secondary); }
+    .desc-box.blue { background: var(--color-accent); color: white; }
+    .bottom-text {
+      position: absolute; bottom: 40px;
+      text-align: center; font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="desc-boxes left">
+      <div class="desc-box gray">{{descriptions.[0].text}}</div>
+      <div class="desc-box gray">{{descriptions.[1].text}}</div>
+    </div>
+    <div class="rings-container">
+      <div class="ring ring-1">{{rings.[0].label}}</div>
+      <div class="ring ring-2">{{rings.[1].label}}</div>
+      <div class="ring ring-3">{{rings.[2].label}}</div>
+      <div class="ring ring-4">{{rings.[3].label}}</div>
+    </div>
+    <div class="desc-boxes right">
+      <div class="desc-box blue">{{descriptions.[2].text}}</div>
+      <div class="desc-box blue">{{descriptions.[3].text}}</div>
+    </div>
+    <div class="bottom-text">
+      {{#each bottom_items}}<p>{{this}}</p>{{/each}}
+    </div>
+  </div>
+</body>
+</html>

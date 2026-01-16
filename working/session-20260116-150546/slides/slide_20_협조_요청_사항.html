@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3행 디스크 리스트 템플릿</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* 콘텐츠 영역만 (1920 × 734px) */
+        .content {
+            width: 1920px;
+            height: 734px;
+            background: white;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 40px 60px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 160px;
+            position: relative;
+            height: auto;
+        }
+
+        .row:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Left Column - Disk Icon */
+        .disk-container {
+            flex-shrink: 0;
+            width: 137px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .disk-icon {
+            width: 120px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .disk-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            height: 35%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .disk-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 40%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .row:nth-child(1) .disk-icon {
+            background: #C4D6D0;
+            border: 2px solid #999;
+        }
+
+        .row:nth-child(2) .disk-icon {
+            background: #83A99B;
+            border: 2px solid #666;
+        }
+
+        .row:nth-child(3) .disk-icon {
+            background: #479374;
+            border: 2px solid #333;
+        }
+
+        .disk-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-align: center;
+            width: 100%;
+            background: rgba(0,0,0,0.2);
+            padding: 4px;
+            border-radius: 4px;
+            min-width: 120px;
+        }
+
+        /* Connector Line */
+        .connector {
+            flex-grow: 1;
+            flex-shrink: 1;
+            height: 2px;
+            background: transparent;
+            position: relative;
+            margin: 0 30px;
+            min-width: 100px;
+        }
+
+        .connector::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #153325;
+            background-image: linear-gradient(90deg, #153325 50%, transparent 50%);
+            background-size: 8px 2px;
+            background-repeat: repeat-x;
+        }
+
+        /* Arrow head */
+        .connector::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #153325;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            transform: translateY(-50%);
+        }
+
+        /* Right Column - Description Box */
+        .content-box {
+            flex: 1;
+            flex-shrink: 0;
+            width: 55%;
+            min-width: 300px;
+            padding: 20px 25px;
+            border: 2px solid;
+            border-radius: 4px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .row:nth-child(1) .content-box {
+            border-color: #153325;
+        }
+
+        .row:nth-child(2) .content-box {
+            border-color: #67B7B5;
+        }
+
+        .row:nth-child(3) .content-box {
+            border-color: #A1BFB4;
+        }
+
+        .box-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #153325;
+            line-height: 1.3;
+        }
+
+        .box-description {
+            font-size: 12px;
+            color: #153325;
+            line-height: 1.5;
+            word-break: keep-all;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1920px) {
+            .content {
+                transform: scale(0.5);
+                transform-origin: top left;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .content {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 콘텐츠 영역만 (헤더/푸터 제외) -->
+    <div class="content">
+            <!-- Row 1 -->
+            <div class="row" id="row-1">
+                <div class="disk-container">
+                    <div class="disk-icon"></div>
+                    <div class="disk-title">프로젝트 환경 지원</div>
+                </div>
+                <div class="connector"></div>
+                <div class="content-box">
+                    <div class="box-title">프로젝트 환경 지원</div>
+                    <div class="box-description">프로젝트룸 10석 지정, 출입증 발급 (1월 중), VPN 접근 권한 부여</div>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="row" id="row-2">
+                <div class="disk-container">
+                    <div class="disk-icon"></div>
+                    <div class="disk-title">데이터 및 자료 지원</div>
+                </div>
+                <div class="connector"></div>
+                <div class="content-box">
+                    <div class="box-title">데이터 및 자료 지원</div>
+                    <div class="box-description">테스트 데이터 제공, 업무 매뉴얼, 레거시 시스템 문서 및 ERD</div>
+                </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="row" id="row-3">
+                <div class="disk-container">
+                    <div class="disk-icon"></div>
+                    <div class="disk-title">현업 참여 지원</div>
+                </div>
+                <div class="connector"></div>
+                <div class="content-box">
+                    <div class="box-title">현업 참여 지원</div>
+                    <div class="box-description">요구사항 인터뷰 (2~3월), 화면 리뷰 (5월), UAT 참여 (11월)</div>
+                </div>
+            </div>
+    </div>
+
+    <script>
+        // Data binding function (콘텐츠 영역만)
+        function updateContent(data) {
+            if (data.items && Array.isArray(data.items)) {
+                data.items.forEach((item, index) => {
+                    const num = index + 1;
+                    if (item.title) {
+                        const titleEl = document.getElementById(`item-${num}-title`);
+                        const boxTitleEl = document.getElementById(`item-${num}-box-title`);
+                        if (titleEl) titleEl.textContent = item.title;
+                        if (boxTitleEl) boxTitleEl.textContent = item.title;
+                    }
+                    if (item.description) {
+                        const descEl = document.getElementById(`item-${num}-description`);
+                        if (descEl) descEl.textContent = item.description;
+                    }
+                });
+            }
+        }
+
+        // Export function for data
+        window.templateAPI = {
+            updateContent: updateContent,
+            getContent: function() {
+                return {
+                    items: [
+                        {
+                            title: document.getElementById('item-1-title').textContent,
+                            description: document.getElementById('item-1-description').textContent
+                        },
+                        {
+                            title: document.getElementById('item-2-title').textContent,
+                            description: document.getElementById('item-2-description').textContent
+                        },
+                        {
+                            title: document.getElementById('item-3-title').textContent,
+                            description: document.getElementById('item-3-description').textContent
+                        }
+                    ]
+                };
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+# 슬라이드 13: 4단계 계단 프로세스
+id: stairs-4step
+name: 4단계 계단 프로세스
+category: process
+description: 상승 계단 형태의 4단계 프로세스 다이어그램
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 13
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: process
+  structure: stairs-ascending
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "좌측 하단에서 우측 상단으로 올라가는 계단 형태"
+  quality_score: 9.0
+  visual_balance: asymmetric
+  information_density: medium
+
+placeholders:
+  - name: steps
+    type: array
+    min: 4
+    max: 4
+    item_schema:
+      - name: icon
+        type: image
+      - name: title
+        type: text
+      - name: items
+        type: array
+    sample:
+      - title: "{{본문}}"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "{{본문}}"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "{{본문}}"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "{{본문}}"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+
+theme_colors:
+  step1: "{{theme.colors.primary}}"
+  step2: "{{theme.colors.accent}}"
+  step3: "{{theme.muted.light}}"
+  step4: "{{theme.muted.pale}}"
+
+semantic_description: |
+  4단계 계단 프로세스.
+
+  **구조:**
+  - 계단 형태: 좌하→우상 상승
+  - 각 단계: 바 + 원형 아이콘 + 제목 + 설명 리스트
+
+keywords: [계단, 4단계, 상승, 프로세스, 성장]
+
+use_for:
+  - "성장 단계"
+  - "발전 과정"

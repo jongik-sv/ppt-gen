@@ -1,0 +1,92 @@
+# 콘텐츠 템플릿 정의
+id: card-4col-circle
+name: 4열 원형 아이콘 카드
+category: grid
+description: 원형 아이콘과 2행 불릿 리스트가 있는 4열 카드
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 5
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: grid
+  structure: card-4col
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "4개 열, 각 열에 원형 제목 + 2행 불릿 리스트"
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: cards
+    type: array
+    min: 4
+    max: 4
+    item_schema:
+      - name: title
+        type: text
+      - name: sections
+        type: array
+        description: "2개 섹션 (각 섹션에 소제목 + 불릿)"
+    sample:
+      - title: "{{중제목}}"
+        sections:
+          - subtitle: "{{소제목}}"
+            items: ["{{본문}}", "{{본문}}"]
+          - subtitle: "{{소제목}}"
+            items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "{{중제목}}"
+        sections:
+          - subtitle: "{{소제목}}"
+            items: ["{{본문}}", "{{본문}}"]
+          - subtitle: "{{소제목}}"
+            items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "{{중제목}}"
+        sections:
+          - subtitle: "{{소제목}}"
+            items: ["{{본문}}", "{{본문}}"]
+          - subtitle: "{{소제목}}"
+            items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "{{중제목}}"
+        sections:
+          - subtitle: "{{소제목}}"
+            items: ["{{본문}}", "{{본문}}"]
+          - subtitle: "{{소제목}}"
+            items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+
+theme_colors:
+  circle: "{{theme.colors.primary}}"
+  circle_text: "#FFFFFF"
+  subtitle: "{{theme.colors.primary}}"
+
+semantic_description: |
+  4열 원형 아이콘 카드 그리드.
+
+  **캔버스:** 1920 × 734px
+
+  **구조:**
+  - 4개 열 균등 배분
+  - 각 열: 원형 제목 + 2개 섹션
+
+  **원형 제목:**
+  - 크기: 120px
+  - 배경: {{theme.colors.primary}}
+  - 텍스트: 흰색
+
+  **섹션:**
+  - 소제목: {{theme.fonts.heading}}, bold
+  - 불릿 리스트
+
+keywords: [4열, 카드, 원형, 그리드, 카테고리]
+
+use_for:
+  - "4가지 카테고리별 상세 내용"
+  - "서비스/제품 분류"

@@ -1,0 +1,124 @@
+# 콘텐츠 템플릿 정의
+id: table-3col-3row
+name: 3열 3행 테이블 리스트
+category: grid
+description: 좌측 제목 + 2열 본문으로 구성된 3행 테이블 레이아웃
+
+# 출처 정보 (필수)
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 2
+  extracted_at: "2026-01-16"
+
+# 품질 설정
+quality: high
+
+# 레이아웃 정보
+layout:
+  type: grid
+  structure: table-3col
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+# 디자인 메타
+design_meta:
+  design_intent: "3행으로 구성된 테이블 형태, 좌측에 제목 영역과 우측에 2열 본문"
+  quality_score: 8.0
+  visual_balance: symmetric
+  information_density: high
+
+# 플레이스홀더 정의
+placeholders:
+  - name: header_titles
+    type: array
+    description: "상단 헤더 (3개 열 제목)"
+    min: 3
+    max: 3
+    item_schema:
+      - name: text
+        type: text
+    sample:
+      - text: "{{중제목}}"
+      - text: "{{중제목}}"
+      - text: "{{중제목}}"
+  - name: rows
+    type: array
+    min: 3
+    max: 3
+    item_schema:
+      - name: label
+        type: text
+        description: "행 제목 (소제목)"
+      - name: sublabel
+        type: text
+        description: "행 부제목"
+      - name: col1_items
+        type: array
+        description: "1열 불릿 항목"
+      - name: col2_items
+        type: array
+        description: "2열 불릿 항목"
+    sample:
+      - label: "소제목"
+        sublabel: "Medium"
+        col1_items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+        col2_items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+      - label: "소제목"
+        sublabel: "Medium"
+        col1_items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+        col2_items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+      - label: "소제목"
+        sublabel: "Medium"
+        col1_items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+        col2_items: ["{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}", "{{본문}}"]
+
+# 테마 색상
+theme_colors:
+  header_bg: "{{theme.background.neutral}}"
+  row_label_bg: "{{theme.background.light}}"
+  border: "{{theme.colors.primary}}"
+  text: "{{theme.colors.secondary}}"
+
+# 시맨틱 설명
+semantic_description: |
+  3열 3행 테이블 형태의 정보 레이아웃.
+
+  **캔버스:**
+  - 콘텐츠 영역: 1920 × 734px
+  - 배경: {{theme.background.light}}
+
+  **레이아웃 구조:**
+  - 상단: 3열 헤더
+  - 본문: 3행 × 3열 테이블
+
+  **각 행 구조:**
+  1. **좌측 레이블 영역 (20%):**
+     - 소제목: {{theme.fonts.heading}}, 14px, bold
+     - 부제목: {{theme.fonts.body}}, 12px, Medium 스타일
+     - 배경: {{theme.background.light}}
+
+  2. **중앙 본문 열 (40%):**
+     - 불릿 리스트
+     - 폰트: {{theme.fonts.body}}, 12px
+     - line-height: 1.6
+
+  3. **우측 본문 열 (40%):**
+     - 불릿 리스트
+     - 동일 스타일
+
+  **구분선:**
+  - 각 행 사이: 1px, {{theme.colors.primary}}
+
+keywords:
+  - 테이블
+  - 3열
+  - 3행
+  - 매트릭스
+  - 비교
+
+use_for:
+  - "카테고리별 상세 항목 비교"
+  - "부서별 업무 분류"
+  - "단계별 세부 내용 정리"

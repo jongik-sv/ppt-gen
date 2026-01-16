@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>3행 필 바 리스트</title>
+  <style>
+    :root {
+      --color-primary: {{theme.colors.primary}};
+      --color-secondary: {{theme.colors.secondary}};
+      --bg-neutral: {{theme.background.neutral}};
+      --muted-light: {{theme.muted.light}};
+      --bg-light: {{theme.background.light}};
+      --font-heading: {{theme.fonts.heading}};
+      --font-body: {{theme.fonts.body}};
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: var(--bg-light);
+      font-family: var(--font-body), sans-serif;
+      display: flex; flex-direction: column;
+      justify-content: center; gap: 30px;
+      padding: 40px 80px;
+    }
+    .row {
+      display: flex; align-items: center;
+      background: var(--bg-neutral);
+      border-radius: 50px; padding: 20px 30px;
+      height: 140px;
+    }
+    .row:nth-child(1) { background: #C8C8C8; }
+    .row:nth-child(2) { background: #B8D4E3; }
+    .row:nth-child(3) { background: var(--color-primary); color: white; }
+    .row:nth-child(3) .row-title { color: white; }
+    .row:nth-child(3) .row-items { color: rgba(255,255,255,0.9); }
+    .circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: white; flex-shrink: 0;
+    }
+    .row-content { margin-left: 30px; flex: 1; }
+    .row-title {
+      font-family: var(--font-heading);
+      font-size: 18px; font-weight: bold;
+      color: var(--color-secondary);
+      margin-bottom: 8px;
+    }
+    .row-subtitle { font-size: 14px; color: var(--color-secondary); }
+    .row-items {
+      display: flex; gap: 40px; margin-left: auto;
+      font-size: 13px; color: var(--color-secondary);
+    }
+    .row-items span { line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    {{#each rows}}
+    <div class="row">
+      <div class="circle"></div>
+      <div class="row-content">
+        <div class="row-title">{{this.title}}</div>
+        <div class="row-subtitle">{{this.subtitle}}</div>
+      </div>
+      <div class="row-items">
+        {{#each this.items}}<span>{{this}}</span>{{/each}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</body>
+</html>

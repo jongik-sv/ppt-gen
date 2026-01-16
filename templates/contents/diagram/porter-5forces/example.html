@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>포터 5 Forces 다이어그램 - 예시</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: #FFFFFF;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .center-box {
+      width: 180px; height: 100px;
+      background: #1B365D; color: white;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-size: 16px; text-align: center;
+    }
+    .force { position: absolute; text-align: center; }
+    .force-label {
+      background: #E5E5E5;
+      padding: 12px 24px; font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .force-items { font-size: 12px; }
+    .force.top { top: 80px; }
+    .force.bottom { bottom: 80px; }
+    .force.left { left: 200px; }
+    .force.right { right: 200px; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="force top">
+      <div class="force-label">Potential entrants</div>
+      <div class="force-items"><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p></div>
+    </div>
+    <div class="force left">
+      <div class="force-label">Suppliers</div>
+      <div class="force-items"><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p></div>
+    </div>
+    <div class="center-box">
+      <div>텍스트를</div>
+      <div>입력하세요</div>
+    </div>
+    <div class="force right">
+      <div class="force-label">Buyers</div>
+      <div class="force-items"><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p></div>
+    </div>
+    <div class="force bottom">
+      <div class="force-label">Substitutes</div>
+      <div class="force-items"><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p></div>
+    </div>
+  </div>
+</body>
+</html>

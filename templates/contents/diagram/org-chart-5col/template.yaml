@@ -1,0 +1,64 @@
+# 슬라이드 15: 조직도 (5열 계층)
+id: org-chart-5col
+name: 조직도 5열 계층
+category: diagram
+description: CEO를 정점으로 한 5열 계층 조직도
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 15
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: org-hierarchy
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "CEO → 부서장 → 팀장 → 팀원 계층 구조"
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: high
+
+placeholders:
+  - name: ceo
+    type: text
+    sample: "CEO"
+  - name: level2
+    type: array
+    sample: ["SUB", "SUB"]
+  - name: level3
+    type: array
+    sample: ["SUB", "SUB", "SUB", "SUB", "SUB"]
+  - name: level4
+    type: array
+    sample: ["SUB", "SUB", "SUB", "SUB", "SUB"]
+  - name: level5
+    type: array
+    sample: ["SUB", "SUB", "SUB", "SUB", "SUB"]
+
+theme_colors:
+  ceo: "{{theme.colors.primary}}"
+  level2: "{{theme.colors.accent}}"
+  level3: "{{theme.muted.light}}"
+  level4: "{{theme.background.neutral}}"
+
+semantic_description: |
+  5열 계층 조직도.
+
+  **구조:**
+  - Level 1: CEO (네이비)
+  - Level 2: 2개 부서장 (블루)
+  - Level 3: 5개 팀장 (연회색)
+  - Level 4-5: 팀원 (흰색)
+
+keywords: [조직도, 계층, 5열, CEO, 구조]
+
+use_for:
+  - "회사 조직 구조"
+  - "부서 계층 표현"

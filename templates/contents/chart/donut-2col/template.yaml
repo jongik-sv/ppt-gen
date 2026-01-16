@@ -1,0 +1,71 @@
+# 슬라이드 18: 2열 도넛 차트
+id: donut-2col
+name: 2열 도넛 차트
+category: chart
+description: 2개의 도넛 차트와 퍼센트 표시
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 18
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: chart
+  structure: donut-2col
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "2개 도넛 차트를 나란히 배치, 각 차트에 퍼센트 + 설명"
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: charts
+    type: array
+    min: 2
+    max: 2
+    item_schema:
+      - name: percent
+        type: text
+      - name: title
+        type: text
+      - name: items
+        type: array
+    sample:
+      - percent: "25%"
+        title: "{{소제목}}"
+        items: ["가나다라마바사 가나다라마바사", "가나다라마바사 가나다라마바사", "가나다라마바사 가나다라마바사"]
+      - percent: "50%"
+        title: "{{소제목}}"
+        items: ["가나다라마바사 가나다라마바사", "가나다라마바사 가나다라마바사", "가나다라마바사 가나다라마바사"]
+
+theme_colors:
+  donut_fill: "{{theme.colors.accent}}"
+  donut_track: "{{theme.background.neutral}}"
+  percent_text: "{{theme.colors.accent}}"
+
+semantic_description: |
+  2열 도넛 차트.
+
+  **구조:**
+  - 2개 열, 각 열에 도넛 차트
+  - 도넛 중앙에 퍼센트 수치
+  - 도넛 상단에 세그먼트 표시
+  - 하단에 제목 + 설명 리스트
+
+  **도넛 스타일:**
+  - 크기: 약 200px
+  - 트랙: 회색
+  - 채움: 주황색/갈색 계열
+
+keywords: [도넛, 차트, 2열, 퍼센트, 통계]
+
+use_for:
+  - "비율 비교"
+  - "달성률 표시"

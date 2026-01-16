@@ -1,0 +1,77 @@
+# 슬라이드 9: 동심원 4링 다이어그램
+id: concentric-4ring
+name: 동심원 4링 다이어그램
+category: diagram
+description: 4개의 동심원과 주변 설명 박스가 있는 다이어그램
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 9
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: concentric-rings
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "중앙 동심원 4개, 좌우에 설명 박스 4개"
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: rings
+    type: array
+    min: 4
+    max: 4
+    item_schema:
+      - name: label
+        type: text
+    sample:
+      - label: "텍스트입력"
+      - label: "텍스트입력"
+      - label: "텍스트입력"
+      - label: "텍스트입력"
+  - name: descriptions
+    type: array
+    min: 4
+    max: 4
+    item_schema:
+      - name: text
+        type: text
+    sample:
+      - text: "{{본문}}"
+      - text: "{{본문}}"
+      - text: "{{본문}}"
+      - text: "{{본문}}"
+  - name: bottom_items
+    type: array
+    sample: ["{{본문}}", "{{본문}}"]
+
+theme_colors:
+  ring_outer: "{{theme.colors.primary}}"
+  ring_mid: "{{theme.colors.accent}}"
+  ring_inner: "{{theme.muted.light}}"
+  box_left: "{{theme.background.neutral}}"
+  box_right: "{{theme.colors.accent}}"
+
+semantic_description: |
+  동심원 4링 다이어그램.
+
+  **구조:**
+  - 중앙: 4개 동심원 (바깥→안쪽 색상 그라데이션)
+  - 좌측: 2개 설명 박스 (회색)
+  - 우측: 2개 설명 박스 (블루)
+  - 하단: 추가 설명
+
+keywords: [동심원, 계층, 레이어, 핵심, 구조]
+
+use_for:
+  - "계층 구조 표현"
+  - "핵심 가치 시각화"

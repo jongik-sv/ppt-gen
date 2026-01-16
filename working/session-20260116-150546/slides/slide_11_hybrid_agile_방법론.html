@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6단계 프로세스 그리드 템플릿</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            padding: 0;
+            margin: 0;
+        }
+
+        .slide-container {
+            width: 1920px;
+            height: 1080px;
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+        }
+
+        .grid-container {
+            position: absolute;
+            left: 3%;
+            top: 20%;
+            width: 94%;
+            height: 75%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 3% 3%;
+            gap-row: 25%;
+        }
+
+        .card {
+            position: relative;
+            background: #f5f7f6;
+            border-radius: 20px;
+            padding: 40px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 350px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .number-circle {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 120px;
+            height: 120px;
+            background: #a1bfb4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32pt;
+            font-weight: 700;
+            color: #ffffff;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(161, 191, 180, 0.3);
+        }
+
+        .triangle-accent {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-bottom: 160px solid #a1bfb4;
+            opacity: 0.8;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            margin-top: 60px;
+        }
+
+        .card-title {
+            font-size: 16pt;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .card-description {
+            font-size: 12pt;
+            font-weight: 400;
+            color: #666666;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1920px) {
+            .slide-container {
+                width: 100%;
+                height: 100vh;
+                aspect-ratio: 16 / 9;
+            }
+
+            .grid-container {
+                gap: 2% 2%;
+                gap-row: 22%;
+            }
+
+            .card {
+                min-height: auto;
+                aspect-ratio: auto;
+            }
+
+            .number-circle {
+                width: 100px;
+                height: 100px;
+                font-size: 24pt;
+            }
+
+            .triangle-accent {
+                border-left: 120px solid transparent;
+                border-bottom: 120px solid #a1bfb4;
+            }
+
+            .card-title {
+                font-size: 14pt;
+            }
+
+            .card-description {
+                font-size: 11pt;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="content-wrapper">
+            <div class="grid-container">
+                <!-- Card 1 -->
+                <div class="card">
+                    <div class="number-circle">1</div>
+                    <div class="triangle-accent"></div>
+                    <div class="card-content">
+                        <div class="card-title">착수</div>
+                        <div class="card-description">킥오프, 환경구축
+표준 정의, WBS 확정</div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card">
+                    <div class="number-circle">2</div>
+                    <div class="triangle-accent"></div>
+                    <div class="card-content">
+                        <div class="card-title">분석</div>
+                        <div class="card-description">현행 분석, 요구사항
+To-Be 프로세스</div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card">
+                    <div class="number-circle">3</div>
+                    <div class="triangle-accent"></div>
+                    <div class="card-content">
+                        <div class="card-title">설계</div>
+                        <div class="card-description">아키텍처, UI
+DB, 인터페이스</div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="card">
+                    <div class="number-circle">4</div>
+                    <div class="triangle-accent"></div>
+                    <div class="card-content">
+                        <div class="card-title">개발</div>
+                        <div class="card-description">8개 스프린트
+기능구현, 단위테스트</div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="card">
+                    <div class="number-circle">5</div>
+                    <div class="triangle-accent"></div>
+                    <div class="card-content">
+                        <div class="card-title">테스트</div>
+                        <div class="card-description">통합, 성능, 보안
+UAT 인수테스트</div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="card">
+                    <div class="number-circle">6</div>
+                    <div class="triangle-accent"></div>
+                    <div class="card-content">
+                        <div class="card-title">이행</div>
+                        <div class="card-description">데이터 이관
+시스템 오픈, 안정화</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Template data handling
+        const templateData = {
+            items: [
+                {
+                    number: 1,
+                    title: "제목을 입력해 주세요",
+                    description: "분기별 현황보고서를 작성해주세요"
+                },
+                {
+                    number: 2,
+                    title: "제목을 입력해 주세요",
+                    description: "분기별 현황보고서를 작성해주세요"
+                },
+                {
+                    number: 3,
+                    title: "제목을 입력해 주세요",
+                    description: "분기별 현황보고서를 작성해주세요"
+                },
+                {
+                    number: 4,
+                    title: "제목을 입력해 주세요",
+                    description: "분기별 현황보고서를 작성해주세요"
+                },
+                {
+                    number: 5,
+                    title: "제목을 입력해 주세요",
+                    description: "분기별 현황보고서를 작성해주세요"
+                },
+                {
+                    number: 6,
+                    title: "제목을 입력해 주세요",
+                    description: "분기별 현황보고서를 작성해주세요"
+                }
+            ]
+        };
+
+        // Initialize template with data
+        function initTemplate(data) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                if (data.items[index]) {
+                    const item = data.items[index];
+                    card.querySelector('.number-circle').textContent = item.number;
+                    card.querySelector('.card-title').textContent = item.title;
+                    card.querySelector('.card-description').textContent = item.description;
+                }
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initTemplate(templateData);
+        });
+    </script>
+</body>
+</html>

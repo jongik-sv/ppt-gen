@@ -1,0 +1,68 @@
+# 콘텐츠 템플릿 정의
+id: chain-3circle
+name: 3원 연결 다이어그램
+category: diagram
+description: 3개 원이 무한대 형태로 연결된 다이어그램
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 4
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: chain-infinity
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "무한대(∞) 형태로 연결된 3개 원, 각 원에 아이콘과 제목, 설명"
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: items
+    type: array
+    min: 3
+    max: 3
+    item_schema:
+      - name: icon
+        type: image
+        required: false
+      - name: title
+        type: text
+      - name: description
+        type: array
+    sample:
+      - title: "{{중제목}}"
+        description: ["텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요"]
+      - title: "{{중제목}}"
+        description: ["텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요"]
+      - title: "{{중제목}}"
+        description: ["텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요"]
+
+theme_colors:
+  circle: "{{theme.colors.primary}}"
+  connector: "{{theme.colors.primary}}"
+
+semantic_description: |
+  무한대 형태로 연결된 3원 다이어그램.
+
+  **캔버스:** 1920 × 734px
+
+  **구조:**
+  - 3개 원이 수평 배치
+  - 원 사이: 무한대(∞) 형태 연결선
+  - 각 원 위치에 아이콘 + 제목
+  - 원 아래/옆에 설명 텍스트
+
+keywords: [연결, 무한대, 순환, 3요소, 플로우]
+
+use_for:
+  - "순환적 관계 표현"
+  - "3가지 연결된 개념"

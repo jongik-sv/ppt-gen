@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>4단계 계단 프로세스 - 예시</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: #FFFFFF;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; align-items: flex-end;
+      justify-content: center;
+      padding: 40px 100px 80px;
+    }
+    .step { display: flex; flex-direction: column; align-items: center; }
+    .step:nth-child(1) .bar { height: 120px; background: #1B365D; }
+    .step:nth-child(2) .bar { height: 200px; background: #4A90A4; }
+    .step:nth-child(3) .bar { height: 280px; background: #B8D4E3; }
+    .step:nth-child(4) .bar { height: 360px; background: #E5E5E5; }
+    .bar {
+      width: 200px; display: flex; align-items: flex-start;
+      justify-content: center; padding-top: 20px;
+    }
+    .icon-circle { width: 60px; height: 60px; border-radius: 50%; background: white; }
+    .step-content { padding: 20px; text-align: center; width: 200px; }
+    .step-title { font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+    .step-items { font-size: 12px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="step">
+      <div class="step-content">
+        <div class="step-title">{{본문}}</div>
+        <div class="step-items"><p>{{본문}}</p><p>{{본문}}</p><p>{{본문}}</p><p>{{본문}}</p></div>
+      </div>
+      <div class="bar"><div class="icon-circle"></div></div>
+    </div>
+    <div class="step">
+      <div class="step-content">
+        <div class="step-title">{{본문}}</div>
+        <div class="step-items"><p>{{본문}}</p><p>{{본문}}</p><p>{{본문}}</p><p>{{본문}}</p></div>
+      </div>
+      <div class="bar"><div class="icon-circle"></div></div>
+    </div>
+    <div class="step">
+      <div class="step-content">
+        <div class="step-title">{{본문}}</div>
+        <div class="step-items"><p>{{본문}}</p><p>{{본문}}</p><p>{{본문}}</p><p>{{본문}}</p></div>
+      </div>
+      <div class="bar"><div class="icon-circle"></div></div>
+    </div>
+    <div class="step">
+      <div class="step-content">
+        <div class="step-title">{{본문}}</div>
+        <div class="step-items"><p>{{본문}}</p><p>{{본문}}</p><p>{{본문}}</p><p>{{본문}}</p></div>
+      </div>
+      <div class="bar"><div class="icon-circle"></div></div>
+    </div>
+  </div>
+</body>
+</html>

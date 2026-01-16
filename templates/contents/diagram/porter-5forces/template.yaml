@@ -1,0 +1,78 @@
+# 슬라이드 11: 포터 5 Forces 다이어그램
+id: porter-5forces
+name: 포터 5 Forces 다이어그램
+category: diagram
+description: 마이클 포터의 5가지 경쟁 요인 분석 다이어그램
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 11
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: porter-5forces
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "중앙에 기업, 상하좌우에 4가지 경쟁 요인, 화살표로 연결"
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: center
+    type: object
+    item_schema:
+      - name: title
+        type: text
+      - name: subtitle
+        type: text
+    sample:
+      title: "텍스트를"
+      subtitle: "입력하세요"
+  - name: forces
+    type: array
+    min: 4
+    max: 4
+    item_schema:
+      - name: label
+        type: text
+      - name: items
+        type: array
+    sample:
+      - label: "Potential entrants"
+        items: ["텍스트를 입력하세요", "텍스트를 입력하세요"]
+      - label: "Suppliers"
+        items: ["텍스트를 입력하세요", "텍스트를 입력하세요"]
+      - label: "Substitutes"
+        items: ["텍스트를 입력하세요", "텍스트를 입력하세요"]
+      - label: "Buyers"
+        items: ["텍스트를 입력하세요", "텍스트를 입력하세요"]
+
+theme_colors:
+  center: "{{theme.colors.primary}}"
+  force_box: "{{theme.muted.light}}"
+  arrow: "{{theme.colors.secondary}}"
+
+semantic_description: |
+  포터 5 Forces 다이어그램.
+
+  **구조:**
+  - 중앙: 기업/산업 (정사각형)
+  - 상단: 잠재적 진입자
+  - 하단: 대체재
+  - 좌측: 공급자
+  - 우측: 구매자
+  - 화살표: 각 방향에서 중앙으로
+
+keywords: [포터, 5forces, 경쟁, 전략, 산업분석]
+
+use_for:
+  - "산업 경쟁 분석"
+  - "전략적 포지셔닝"

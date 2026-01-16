@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>동심원 4링 다이어그램 - 예시</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: #FFFFFF;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; padding: 40px;
+    }
+    .rings-container {
+      position: relative; width: 360px; height: 360px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ring {
+      position: absolute; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: white;
+    }
+    .ring-1 { width: 360px; height: 360px; background: #1B365D; }
+    .ring-2 { width: 280px; height: 280px; background: #4A90A4; }
+    .ring-3 { width: 200px; height: 200px; background: #B8D4E3; color: #333; }
+    .ring-4 { width: 120px; height: 120px; background: #1B365D; }
+    .desc-boxes { position: absolute; display: flex; flex-direction: column; gap: 20px; }
+    .desc-boxes.left { left: 80px; }
+    .desc-boxes.right { right: 80px; }
+    .desc-box { width: 200px; padding: 20px; font-size: 13px; line-height: 1.6; }
+    .desc-box.gray { background: #E5E5E5; }
+    .desc-box.blue { background: #4A90A4; color: white; }
+    .bottom-text { position: absolute; bottom: 40px; text-align: center; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="desc-boxes left">
+      <div class="desc-box gray">{{본문}}</div>
+      <div class="desc-box gray">{{본문}}</div>
+    </div>
+    <div class="rings-container">
+      <div class="ring ring-1">텍스트입력</div>
+      <div class="ring ring-2">텍스트입력</div>
+      <div class="ring ring-3">텍스트입력</div>
+      <div class="ring ring-4">텍스트입력</div>
+    </div>
+    <div class="desc-boxes right">
+      <div class="desc-box blue">{{본문}}</div>
+      <div class="desc-box blue">{{본문}}</div>
+    </div>
+    <div class="bottom-text"><p>{{본문}}</p><p>{{본문}}</p></div>
+  </div>
+</body>
+</html>

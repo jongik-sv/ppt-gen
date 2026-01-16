@@ -1,0 +1,67 @@
+# 슬라이드 10: 4박스 허브 다이어그램
+id: hub-4box
+name: 4박스 허브 다이어그램
+category: diagram
+description: 중앙 원형 허브와 4개 코너 박스가 연결된 다이어그램
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 10
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: hub-spoke
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "중앙 허브에서 4개 코너 박스로 연결되는 구조"
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: center
+    type: text
+    sample: "제목"
+  - name: boxes
+    type: array
+    min: 4
+    max: 4
+    item_schema:
+      - name: title
+        type: text
+      - name: items
+        type: array
+    sample:
+      - title: "{{중제목}}"
+        items: ["텍스트를 입력하세요", "텍스트를 입력하세요 텍스트 입력", "텍스트를 입력하세요 텍스트 입력", "텍스트를 입력하세요 텍스트 입력"]
+      - title: "{{중제목}}"
+        items: ["텍스트를 입력하세요", "텍스트를 입력하세요 텍스트 입력", "텍스트를 입력하세요 텍스트 입력", "텍스트를 입력하세요 텍스트 입력"]
+      - title: "{{중제목}}"
+        items: ["텍스트를 입력하세요", "텍스트를 입력하세요 텍스트 입력", "텍스트를 입력하세요 텍스트 입력", "텍스트를 입력하세요 텍스트 입력"]
+      - title: "{{중제목}}"
+        items: ["텍스트를 입력하세요", "텍스트를 입력하세요 텍스트 입력", "텍스트를 입력하세요 텍스트 입력", "텍스트를 입력하세요 텍스트 입력"]
+
+theme_colors:
+  center: "{{theme.background.neutral}}"
+  box_border: "{{theme.colors.primary}}"
+
+semantic_description: |
+  4박스 허브 다이어그램.
+
+  **구조:**
+  - 중앙: 원형 허브 (제목)
+  - 4 코너: 박스 (제목 + 불릿 리스트)
+  - 연결선: 허브에서 각 박스로
+
+keywords: [허브, 4박스, 연결, 중심, 관계]
+
+use_for:
+  - "중심 개념과 4가지 하위 요소"
+  - "허브 앤 스포크 구조"

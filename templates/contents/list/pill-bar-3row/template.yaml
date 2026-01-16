@@ -1,0 +1,70 @@
+# 슬라이드 6: 3행 필 바 리스트
+id: pill-bar-3row
+name: 3행 필 바 리스트
+category: list
+description: 좌측 원형 아이콘과 필 모양 바가 있는 3행 리스트
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 6
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: list
+  structure: pill-bar
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "3행, 각 행에 원형 아이콘 + 필 바 + 설명 텍스트"
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: rows
+    type: array
+    min: 3
+    max: 3
+    item_schema:
+      - name: title
+        type: text
+      - name: subtitle
+        type: text
+      - name: items
+        type: array
+    sample:
+      - title: "{{중제목}}"
+        subtitle: "텍스트입력"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "{{중제목}}"
+        subtitle: "텍스트입력"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "{{중제목}}"
+        subtitle: "텍스트입력"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+
+theme_colors:
+  row1_bg: "{{theme.background.neutral}}"
+  row2_bg: "{{theme.muted.light}}"
+  row3_bg: "{{theme.colors.primary}}"
+
+semantic_description: |
+  3행 필 바 리스트. 각 행은 다른 색상의 필 모양 바.
+
+  **구조:**
+  - 좌측: 원형 아이콘
+  - 중앙: 필 바 (제목)
+  - 우측: 설명 텍스트
+
+  **색상 그라데이션:** 회색 → 연청색 → 네이비
+
+keywords: [리스트, 3행, 필바, 단계, 카테고리]
+
+use_for:
+  - "3가지 카테고리 설명"
+  - "단계별 설명"

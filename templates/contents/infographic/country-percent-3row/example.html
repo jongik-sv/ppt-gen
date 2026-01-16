@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>국가별 퍼센트 비교 - 예시</title>
+  <style>
+    :root {
+      --color-primary: #1B365D;
+      --color-secondary: #333333;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: #FFFFFF;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; flex-direction: column;
+      justify-content: center; gap: 40px;
+      padding: 40px 100px;
+    }
+    .row { display: flex; align-items: center; gap: 40px; }
+    .pill {
+      display: flex; align-items: center;
+      background: var(--color-primary);
+      border-radius: 40px; padding: 15px 30px;
+      min-width: 280px;
+    }
+    .flag { width: 50px; height: 50px; border-radius: 50%; background: #ddd; }
+    .pill-text { margin-left: 15px; color: white; }
+    .pill-label { font-size: 14px; }
+    .pill-percent { font-size: 20px; font-weight: bold; }
+    .description { flex: 1; font-size: 14px; line-height: 1.6; }
+    .percent-large { font-size: 48px; font-weight: bold; min-width: 120px; text-align: right; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="row">
+      <div class="pill">
+        <div class="flag"></div>
+        <div class="pill-text">
+          <div class="pill-label">{{본문}}</div>
+          <div class="pill-percent">60%</div>
+        </div>
+      </div>
+      <div class="description">You can simply impress your audience and add a unique zing and appeal to your Reports and Presentations with our Templates.</div>
+      <div class="percent-large">60%</div>
+    </div>
+    <div class="row">
+      <div class="pill">
+        <div class="flag"></div>
+        <div class="pill-text">
+          <div class="pill-label">{{본문}}</div>
+          <div class="pill-percent">80%</div>
+        </div>
+      </div>
+      <div class="description">You can simply impress your audience and add a unique zing and appeal to your Reports and Presentations with our Templates.</div>
+      <div class="percent-large">80%</div>
+    </div>
+    <div class="row">
+      <div class="pill">
+        <div class="flag"></div>
+        <div class="pill-text">
+          <div class="pill-label">{{본문}}</div>
+          <div class="pill-percent">50%</div>
+        </div>
+      </div>
+      <div class="description">You can simply impress your audience and add a unique zing and appeal to your Reports and Presentations with our Templates.</div>
+      <div class="percent-large">50%</div>
+    </div>
+  </div>
+</body>
+</html>

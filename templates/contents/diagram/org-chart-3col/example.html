@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>조직도 3열 2행 - 예시</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: #FFFFFF;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; flex-direction: column;
+      padding: 40px 80px;
+    }
+    .header-bar { background: #1B365D; height: 50px; margin-bottom: 30px; }
+    .columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; flex: 1; }
+    .column-title {
+      background: #E5E5E5;
+      padding: 15px 20px; font-size: 16px; font-weight: bold;
+      text-align: center; margin-bottom: 20px;
+      border-bottom: 2px solid #1B365D;
+    }
+    .section { margin-bottom: 20px; }
+    .section-item { font-size: 13px; line-height: 1.8; padding-left: 16px; position: relative; }
+    .section-item::before { content: '•'; position: absolute; left: 0; color: #1B365D; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="header-bar"></div>
+    <div class="columns">
+      <div class="column">
+        <div class="column-title">Text</div>
+        <div class="section">
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+        </div>
+        <div class="section">
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="column-title">Text</div>
+        <div class="section">
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+        </div>
+        <div class="section">
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="column-title">Text</div>
+        <div class="section">
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+        </div>
+        <div class="section">
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+          <div class="section-item">텍스트입력</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

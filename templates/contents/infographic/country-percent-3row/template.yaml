@@ -1,0 +1,75 @@
+# 슬라이드 7: 국가별 퍼센트 비교
+id: country-percent-3row
+name: 국가별 퍼센트 비교
+category: infographic
+description: 국기 아이콘과 퍼센트 수치가 있는 3행 비교 레이아웃
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 7
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: infographic
+  structure: country-percent
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "국가별 수치 비교, 국기 + 퍼센트 + 설명"
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: rows
+    type: array
+    min: 3
+    max: 3
+    item_schema:
+      - name: flag
+        type: image
+        description: "국기 이미지"
+      - name: label
+        type: text
+      - name: percent
+        type: text
+      - name: description
+        type: text
+      - name: percent_right
+        type: text
+    sample:
+      - label: "{{본문}}"
+        percent: "60%"
+        description: "You can simply impress your audience..."
+        percent_right: "60%"
+      - label: "{{본문}}"
+        percent: "80%"
+        description: "You can simply impress your audience..."
+        percent_right: "80%"
+      - label: "{{본문}}"
+        percent: "50%"
+        description: "You can simply impress your audience..."
+        percent_right: "50%"
+
+theme_colors:
+  pill_bg: "{{theme.colors.primary}}"
+  text: "{{theme.colors.secondary}}"
+
+semantic_description: |
+  국가별 퍼센트 비교 인포그래픽.
+
+  **구조:**
+  - 좌측: 필 바 (국기 + 라벨 + 퍼센트)
+  - 중앙: 설명 텍스트
+  - 우측: 큰 퍼센트 수치
+
+keywords: [국가, 퍼센트, 비교, 통계, 인포그래픽]
+
+use_for:
+  - "국가별 수치 비교"
+  - "지역별 통계"

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>방사형 4분기 다이어그램</title>
+  <style>
+    :root {
+      --color-primary: {{theme.colors.primary}};
+      --color-secondary: {{theme.colors.secondary}};
+      --bg-neutral: {{theme.background.neutral}};
+      --bg-light: {{theme.background.light}};
+      --font-body: {{theme.fonts.body}};
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: var(--bg-light);
+      font-family: var(--font-body), sans-serif;
+      display: grid; grid-template-columns: 1fr 1fr 1.5fr;
+      gap: 40px; padding: 40px 60px;
+    }
+    .left-section { padding: 20px; }
+    .left-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; }
+    .left-items { font-size: 13px; line-height: 1.8; }
+    .center-hub {
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hub-circle {
+      width: 180px; height: 180px; border-radius: 50%;
+      background: var(--bg-neutral); border: 3px solid var(--color-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; text-align: center;
+    }
+    .branches { display: flex; flex-direction: column; gap: 20px; }
+    .branch { display: flex; align-items: flex-start; gap: 20px; }
+    .branch-circle {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--bg-neutral); flex-shrink: 0;
+    }
+    .branch-content { flex: 1; }
+    .branch-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+    .branch-items { font-size: 12px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="left-section">
+      <div class="left-title">{{left_section.title}}</div>
+      <div class="left-items">
+        {{#each left_section.items}}<p>{{this}}</p>{{/each}}
+      </div>
+    </div>
+    <div class="center-hub">
+      <div class="hub-circle">{{center}}</div>
+    </div>
+    <div class="branches">
+      {{#each branches}}
+      <div class="branch">
+        <div class="branch-circle"></div>
+        <div class="branch-content">
+          <div class="branch-title">{{this.title}}</div>
+          <div class="branch-items">{{#each this.items}}<p>{{this}}</p>{{/each}}</div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</body>
+</html>

@@ -117,32 +117,20 @@
 </head>
 <body>
     <div class="slide-container">
-        <!-- 좌측 타임라인 이미지 -->
-        <div class="timeline-image-wrapper">
-            <img class="timeline-image" src="./image-placeholder.png" alt="Timeline Visual">
+        <!-- 좌측 장식 영역 -->
+        <div class="timeline-image-wrapper" style="background: #22523B;">
+            <div style="color: white; font-size: 72px; font-weight: bold; opacity: 0.3; text-align: center; line-height: 1.2;">TIMELINE</div>
         </div>
 
         <!-- 우측 콘텐츠 -->
         <div class="content-area">
-            <!-- 첫 번째 아이템 -->
+            {{#each items}}
             <div class="timeline-item">
-                <span class="item-label">2020년</span>
-                <div class="item-title">프로젝트 시작</div>
-                <div class="item-description">
-                    팀을 구성하고 프로젝트의 핵심 목표와 방향성을 수립했습니다.
-                    시장 조사와 경쟁사 분석을 통해 차별화된 전략을 수립했습니다.
-                </div>
+                <span class="item-label">{{this.label}}</span>
+                <div class="item-title">{{this.title}}</div>
+                <div class="item-description">{{this.description}}</div>
             </div>
-
-            <!-- 두 번째 아이템 -->
-            <div class="timeline-item">
-                <span class="item-label">2023년</span>
-                <div class="item-title">1차 론칭</div>
-                <div class="item-description">
-                    MVP를 개발하여 시장에 첫 출시했습니다.
-                    초기 사용자 피드백을 수집하고 지속적인 개선을 진행했습니다.
-                </div>
-            </div>
+            {{/each}}
         </div>
     </div>
 </body>

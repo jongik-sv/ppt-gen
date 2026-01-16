@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>3원 연결 다이어그램 - 예시</title>
+  <style>
+    :root {
+      --color-primary: #1B365D;
+      --color-secondary: #333333;
+      --color-accent: #4A90A4;
+      --bg-light: #FFFFFF;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: var(--bg-light);
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex; justify-content: center; align-items: center;
+      padding: 40px;
+    }
+    .diagram-container { display: flex; align-items: center; }
+    .item { display: flex; flex-direction: column; align-items: center; width: 300px; }
+    .circle {
+      width: 180px; height: 180px; border-radius: 50%;
+      background: var(--color-accent);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .item-title {
+      font-size: 18px; font-weight: bold;
+      color: var(--color-secondary);
+      margin-bottom: 12px;
+    }
+    .item-desc { font-size: 13px; color: var(--color-secondary); line-height: 1.6; text-align: center; }
+    .connector {
+      width: 80px; height: 120px;
+      border: 3px solid var(--color-primary);
+      border-radius: 60px;
+      margin: 0 -40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="diagram-container">
+      <div class="item">
+        <div class="circle"></div>
+        <div class="item-title">{{중제목}}</div>
+        <div class="item-desc"><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p></div>
+      </div>
+      <div class="connector"></div>
+      <div class="item">
+        <div class="circle"></div>
+        <div class="item-title">{{중제목}}</div>
+        <div class="item-desc"><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p></div>
+      </div>
+      <div class="connector"></div>
+      <div class="item">
+        <div class="circle"></div>
+        <div class="item-title">{{중제목}}</div>
+        <div class="item-desc"><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p><p>텍스트를 입력하세요</p></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

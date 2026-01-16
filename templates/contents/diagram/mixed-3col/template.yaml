@@ -1,0 +1,66 @@
+# 슬라이드 16: 3열 복합 다이어그램
+id: mixed-3col
+name: 3열 복합 다이어그램
+category: diagram
+description: 피라미드, 바 리스트, 순환 다이어그램이 혼합된 3열 레이아웃
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 16
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: mixed-3col
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "3가지 다른 다이어그램 유형을 나란히 배치"
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: high
+
+placeholders:
+  - name: columns
+    type: array
+    min: 3
+    max: 3
+    item_schema:
+      - name: title
+        type: text
+      - name: type
+        type: text
+        description: "pyramid, bar, cycle"
+      - name: items
+        type: array
+    sample:
+      - title: "{{중제목}}"
+        type: "pyramid"
+        items: ["{{본문}}", "텍스트를 입력하세요 텍스트", "텍스트를 입력하세요 텍스트", "텍스트를 입력하세요 텍스트"]
+      - title: "{{중제목}}"
+        type: "bar"
+        items: ["텍스트를 입력하세요 텍스트", "텍스트를 입력하세요 텍스트", "텍스트를 입력하세요 텍스트"]
+      - title: "{{중제목}}"
+        type: "cycle"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}", "텍스트 입력", "텍스트 입력"]
+
+theme_colors:
+  column_border: "{{theme.colors.primary}}"
+
+semantic_description: |
+  3열 복합 다이어그램.
+
+  **열 1:** 피라미드 다이어그램
+  **열 2:** 바 리스트
+  **열 3:** 순환 화살표
+
+keywords: [복합, 3열, 피라미드, 순환, 혼합]
+
+use_for:
+  - "다양한 관점 비교"
+  - "복합 정보 표현"

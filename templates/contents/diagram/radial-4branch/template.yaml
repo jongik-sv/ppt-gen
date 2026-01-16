@@ -1,0 +1,77 @@
+# 슬라이드 17: 사업장별 목표 (방사형)
+id: radial-4branch
+name: 방사형 4분기 다이어그램
+category: diagram
+description: 중앙에서 4방향으로 분기하는 방사형 다이어그램
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 17
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: radial-4
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "중앙 원에서 4개 분기, 좌측에 목표 리스트"
+  quality_score: 8.5
+  visual_balance: asymmetric
+  information_density: high
+
+placeholders:
+  - name: left_section
+    type: object
+    item_schema:
+      - name: title
+        type: text
+      - name: items
+        type: array
+    sample:
+      title: "2019년 사업장별 목표"
+      items: ["텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요", "텍스트를 입력하세요"]
+  - name: center
+    type: text
+    sample: "{{본문}}"
+  - name: branches
+    type: array
+    min: 4
+    max: 4
+    item_schema:
+      - name: title
+        type: text
+      - name: items
+        type: array
+    sample:
+      - title: "당진공장"
+        items: ["텍스트를 입력하세요 텍스트를 입력하세요", "텍스트를 입력하세요 텍스트를 입력하세요"]
+      - title: "부산공장"
+        items: ["텍스트를 입력하세요 텍스트를 입력하세요", "텍스트를 입력하세요 텍스트를 입력하세요"]
+      - title: "인천공장"
+        items: ["텍스트를 입력하세요 텍스트를 입력하세요", "텍스트를 입력하세요 텍스트를 입력하세요"]
+      - title: "포항공장"
+        items: ["텍스트를 입력하세요 텍스트를 입력하세요", "텍스트를 입력하세요 텍스트를 입력하세요"]
+
+theme_colors:
+  center: "{{theme.background.neutral}}"
+  branch: "{{theme.colors.primary}}"
+
+semantic_description: |
+  방사형 4분기 다이어그램.
+
+  **구조:**
+  - 좌측: 목표 리스트
+  - 중앙: 원형 허브
+  - 우측: 4개 분기 (상/중상/중하/하)
+
+keywords: [방사형, 4분기, 사업장, 목표, 분기]
+
+use_for:
+  - "사업장/부서별 목표"
+  - "지역별 현황"

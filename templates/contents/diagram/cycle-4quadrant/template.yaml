@@ -1,0 +1,72 @@
+# 슬라이드 8: 4분면 사이클 다이어그램
+id: cycle-4quadrant
+name: 4분면 사이클 다이어그램
+category: diagram
+description: 4개 분면으로 나뉜 원형 사이클 다이어그램
+
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 8
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: diagram
+  structure: cycle-4
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+design_meta:
+  design_intent: "4분면 파이 형태 사이클, 각 분면에 제목과 설명"
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+
+placeholders:
+  - name: quadrants
+    type: array
+    min: 4
+    max: 4
+    item_schema:
+      - name: title
+        type: text
+      - name: subtitle
+        type: text
+      - name: items
+        type: array
+    sample:
+      - title: "텍스트를 입력하세요"
+        subtitle: "텍스트를 입력"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "텍스트를 입력하세요"
+        subtitle: "텍스트를 입력"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "텍스트를 입력하세요"
+        subtitle: "텍스트를 입력"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+      - title: "텍스트를 입력하세요"
+        subtitle: "텍스트를 입력"
+        items: ["{{본문}}", "{{본문}}", "{{본문}}"]
+
+theme_colors:
+  q1: "{{theme.colors.primary}}"
+  q2: "{{theme.muted.light}}"
+  q3: "{{theme.colors.accent}}"
+  q4: "{{theme.muted.pale}}"
+
+semantic_description: |
+  4분면 사이클 다이어그램.
+
+  **구조:**
+  - 중앙: 4분할 원형 (파이 형태)
+  - 4 코너: 각 분면 설명 텍스트
+  - 중앙에 순환 화살표
+
+keywords: [사이클, 4분면, 순환, PDCA, 프로세스]
+
+use_for:
+  - "PDCA 사이클"
+  - "4단계 순환 프로세스"

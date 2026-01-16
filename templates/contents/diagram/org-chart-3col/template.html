@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>조직도 3열 2행</title>
+  <style>
+    :root {
+      --color-primary: {{theme.colors.primary}};
+      --color-secondary: {{theme.colors.secondary}};
+      --bg-neutral: {{theme.background.neutral}};
+      --bg-light: {{theme.background.light}};
+      --font-body: {{theme.fonts.body}};
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: var(--bg-light);
+      font-family: var(--font-body), sans-serif;
+      display: flex; flex-direction: column;
+      padding: 40px 80px;
+    }
+    .header-bar {
+      background: var(--color-primary);
+      height: 50px; margin-bottom: 30px;
+    }
+    .columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; flex: 1; }
+    .column { display: flex; flex-direction: column; }
+    .column-title {
+      background: var(--bg-neutral);
+      padding: 15px 20px; font-size: 16px; font-weight: bold;
+      text-align: center; margin-bottom: 20px;
+      border-bottom: 2px solid var(--color-primary);
+    }
+    .section { margin-bottom: 20px; }
+    .section-item {
+      font-size: 13px; line-height: 1.8;
+      padding-left: 16px; position: relative;
+    }
+    .section-item::before {
+      content: '•'; position: absolute; left: 0;
+      color: var(--color-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="header-bar"></div>
+    <div class="columns">
+      {{#each columns}}
+      <div class="column">
+        <div class="column-title">{{this.title}}</div>
+        {{#each this.sections}}
+        <div class="section">
+          {{#each this.items}}<div class="section-item">{{this}}</div>{{/each}}
+        </div>
+        {{/each}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</body>
+</html>

@@ -1,19 +1,19 @@
 version: '2.0'
-updated_at: '2026-01-16 15:14:21'
-total: 16
+updated_at: '2026-01-16 18:30:00'
+total: 34
 categories:
-  chart: 1
+  chart: 2
   contents: 0
   cover: 1
-  diagram: 3
+  diagram: 13
   divider: 1
-  grid: 4
+  grid: 6
   image: 1
-  infographic: 1
-  list: 1
-  process: 1
+  infographic: 2
+  list: 3
+  process: 2
   section: 0
-  timeline: 1
+  timeline: 2
   toc: 1
 templates:
 - id: bar-deep-green-01
@@ -455,3 +455,491 @@ templates:
   source:
     file: ppt-sample/깔끔이-딥그린.pptx
     slide: 2
+# 동국시스템즈 템플릿 (18개)
+- id: arch-list-3col
+  category: list
+  name: 3열 아치형 리스트
+  path: contents/list/arch-list-3col
+  thumbnail: contents/thumbnails/list/arch-list-3col.png
+  design_intent: 아치형 연결선으로 3열 리스트 표현
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 3
+  item_count_flexible: false
+  keywords:
+  - 아치
+  - 3열
+  - 리스트
+  - 연결선
+  - 카테고리
+  - 구조화
+  use_for:
+  - 3가지 카테고리 항목 비교
+  - 연결된 개념 표현
+  - 상호 관계가 있는 리스트
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 1
+    extracted_at: '2026-01-16'
+- id: table-3col-3row
+  category: grid
+  name: 3열 3행 테이블
+  path: contents/grid/table-3col-3row
+  thumbnail: contents/thumbnails/grid/table-3col-3row.png
+  design_intent: 격자형 테이블로 정보 구조화
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: high
+  item_count: 9
+  item_count_flexible: false
+  keywords:
+  - 테이블
+  - 3x3
+  - 격자
+  - 매트릭스
+  - 비교표
+  use_for:
+  - 항목별 비교 테이블
+  - 매트릭스 형태 데이터 표현
+  - 카테고리별 정보 정리
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 2
+    extracted_at: '2026-01-16'
+- id: venn-3circle
+  category: diagram
+  name: 3원 벤다이어그램
+  path: contents/diagram/venn-3circle
+  thumbnail: contents/thumbnails/diagram/venn-3circle.png
+  design_intent: 3개 원의 교집합 표현
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 3
+  item_count_flexible: false
+  keywords:
+  - 벤다이어그램
+  - 교집합
+  - 3원
+  - 관계도
+  - 중첩
+  use_for:
+  - 3가지 요소의 관계 표현
+  - 공통점과 차이점 시각화
+  - 개념 간 교집합 설명
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 3
+    extracted_at: '2026-01-16'
+- id: chain-3circle
+  category: diagram
+  name: 3원 연결 다이어그램
+  path: contents/diagram/chain-3circle
+  thumbnail: contents/thumbnails/diagram/chain-3circle.png
+  design_intent: 3개 원이 체인처럼 연결
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 3
+  item_count_flexible: false
+  keywords:
+  - 연결
+  - 체인
+  - 3원
+  - 순환
+  - 연속
+  use_for:
+  - 연속적인 3단계 프로세스
+  - 연결된 개념 표현
+  - 순환 구조 시각화
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 4
+    extracted_at: '2026-01-16'
+- id: card-4col-circle
+  category: grid
+  name: 4열 원형 카드
+  path: contents/grid/card-4col-circle
+  thumbnail: contents/thumbnails/grid/card-4col-circle.png
+  design_intent: 원형 아이콘과 4열 카드 배치
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 4
+  item_count_flexible: true
+  keywords:
+  - 4열
+  - 카드
+  - 원형
+  - 아이콘
+  - 그리드
+  use_for:
+  - 4가지 항목 소개
+  - 기능 또는 서비스 나열
+  - 팀원 소개
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 5
+    extracted_at: '2026-01-16'
+- id: pill-bar-3row
+  category: list
+  name: 3행 필 바 리스트
+  path: contents/list/pill-bar-3row
+  thumbnail: contents/thumbnails/list/pill-bar-3row.png
+  design_intent: 알약 모양 바 형태의 3행 리스트
+  quality_score: 8.5
+  visual_balance: asymmetric
+  information_density: medium
+  item_count: 3
+  item_count_flexible: true
+  keywords:
+  - 필바
+  - 알약
+  - 3행
+  - 리스트
+  - 카테고리
+  use_for:
+  - 3가지 항목 나열
+  - 단계별 설명
+  - 특징 리스트
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 6
+    extracted_at: '2026-01-16'
+- id: country-percent-3row
+  category: infographic
+  name: 국가별 퍼센트 (3행)
+  path: contents/infographic/country-percent-3row
+  thumbnail: contents/thumbnails/infographic/country-percent-3row.png
+  design_intent: 국가별 비율을 퍼센트 바로 표현
+  quality_score: 9.0
+  visual_balance: asymmetric
+  information_density: medium
+  item_count: 3
+  item_count_flexible: true
+  keywords:
+  - 국가
+  - 퍼센트
+  - 바
+  - 비율
+  - 인포그래픽
+  use_for:
+  - 국가별 데이터 비교
+  - 비율 시각화
+  - 순위 표현
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 7
+    extracted_at: '2026-01-16'
+- id: cycle-4quadrant
+  category: diagram
+  name: 4분면 사이클
+  path: contents/diagram/cycle-4quadrant
+  thumbnail: contents/thumbnails/diagram/cycle-4quadrant.png
+  design_intent: 4개 분면으로 나눈 순환 다이어그램
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 4
+  item_count_flexible: false
+  keywords:
+  - 사이클
+  - 4분면
+  - 순환
+  - 쿼드런트
+  - PDCA
+  use_for:
+  - PDCA 사이클 표현
+  - 4단계 순환 프로세스
+  - 분기별 계획
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 8
+    extracted_at: '2026-01-16'
+- id: concentric-4ring
+  category: diagram
+  name: 동심원 4링
+  path: contents/diagram/concentric-4ring
+  thumbnail: contents/thumbnails/diagram/concentric-4ring.png
+  design_intent: 4개 동심원으로 계층 표현
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 4
+  item_count_flexible: false
+  keywords:
+  - 동심원
+  - 계층
+  - 4링
+  - 구조
+  - 레이어
+  use_for:
+  - 계층 구조 표현
+  - 핵심에서 외곽으로 확장
+  - 우선순위 시각화
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 9
+    extracted_at: '2026-01-16'
+- id: hub-4box
+  category: diagram
+  name: 4박스 허브
+  path: contents/diagram/hub-4box
+  thumbnail: contents/thumbnails/diagram/hub-4box.png
+  design_intent: 중앙 허브와 4개 박스 연결
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 4
+  item_count_flexible: false
+  keywords:
+  - 허브
+  - 4박스
+  - 중앙
+  - 연결
+  - 네트워크
+  use_for:
+  - 중심 개념과 4가지 요소 연결
+  - 허브앤스포크 구조
+  - 핵심 기능과 하위 기능
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 10
+    extracted_at: '2026-01-16'
+- id: porter-5forces
+  category: diagram
+  name: 포터 5 Forces
+  path: contents/diagram/porter-5forces
+  thumbnail: contents/thumbnails/diagram/porter-5forces.png
+  design_intent: 포터의 5가지 경쟁요인 다이어그램
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 5
+  item_count_flexible: false
+  keywords:
+  - 포터
+  - 5forces
+  - 경쟁
+  - 전략
+  - 분석
+  use_for:
+  - 산업 경쟁 분석
+  - 전략 프레임워크
+  - 시장 분석
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 11
+    extracted_at: '2026-01-16'
+- id: arrow-5step
+  category: timeline
+  name: 5단계 화살표 타임라인
+  path: contents/timeline/arrow-5step
+  thumbnail: contents/thumbnails/timeline/arrow-5step.png
+  design_intent: 5단계 화살표 형태의 타임라인
+  quality_score: 9.0
+  visual_balance: asymmetric
+  information_density: medium
+  item_count: 5
+  item_count_flexible: true
+  keywords:
+  - 타임라인
+  - 화살표
+  - 5단계
+  - 진행
+  - 마일스톤
+  use_for:
+  - 프로젝트 타임라인
+  - 5단계 프로세스
+  - 연도별 계획
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 12
+    extracted_at: '2026-01-16'
+- id: stairs-4step
+  category: process
+  name: 4단계 계단 프로세스
+  path: contents/process/stairs-4step
+  thumbnail: contents/thumbnails/process/stairs-4step.png
+  design_intent: 계단식 상승 형태의 4단계
+  quality_score: 9.0
+  visual_balance: asymmetric
+  information_density: medium
+  item_count: 4
+  item_count_flexible: true
+  keywords:
+  - 계단
+  - 4단계
+  - 프로세스
+  - 상승
+  - 성장
+  use_for:
+  - 성장 단계 표현
+  - 레벨업 프로세스
+  - 목표 달성 단계
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 13
+    extracted_at: '2026-01-16'
+- id: org-chart-3col
+  category: diagram
+  name: 조직도 3열
+  path: contents/diagram/org-chart-3col
+  thumbnail: contents/thumbnails/diagram/org-chart-3col.png
+  design_intent: 3열 구조의 조직도
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 3
+  item_count_flexible: true
+  keywords:
+  - 조직도
+  - 3열
+  - 계층
+  - 구조
+  - 팀
+  use_for:
+  - 조직 구조 표현
+  - 팀 구성 소개
+  - 계층 구조 시각화
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 14
+    extracted_at: '2026-01-16'
+- id: org-chart-5col
+  category: diagram
+  name: 조직도 5열
+  path: contents/diagram/org-chart-5col
+  thumbnail: contents/thumbnails/diagram/org-chart-5col.png
+  design_intent: 5열 구조의 확장형 조직도
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: high
+  item_count: 5
+  item_count_flexible: true
+  keywords:
+  - 조직도
+  - 5열
+  - 계층
+  - 구조
+  - 대형
+  use_for:
+  - 대형 조직 구조
+  - 5개 부서 표현
+  - 확장된 팀 구성
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 15
+    extracted_at: '2026-01-16'
+- id: mixed-3col
+  category: diagram
+  name: 3열 복합 다이어그램
+  path: contents/diagram/mixed-3col
+  thumbnail: contents/thumbnails/diagram/mixed-3col.png
+  design_intent: 다양한 형태가 결합된 3열 다이어그램
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 3
+  item_count_flexible: false
+  keywords:
+  - 복합
+  - 3열
+  - 다이어그램
+  - 혼합
+  - 다양
+  use_for:
+  - 다양한 형태 조합
+  - 복합 정보 표현
+  - 3가지 다른 유형 비교
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 16
+    extracted_at: '2026-01-16'
+- id: radial-4branch
+  category: diagram
+  name: 방사형 4분기
+  path: contents/diagram/radial-4branch
+  thumbnail: contents/thumbnails/diagram/radial-4branch.png
+  design_intent: 중심에서 4방향으로 뻗는 방사형
+  quality_score: 9.0
+  visual_balance: asymmetric
+  information_density: medium
+  item_count: 4
+  item_count_flexible: true
+  keywords:
+  - 방사형
+  - 4분기
+  - 허브
+  - 분기
+  - 확장
+  use_for:
+  - 중심 개념과 4가지 하위 요소
+  - 본사와 지사 구조
+  - 핵심에서 파생되는 항목
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 17
+    extracted_at: '2026-01-16'
+- id: donut-2col
+  category: chart
+  name: 2열 도넛 차트
+  path: contents/chart/donut-2col
+  thumbnail: contents/thumbnails/chart/donut-2col.png
+  design_intent: 2개 도넛 차트를 나란히 배치
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 2
+  item_count_flexible: false
+  keywords:
+  - 도넛
+  - 차트
+  - 2열
+  - 퍼센트
+  - 비율
+  use_for:
+  - 두 가지 비율 비교
+  - 달성률 시각화
+  - 진행 상황 표시
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/동국시스템즈-템플릿(정리).pptx
+    slide: 18
+    extracted_at: '2026-01-16'

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle 3-Step Process Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pptx-slide {
+            width: 1920px;
+            height: 1080px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 원형 컨테이너 */
+        .circle-container {
+            position: absolute;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 100%;
+            height: 400px;
+            top: 300px;
+        }
+
+        /* 개별 스텝 */
+        .step {
+            position: relative;
+            width: 390px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 원형 */
+        .circle {
+            width: 390px;
+            height: 390px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .step:nth-child(1) .circle {
+            background: #67B7B5;
+            border: 2px solid #999999;
+        }
+
+        .step:nth-child(2) .circle {
+            background: #D0D5AF;
+            border: 2px solid #999999;
+        }
+
+        .step:nth-child(3) .circle {
+            background: #99C7BF;
+            border: 2px solid #999999;
+        }
+
+        /* 아이콘 */
+        .icon {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+        }
+
+        .icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* 텍스트 영역 */
+        .step-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .step-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #153325;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .step-description {
+            font-size: 22px;
+            color: #153325;
+            line-height: 1.5;
+            margin: 0;
+            word-break: break-word;
+        }
+
+        /* 연결 화살표 */
+        .arrow-container {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            top: 300px;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 450px;
+        }
+
+        .arrow {
+            width: 180px;
+            height: 2px;
+            background: #999999;
+            border-top: 2px dashed #999999;
+            border-bottom: none;
+            position: relative;
+            background: transparent;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid #999999;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1920px) {
+            .pptx-slide {
+                transform: scale(1);
+                transform-origin: top left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pptx-slide">
+        <!-- 화살표 -->
+        <div class="arrow-container">
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+        </div>
+
+        <!-- 원형 컨테이너 -->
+        <div class="circle-container">
+            <!-- Step 1 -->
+            <div class="step">
+                <div class="circle">
+                    <div class="icon"><span>1</span></div>
+                </div>
+                <div class="step-content">
+                    <div class="step-title">Phase 1: WMS</div>
+                    <p class="step-description">창고관리 시스템
+입고/재고/출고
+2025년 12월 완료</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step">
+                <div class="circle">
+                    <div class="icon"><span>2</span></div>
+                </div>
+                <div class="step-content">
+                    <div class="step-title">Phase 2: TMS</div>
+                    <p class="step-description">배송관리 시스템
+배차/경로최적화
+2026년 1월 완료</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step">
+                <div class="circle">
+                    <div class="icon"><span>3</span></div>
+                </div>
+                <div class="step-content">
+                    <div class="step-title">Phase 3: OMS</div>
+                    <p class="step-description">주문관리 시스템
+주문통합/정산
+2026년 2월 완료</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 템플릿 데이터를 바탕으로 슬라이드를 렌더링합니다
+         */
+        function renderTemplate(data) {
+            const steps = document.querySelectorAll('.step');
+
+            if (data && data.items && Array.isArray(data.items)) {
+                data.items.forEach((item, index) => {
+                    if (index < steps.length) {
+                        const step = steps[index];
+
+                        // 제목 업데이트
+                        const titleEl = step.querySelector('.step-title');
+                        if (item.title) {
+                            titleEl.textContent = item.title;
+                        }
+
+                        // 설명 업데이트
+                        const descEl = step.querySelector('.step-description');
+                        if (item.description) {
+                            descEl.textContent = item.description;
+                        }
+
+                        // 아이콘 업데이트
+                        const iconEl = step.querySelector('.icon');
+                        if (item.icon) {
+                            iconEl.innerHTML = `<img src="${item.icon}" alt="${item.title}">`;
+                        }
+                    }
+                });
+            }
+        }
+
+        // 예제 데이터로 테스트
+        const sampleData = {
+            items: [
+                {
+                    title: '준비 단계',
+                    description: '프로세스 시작을 위한 준비 및 계획 수립',
+                    icon: null
+                },
+                {
+                    title: '실행 단계',
+                    description: '계획을 바탕으로 실제 작업 수행',
+                    icon: null
+                },
+                {
+                    title: '완료 단계',
+                    description: '결과 검증 및 최종 확인',
+                    icon: null
+                }
+            ]
+        };
+
+        // 페이지 로드 시 렌더링
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTemplate(sampleData);
+        });
+    </script>
+</body>
+</html>

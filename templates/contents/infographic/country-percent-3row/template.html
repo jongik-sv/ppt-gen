@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>국가별 퍼센트 비교</title>
+  <style>
+    :root {
+      --color-primary: {{theme.colors.primary}};
+      --color-secondary: {{theme.colors.secondary}};
+      --bg-light: {{theme.background.light}};
+      --font-heading: {{theme.fonts.heading}};
+      --font-body: {{theme.fonts.body}};
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: var(--bg-light);
+      font-family: var(--font-body), sans-serif;
+      display: flex; flex-direction: column;
+      justify-content: center; gap: 40px;
+      padding: 40px 100px;
+    }
+    .row { display: flex; align-items: center; gap: 40px; }
+    .pill {
+      display: flex; align-items: center;
+      background: var(--color-primary);
+      border-radius: 40px; padding: 15px 30px;
+      min-width: 280px;
+    }
+    .flag {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: #ddd; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .flag img { width: 100%; height: 100%; object-fit: cover; }
+    .pill-text { margin-left: 15px; color: white; }
+    .pill-label { font-size: 14px; }
+    .pill-percent { font-size: 20px; font-weight: bold; }
+    .description {
+      flex: 1; font-size: 14px;
+      color: var(--color-secondary); line-height: 1.6;
+    }
+    .percent-large {
+      font-size: 48px; font-weight: bold;
+      color: var(--color-secondary); min-width: 120px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    {{#each rows}}
+    <div class="row">
+      <div class="pill">
+        <div class="flag">{{#if this.flag}}<img src="{{this.flag}}" alt="">{{/if}}</div>
+        <div class="pill-text">
+          <div class="pill-label">{{this.label}}</div>
+          <div class="pill-percent">{{this.percent}}</div>
+        </div>
+      </div>
+      <div class="description">{{this.description}}</div>
+      <div class="percent-large">{{this.percent_right}}</div>
+    </div>
+    {{/each}}
+  </div>
+</body>
+</html>

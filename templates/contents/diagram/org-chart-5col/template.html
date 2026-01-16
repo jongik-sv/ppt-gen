@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>조직도 5열 계층</title>
+  <style>
+    :root {
+      --color-primary: {{theme.colors.primary}};
+      --color-accent: {{theme.colors.accent}};
+      --muted-light: {{theme.muted.light}};
+      --bg-neutral: {{theme.background.neutral}};
+      --bg-light: {{theme.background.light}};
+      --font-body: {{theme.fonts.body}};
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .content {
+      width: 1920px; height: 734px;
+      background: var(--bg-light);
+      font-family: var(--font-body), sans-serif;
+      display: flex; flex-direction: column;
+      align-items: center; padding: 30px;
+    }
+    .level { display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; }
+    .box {
+      padding: 15px 30px; text-align: center;
+      font-size: 14px; min-width: 120px;
+    }
+    .ceo { background: var(--color-primary); color: white; }
+    .l2 { background: var(--color-accent); color: white; }
+    .l3 { background: var(--muted-light); }
+    .l4, .l5 { background: var(--bg-neutral); }
+    .connector { width: 2px; height: 15px; background: #999; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="level"><div class="box ceo">{{ceo}}</div></div>
+    <div class="connector"></div>
+    <div class="level">{{#each level2}}<div class="box l2">{{this}}</div>{{/each}}</div>
+    <div class="connector"></div>
+    <div class="level">{{#each level3}}<div class="box l3">{{this}}</div>{{/each}}</div>
+    <div class="connector"></div>
+    <div class="level">{{#each level4}}<div class="box l4">{{this}}</div>{{/each}}</div>
+    <div class="connector"></div>
+    <div class="level">{{#each level5}}<div class="box l5">{{this}}</div>{{/each}}</div>
+  </div>
+</body>
+</html>

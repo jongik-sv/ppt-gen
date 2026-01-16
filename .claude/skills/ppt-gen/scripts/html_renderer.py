@@ -71,20 +71,19 @@ def flatten_theme(theme: dict, prefix: str = "") -> dict:
 def render_handlebars(template_html: str, context: dict) -> str:
     """
     Handlebars 템플릿 렌더링.
-    Node.js의 handlebars 사용.
+    Python 기반 Handlebars 대체 구현.
+
+    중요: 처리 순서가 중요함!
+    1. each 블록 먼저 처리 (내부의 this.xxx도 함께 처리)
+    2. if 블록 처리
+    3. 마지막으로 단순 변수 치환
+
+    이렇게 해야 {{this.label}} 같은 each 내부 변수가 단순 치환에서
+    잘못 처리되는 것을 방지함.
     """
-    # 간단한 Python 기반 Handlebars 대체 구현
     result = template_html
 
-    # 1. 단순 변수 치환 {{var}}
-    def replace_var(match):
-        path = match.group(1).strip()
-        value = get_nested_value(context, path)
-        return str(value) if value is not None else ""
-
-    result = re.sub(r"\{\{(?!#|/)([^}]+)\}\}", replace_var, result)
-
-    # 2. each 블록 처리 {{#each items}}...{{/each}}
+    # 1. each 블록 먼저 처리 {{#each items}}...{{/each}}
     def replace_each(match):
         var_name = match.group(1).strip()
         block_content = match.group(2)
@@ -118,7 +117,7 @@ def render_handlebars(template_html: str, context: dict) -> str:
         flags=re.DOTALL,
     )
 
-    # 3. if 블록 처리 {{#if condition}}...{{/if}}
+    # 2. if 블록 처리 {{#if condition}}...{{/if}}
     def replace_if(match):
         condition = match.group(1).strip()
         block_content = match.group(2)
@@ -132,16 +131,30 @@ def render_handlebars(template_html: str, context: dict) -> str:
         flags=re.DOTALL,
     )
 
+    # 3. 마지막으로 단순 변수 치환 {{var}}
+    def replace_var(match):
+        path = match.group(1).strip()
+        value = get_nested_value(context, path)
+        return str(value) if value is not None else ""
+
+    result = re.sub(r"\{\{(?!#|/)([^}]+)\}\}", replace_var, result)
+
     return result
 
 
 def get_nested_value(obj: dict, path: str):
-    """점 표기법으로 중첩 값 가져오기."""
+    """점 표기법으로 중첩 값 가져오기. 배열 인덱스도 지원."""
     keys = path.split(".")
     value = obj
     for key in keys:
         if isinstance(value, dict) and key in value:
             value = value[key]
+        elif isinstance(value, list) and key.isdigit():
+            idx = int(key)
+            if 0 <= idx < len(value):
+                value = value[idx]
+            else:
+                return None
         else:
             return None
     return value
