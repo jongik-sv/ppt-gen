@@ -1,0 +1,465 @@
+# PPT 생성 세션 (개선된 템플릿 매칭)
+# 생성일: 2026-01-16
+# 프로젝트: 스마트 물류관리 시스템 구축 프로젝트 착수보고회
+
+session:
+  id: "session-20260116-150546"
+  created_at: "2026-01-16T15:05:46Z"
+  source_file: "/home/jji/project/ppt-gen/project-plan.md"
+
+settings:
+  purpose: "착수보고회 발표"
+  audience: "경영진, 발주기관(글로벌물류), 스폰서"
+  duration: "30분"
+  slide_count: "20~25장"
+  design_style: "전문적 비즈니스"
+  theme: "deep-green"
+  quality: "medium"
+  slide_size: "16:9"
+
+outline:
+  total_slides: 22
+  sections:
+    - name: "도입부"
+      slides: [1, 2, 3]
+    - name: "프로젝트 개요"
+      slides: [4, 5, 6, 7]
+    - name: "추진 전략"
+      slides: [8, 9, 10, 11]
+    - name: "기술 아키텍처"
+      slides: [12, 13]
+    - name: "프로젝트 조직"
+      slides: [14, 15]
+    - name: "일정 및 마일스톤"
+      slides: [16, 17]
+    - name: "품질 및 리스크"
+      slides: [18, 19]
+    - name: "마무리"
+      slides: [20, 21, 22]
+
+slides:
+  # ==================== 도입부 ====================
+  - slide_number: 1
+    title: "스마트 물류관리 시스템 구축 프로젝트"
+    subtitle: "착수보고회"
+    purpose: "표지 - 프로젝트명, 일시, 발표자 소개"
+    template:
+      id: "cover-deep-green-01"
+      category: "cover"
+      name: "깔끔이 딥그린 표지"
+      rationale: "공식 착수보고회에 적합한 프로페셔널 표지 디자인"
+    content:
+      label: "2025년 스마트물류 프로젝트 착수보고"
+      title: "스마트 물류관리 시스템 구축"
+      description: "(주)글로벌물류 × (주)테크솔루션"
+      presenter: "수행 PM 김철수 차장"
+
+  - slide_number: 2
+    title: "목차"
+    purpose: "발표 전체 구성 안내"
+    template:
+      id: "toc-deep-green-01"
+      category: "toc"
+      name: "TOC 3열 구조"
+      rationale: "3개의 주요 섹션을 균형 있게 표시"
+    content:
+      items:
+        - number: "01"
+          title: "프로젝트 개요"
+          description: "• 프로젝트 정보 및 배경\n• 추진 목표\n• 기대 효과"
+        - number: "02"
+          title: "추진 전략 및 방법론"
+          description: "• 5대 핵심 전략\n• 단계별 전환 계획\n• Hybrid Agile 방법론"
+        - number: "03"
+          title: "실행 계획"
+          description: "• 조직 및 R&R\n• 마스터 일정\n• 품질/위험 관리"
+
+  - slide_number: 3
+    title: "프로젝트 개요"
+    purpose: "섹션 구분자 - 1장 시작"
+    template:
+      id: "divider-deep-green-01"
+      category: "divider"
+      name: "섹션 구분 - VERSION"
+      rationale: "새 섹션 시작을 명확히 표시"
+    content:
+      version_label: "VERSION. 01"
+      title: "프로젝트 개요"
+      description: "배경, 목적, 범위 및 기대효과"
+
+  # ==================== 프로젝트 개요 ====================
+  - slide_number: 4
+    title: "프로젝트 정보"
+    purpose: "핵심 프로젝트 정보 요약"
+    template:
+      id: "card-4col-numbered-01"
+      category: "grid"
+      name: "4열 카드 + 하단 번호"
+      rationale: "4가지 핵심 정보를 번호와 함께 체계적으로 표시"
+    content:
+      items:
+        - number: "1"
+          label: "프로젝트명"
+          content: "스마트 물류관리\n시스템 구축"
+        - number: "2"
+          label: "발주기관"
+          content: "(주)글로벌물류\n국내 Top5 물류기업"
+        - number: "3"
+          label: "계약금액"
+          content: "15억원\n(VAT 별도)"
+        - number: "4"
+          label: "계약기간"
+          content: "2025.01 ~ 2025.12\n총 12개월"
+
+  - slide_number: 5
+    title: "프로젝트 배경"
+    purpose: "현행 시스템 문제점 및 추진 배경"
+    template:
+      id: "disk-3row-01"
+      category: "list"
+      name: "3행 디스크 리스트"
+      rationale: "3가지 핵심 문제를 순차적으로 설명"
+    content:
+      items:
+        - title: "시스템 노후화"
+          description: "10년 이상 운영된 레거시 시스템으로 처리 속도 저하 및 장애 빈발. 유지보수 비용 증가와 신규 기능 추가 어려움"
+        - title: "실시간 정보 부재"
+          description: "배치 기반 처리로 실시간 재고 파악 불가. 과재고/부족재고 발생으로 연간 8억원 손실 추정"
+        - title: "수동 운영 의존"
+          description: "배차, 경로 설정 등 핵심 의사결정이 담당자 경험에 의존. 인력 이동 시 노하우 유실 위험"
+
+  - slide_number: 6
+    title: "프로젝트 목표"
+    purpose: "핵심 추진 목표 4가지 제시"
+    template:
+      id: "smartart-left-01"
+      category: "diagram"
+      name: "좌측 4박스 + 우측 텍스트"
+      rationale: "4대 핵심 목표를 시각적으로 강조하고 상세 설명 제공"
+    content:
+      boxes:
+        - text: "AI 기반\n최적화"
+        - text: "실시간\n가시성"
+        - text: "클라우드\n네이티브"
+        - text: "데이터 기반\n경영"
+      right_title: "4대 핵심 목표"
+      right_body: "• AI/ML 활용 수요예측 및 재고 최적화\n• IoT 센서 연계 전 공정 실시간 모니터링\n• AWS 기반 MSA 아키텍처로 확장성 확보\n• 통합 대시보드를 통한 실시간 KPI 관리"
+
+  - slide_number: 7
+    title: "기대 효과"
+    purpose: "정량적 기대 효과 시각화"
+    template:
+      id: "percent-dot-01"
+      category: "infographic"
+      name: "퍼센트 닷 그리드"
+      rationale: "3가지 핵심 KPI 개선 효과를 시각적으로 강조"
+    content:
+      items:
+        - percent: 99
+          title: "재고 정확도"
+          description: "AS-IS 95% → TO-BE 99.5%"
+          dot_color: "#22523B"
+        - percent: 50
+          title: "출고 리드타임 단축"
+          description: "AS-IS 4시간 → TO-BE 2시간"
+          dot_color: "#479374"
+        - percent: 20
+          title: "물류비 절감"
+          description: "연간 23억원 비용 절감"
+          dot_color: "#67B7B5"
+
+  # ==================== 추진 전략 ====================
+  - slide_number: 8
+    title: "추진 전략 및 방법론"
+    purpose: "섹션 구분자 - 2장 시작"
+    template:
+      id: "divider-deep-green-01"
+      category: "divider"
+      name: "섹션 구분 - VERSION"
+      rationale: "새 섹션 시작 표시"
+    content:
+      version_label: "VERSION. 02"
+      title: "추진 전략 및 방법론"
+      description: "5대 핵심 전략과 하이브리드 방법론"
+
+  - slide_number: 9
+    title: "5대 핵심 전략"
+    purpose: "프로젝트 추진의 5가지 핵심 전략"
+    template:
+      id: "honeycomb-5-01"
+      category: "diagram"
+      name: "5개 육각형 허니콤"
+      rationale: "5가지 전략을 상호 연결된 구조로 시각화"
+    content:
+      items:
+        - title: "단계적\n전환"
+        - title: "애자일\n기반"
+        - title: "현업\n밀착"
+        - title: "품질\n내재화"
+        - title: "클라우드\n퍼스트"
+
+  - slide_number: 10
+    title: "단계별 전환 전략"
+    purpose: "3단계 시스템 전환 로드맵"
+    template:
+      id: "circle-3step-01"
+      category: "process"
+      name: "3단계 원형 프로세스"
+      rationale: "Phase 1-2-3 전환 단계를 시각적으로 표현"
+    content:
+      items:
+        - title: "Phase 1: WMS"
+          description: "창고관리 시스템\n입고/재고/출고\n2025년 12월 완료"
+        - title: "Phase 2: TMS"
+          description: "배송관리 시스템\n배차/경로최적화\n2026년 1월 완료"
+        - title: "Phase 3: OMS"
+          description: "주문관리 시스템\n주문통합/정산\n2026년 2월 완료"
+
+  - slide_number: 11
+    title: "Hybrid Agile 방법론"
+    purpose: "하이브리드 방법론 적용 모델"
+    template:
+      id: "process-6step-01"
+      category: "grid"
+      name: "6단계 프로세스 그리드"
+      rationale: "착수-분석-설계-개발-테스트-이행 6단계를 그리드로 표현"
+    content:
+      items:
+        - number: 1
+          title: "착수"
+          description: "킥오프, 환경구축\n표준 정의, WBS 확정"
+        - number: 2
+          title: "분석"
+          description: "현행 분석, 요구사항\nTo-Be 프로세스"
+        - number: 3
+          title: "설계"
+          description: "아키텍처, UI\nDB, 인터페이스"
+        - number: 4
+          title: "개발"
+          description: "8개 스프린트\n기능구현, 단위테스트"
+        - number: 5
+          title: "테스트"
+          description: "통합, 성능, 보안\nUAT 인수테스트"
+        - number: 6
+          title: "이행"
+          description: "데이터 이관\n시스템 오픈, 안정화"
+
+  # ==================== 기술 아키텍처 ====================
+  - slide_number: 12
+    title: "시스템 아키텍처"
+    purpose: "MSA 기반 시스템 구조 개요"
+    template:
+      id: "radial-5-01"
+      category: "diagram"
+      name: "방사형 5방향 다이어그램"
+      rationale: "중앙 플랫폼과 5개 핵심 서비스 간 관계를 방사형으로 표현"
+    content:
+      center: "스마트물류\n통합 플랫폼"
+      items:
+        - text: "WMS\n창고관리"
+        - text: "TMS\n배송관리"
+        - text: "OMS\n주문관리"
+        - text: "Dashboard\n모니터링"
+        - text: "AI Engine\nML/분석"
+
+  - slide_number: 13
+    title: "기술 스택"
+    purpose: "주요 기술 스택 소개"
+    template:
+      id: "card-4col-01"
+      category: "grid"
+      name: "4열 카드 레이아웃"
+      rationale: "Frontend/Backend/Data/DevOps 4영역 기술 스택"
+    content:
+      items:
+        - label: "Frontend"
+          content: "Vue.js 3\nTypeScript\nVuetify 3"
+        - label: "Backend"
+          content: "Spring Boot 3.2\nJava 17 LTS\nSpring Security"
+        - label: "Database"
+          content: "PostgreSQL 16\nRedis 7.2\nOpenSearch"
+        - label: "DevOps"
+          content: "AWS EKS\nGitHub Actions\nArgoCD"
+
+  # ==================== 프로젝트 조직 ====================
+  - slide_number: 14
+    title: "실행 계획"
+    purpose: "섹션 구분자 - 3장 시작"
+    template:
+      id: "divider-deep-green-01"
+      category: "divider"
+      name: "섹션 구분 - VERSION"
+      rationale: "새 섹션 시작 표시"
+    content:
+      version_label: "VERSION. 03"
+      title: "실행 계획"
+      description: "조직, 일정, 품질관리, 위험관리"
+
+  - slide_number: 15
+    title: "프로젝트 조직"
+    purpose: "핵심 투입 인력 소개"
+    template:
+      id: "smartart-left-01"
+      category: "diagram"
+      name: "좌측 4박스 + 우측 텍스트"
+      rationale: "핵심 인력 4명의 역할을 시각적으로 표현"
+    content:
+      boxes:
+        - text: "PM\n김철수"
+        - text: "AA\n박준형"
+        - text: "PL\n최수진"
+        - text: "DBA\n오현우"
+      right_title: "핵심 수행인력"
+      right_body: "• PM 김철수 차장: PMP 자격, 프로젝트 총괄\n• AA 박준형 책임: AWS SAA/SAP, 아키텍처 설계\n• PL 최수진 선임: 풀스택 개발, 개발팀 리드\n• DBA 오현우 대리: OCP 자격, DB 설계/튜닝"
+
+  # ==================== 일정 및 마일스톤 ====================
+  - slide_number: 16
+    title: "마스터 일정"
+    purpose: "전체 프로젝트 일정 개요"
+    template:
+      id: "connector-2row-01"
+      category: "timeline"
+      name: "2행 타임라인"
+      rationale: "상반기/하반기 2단계로 나눠 주요 활동 설명"
+    content:
+      items:
+        - label: "2025년 상반기"
+          title: "착수 → 분석 → 설계"
+          description: "• 1월: 킥오프, 환경구축, 표준 정의\n• 2~3월: 현행 분석, 요구사항 정의\n• 4~5월: 아키텍처/화면/DB 설계"
+        - label: "2025년 하반기"
+          title: "개발 → 테스트 → 오픈"
+          description: "• 6~9월: 8개 스프린트 개발 (16주)\n• 10~11월: 통합/성능/보안/UAT 테스트\n• 12월: 시스템 오픈 및 안정화"
+
+  - slide_number: 17
+    title: "주요 마일스톤"
+    purpose: "6대 마일스톤 및 완료 기준"
+    template:
+      id: "process-6step-01"
+      category: "grid"
+      name: "6단계 프로세스 그리드"
+      rationale: "주요 마일스톤 6개를 그리드로 표시"
+    content:
+      items:
+        - number: "M1"
+          title: "착수보고"
+          description: "1/10 완료\n수행계획서 승인"
+        - number: "M2"
+          title: "요구사항 확정"
+          description: "3/31 예정\n기능/비기능 100%"
+        - number: "M3"
+          title: "설계 완료"
+          description: "5/31 예정\nPoC 완료"
+        - number: "M4"
+          title: "개발 완료"
+          description: "9/30 예정\n단위테스트 100%"
+        - number: "M5"
+          title: "테스트 완료"
+          description: "11/15 예정\nUAT 사인오프"
+        - number: "M6"
+          title: "시스템 오픈"
+          description: "12/1 예정\nGo/No-Go 통과"
+
+  # ==================== 품질 및 리스크 ====================
+  - slide_number: 18
+    title: "품질 관리 체계"
+    purpose: "품질 목표 및 관리 방안"
+    template:
+      id: "card-4col-teal"
+      category: "grid"
+      name: "4열 카드 - 틸"
+      rationale: "4가지 품질 영역을 틸 색상의 카드로 차별화 표시"
+    content:
+      items:
+        - label: "코드 품질"
+          content: "SonarQube\nQuality Gate 통과\n커버리지 80%+"
+        - label: "결함 관리"
+          content: "해결률 100%\nP1/P2 결함 0건\n밀도 0.5건/KLOC"
+        - label: "테스트"
+          content: "통과율 100%\n자동화 70%+\nE2E 테스트"
+        - label: "산출물"
+          content: "검토완료율 100%\n버전관리\n품질 게이트"
+
+  - slide_number: 19
+    title: "주요 위험 및 대응"
+    purpose: "Top 3 위험 요소와 대응 전략"
+    template:
+      id: "disk-3row-01"
+      category: "list"
+      name: "3행 디스크 리스트"
+      rationale: "3대 핵심 리스크와 대응방안을 리스트로 표현"
+    content:
+      items:
+        - title: "요구사항 변경 (High)"
+          description: "CCB 승인 필수, 영향도 분석 후 반영. 예비비 5% 확보하여 일정 버퍼 운영"
+        - title: "일정 지연 (Medium)"
+          description: "주간 진척 관리 및 Critical Path 집중 모니터링. 필요시 추가 인력 투입"
+        - title: "데이터 이관 실패 (High)"
+          description: "사전 리허설 3회 수행, 데이터 클렌징, 상세 롤백 계획 수립"
+
+  # ==================== 마무리 ====================
+  - slide_number: 20
+    title: "협조 요청 사항"
+    purpose: "발주기관에 요청하는 협조 사항"
+    template:
+      id: "disk-3row-01"
+      category: "list"
+      name: "3행 디스크 리스트"
+      rationale: "3가지 주요 협조 요청을 리스트로 표현"
+    content:
+      items:
+        - title: "프로젝트 환경 지원"
+          description: "프로젝트룸 10석 지정, 출입증 발급 (1월 중), VPN 접근 권한 부여"
+        - title: "데이터 및 자료 지원"
+          description: "테스트 데이터 제공, 업무 매뉴얼, 레거시 시스템 문서 및 ERD"
+        - title: "현업 참여 지원"
+          description: "요구사항 인터뷰 (2~3월), 화면 리뷰 (5월), UAT 참여 (11월)"
+
+  - slide_number: 21
+    title: "향후 일정"
+    purpose: "착수보고 이후 향후 3개월 계획"
+    template:
+      id: "connector-2row-01"
+      category: "timeline"
+      name: "2행 타임라인"
+      rationale: "1~2월/3월 2단계로 향후 일정 안내"
+    content:
+      items:
+        - label: "1~2월"
+          title: "분석 단계"
+          description: "• 현행 시스템 분석\n• 요구사항 수집 및 정의\n• 주 2회 현업 인터뷰"
+        - label: "3월"
+          title: "요구사항 확정"
+          description: "• 요구사항정의서 최종화\n• To-Be 프로세스 설계\n• M2 마일스톤 완료"
+
+  - slide_number: 22
+    title: "감사합니다"
+    purpose: "마무리 슬라이드"
+    template:
+      id: "cover-deep-green-01"
+      category: "cover"
+      name: "깔끔이 딥그린 표지"
+      rationale: "통일감 있는 마무리를 위해 표지와 동일한 디자인"
+    content:
+      label: "Q&A"
+      title: "감사합니다"
+      description: "문의사항이 있으시면 질문해 주세요"
+      presenter: "PM 김철수 | kim.cs@techsolution.co.kr"
+
+template_summary:
+  cover-deep-green-01: 2      # 표지, 마무리
+  toc-deep-green-01: 1        # 목차
+  divider-deep-green-01: 3    # 섹션 구분
+  card-4col-01: 1             # 기술 스택
+  card-4col-numbered-01: 1    # 프로젝트 정보
+  card-4col-teal: 1           # 품질 관리
+  disk-3row-01: 3             # 배경, 위험, 협조요청
+  honeycomb-5-01: 1           # 5대 전략
+  smartart-left-01: 2         # 목표, 조직
+  radial-5-01: 1              # 시스템 아키텍처
+  circle-3step-01: 1          # 단계별 전환
+  process-6step-01: 2         # 방법론, 마일스톤
+  connector-2row-01: 2        # 마스터 일정, 향후 일정
+  percent-dot-01: 1           # 기대효과
+
+total_templates_used: 14
+total_slides: 22

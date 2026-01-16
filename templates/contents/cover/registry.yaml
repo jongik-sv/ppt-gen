@@ -1,0 +1,36 @@
+type: contents
+category: cover
+updated_at: '2026-01-16 15:14:21'
+count: 1
+entries:
+- id: cover-deep-green-01
+  category: cover
+  name: 깔끔이 딥그린 표지
+  path: contents/cover/cover-deep-green-01
+  thumbnail: contents/thumbnails/cover/cover-deep-green-01.png
+  design_intent: professional-corporate
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: low
+  item_count_flexible: true
+  keywords:
+  - 표지
+  - 커버
+  - 딥그린
+  - 기업
+  - 전문가
+  - 보고서
+  - 분기
+  - 평가
+  - 프로페셔널
+  - 정식
+  use_for:
+  - 회사 정기 평가보고회 표지 슬라이드
+  - 분기별 사업 성과 발표 커버 페이지
+  - 임원진 보고서 개시 슬라이드
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 1
+    extracted_at: '2026-01-16T00:00:00Z'

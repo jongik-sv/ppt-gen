@@ -1,0 +1,35 @@
+type: contents
+category: divider
+updated_at: '2026-01-16 15:14:21'
+count: 1
+entries:
+- id: divider-deep-green-01
+  category: divider
+  name: 섹션 구분 - 딥그린
+  path: contents/divider/divider-deep-green-01
+  thumbnail: contents/thumbnails/divider/divider-deep-green-01.png
+  design_intent: divider
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: low
+  item_count_flexible: true
+  keywords:
+  - 섹션
+  - 구분
+  - divider
+  - 딥그린
+  - 미니멀
+  - 수직
+  - 깔끔
+  - 제목
+  - 설명
+  - 버전
+  use_for:
+  - 프레젠테이션 섹션 간의 구분 페이지 표시
+  - 새로운 주제로 전환할 때의 시각적 강조
+  - 장 번호와 함께 섹션 제목 소개
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 3

@@ -1,0 +1,148 @@
+# 4열 카드 그리드 + 하단 번호 레이아웃
+# 원본: ppt-sample/깔끔이-딥그린.pptx 슬라이드 9
+# 추출일: 2026-01-16
+
+id: card-4col-numbered-01
+name: "4열 카드 그리드 + 하단 번호"
+category: grid
+description: "4개의 세로 카드와 하단 원형 번호 인디케이터가 있는 레이아웃"
+
+source:
+  file: "ppt-sample/깔끔이-딥그린.pptx"
+  slide: 9
+  extracted_at: "2026-01-16"
+
+quality: high
+
+layout:
+  type: grid
+  structure: 4-column-cards-numbered
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+  content:
+    columns: 4
+    card_style: rectangle
+    has_bottom_indicator: true
+
+placeholders:
+  - name: items
+    type: array
+    min_items: 4
+    max_items: 4
+    item_schema:
+      - name: label
+        type: text
+        description: "카드 상단 라벨"
+        sample: "텍스트 입력"
+      - name: content
+        type: rich-text
+        description: "카드 본문 내용"
+        sample: "내가 바람 펴도 너는 절대 피지마 Baby나는 너를 잊어도 넌 나를 잊지마 Lady"
+      - name: number
+        type: text
+        description: "하단 번호"
+        sample: "01"
+
+theme_colors:
+  primary: "#22523B"
+  secondary: "#153325"
+  card_fill: "#22523B"
+  text_on_card: "#FFFFFF"
+  indicator_fill: "#22523B"
+
+typography:
+  title:
+    font_family: "서평원 꺾깎체 TTF"
+    font_size: "18pt"
+    color: "#22523B"
+  subtitle:
+    font_family: "나눔바른펜"
+    font_size: "12pt"
+    color: "#22523B"
+  card_label:
+    font_family: "서평원 꺾깎체 TTF"
+    font_size: "13pt"
+    color: "#22523B"
+  card_content:
+    font_family: "나눔바른펜"
+    font_size: "10pt"
+    color: "#FFFFFF"
+  number:
+    font_family: "코트라 볼드체"
+    font_size: "16pt"
+    color: "#FFFFFF"
+
+shapes:
+  - id: card-1
+    type: rectangle
+    position: { x: "6.2%", y: "35.3%" }
+    size: { width: "19.9%", height: "52.1%" }
+    style:
+      fill: "#22523B"
+      corner_radius: "0"
+
+  - id: card-2
+    type: rectangle
+    position: { x: "28.8%", y: "35.3%" }
+    size: { width: "19.9%", height: "52.1%" }
+    style:
+      fill: "#22523B"
+
+  - id: card-3
+    type: rectangle
+    position: { x: "51.3%", y: "35.3%" }
+    size: { width: "19.9%", height: "52.1%" }
+    style:
+      fill: "#22523B"
+
+  - id: card-4
+    type: rectangle
+    position: { x: "73.9%", y: "35.3%" }
+    size: { width: "19.9%", height: "52.1%" }
+    style:
+      fill: "#22523B"
+
+  - id: indicator-1
+    type: circle
+    position: { x: "12.8%", y: "81.3%" }
+    size: { width: "6.2%", height: "12.2%" }
+    style:
+      fill: "#22523B"
+      stroke: "#22523B"
+
+  - id: indicator-2
+    type: circle
+    position: { x: "35.3%", y: "81.3%" }
+    size: { width: "6.2%", height: "12.2%" }
+    style:
+      fill: "#22523B"
+
+  - id: indicator-3
+    type: circle
+    position: { x: "57.9%", y: "81.3%" }
+    size: { width: "6.2%", height: "12.2%" }
+    style:
+      fill: "#22523B"
+
+  - id: indicator-4
+    type: circle
+    position: { x: "81.1%", y: "81.3%" }
+    size: { width: "6.2%", height: "12.2%" }
+    style:
+      fill: "#22523B"
+
+keywords:
+  - "4열"
+  - "카드"
+  - "그리드"
+  - "번호"
+  - "인디케이터"
+  - "딥그린"
+
+use_for:
+  - "4가지 항목을 나란히 비교"
+  - "단계별 프로세스 설명"
+  - "4가지 카테고리 분류"
+  - "순서가 있는 콘텐츠 표현"

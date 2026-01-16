@@ -1,0 +1,37 @@
+type: contents
+category: toc
+updated_at: '2026-01-16 15:14:21'
+count: 1
+entries:
+- id: toc-deep-green-01
+  category: toc
+  name: TOC 3열 구조 - 딥그린
+  path: contents/toc/toc-deep-green-01
+  thumbnail: contents/toc/toc-deep-green-01/thumbnail.png
+  design_intent: toc-3col
+  quality_score: 9.2
+  visual_balance: symmetric
+  information_density: medium
+  layout_type: 3-column
+  item_count: 3
+  item_count_flexible: true
+  keywords:
+  - 목차
+  - TOC
+  - 3열
+  - 깔끔한
+  - 구조화
+  - 딥그린
+  - 계층
+  - 균형
+  - 컨텐츠 분류
+  - 섹션 개요
+  use_for:
+  - 프레젠테이션 목차 및 목차 슬라이드 제작
+  - 3가지 주요 주제를 균등하게 분배하여 표시
+  - 각 섹션의 개요와 세부 항목을 계층적으로 구성
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 2

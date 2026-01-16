@@ -1,0 +1,34 @@
+type: contents
+category: timeline
+updated_at: '2026-01-16 15:14:21'
+count: 1
+entries:
+- id: connector-2row-01
+  category: timeline
+  name: 2행 타임라인 (좌측 이미지 + 연결선)
+  path: contents/timeline/connector-2row-01
+  thumbnail: contents/timeline/connector-2row-01/thumbnail.png
+  design_intent: timeline-connector
+  quality_score: 9.2
+  visual_balance: asymmetric
+  information_density: medium
+  item_count: 2
+  item_count_flexible: true
+  keywords:
+  - 타임라인
+  - 2행
+  - 연결선
+  - 시간순
+  - 마일스톤
+  - 이벤트
+  - 시간축
+  - 프로세스
+  - 좌측이미지
+  - 이력
+  use_for:
+  - 시간 순서대로 진행되는 2단계 이벤트 표시
+  - 프로젝트 개발 과정의 주요 마일스톤 2개 소개
+  - 제품 개발 이력 또는 역사의 중요 시점 구분
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx

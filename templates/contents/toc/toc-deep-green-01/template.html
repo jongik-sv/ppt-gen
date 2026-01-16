@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOC - 3열 딥그린 디자인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: "나눔바른펜", sans-serif;
+        }
+
+        .slide {
+            width: 1980px;
+            height: 1080px;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            position: relative;
+        }
+
+        .header {
+            width: 100%;
+            padding-top: 183.6px;
+            padding-bottom: 46.44px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-family: "코트라 볼드체", sans-serif;
+            font-size: 24pt;
+            font-weight: bold;
+            color: #22523B;
+            text-align: center;
+            filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.1));
+        }
+
+        .content-wrapper {
+            width: 100%;
+            flex: 1;
+            padding: 0 85px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+            align-items: flex-start;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .column-header {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .number {
+            font-family: "코트라 볼드체", sans-serif;
+            font-size: 24pt;
+            font-weight: bold;
+            color: #22523B;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 10px;
+            filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.1));
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #153325;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-family: "서평원 꺾깎체 TTF", sans-serif;
+            font-size: 13pt;
+            font-weight: normal;
+            color: #22523B;
+            width: 100%;
+            margin-bottom: 15px;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.08));
+        }
+
+        .description {
+            font-family: "나눔바른펜", sans-serif;
+            font-size: 12pt;
+            color: #22523B;
+            line-height: 1.8;
+            margin-left: 0;
+        }
+
+        .description ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .description li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .description li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #22523B;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 1200px) {
+            .content-wrapper {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+                padding: 0 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+
+            .header {
+                padding-top: 40px;
+                padding-bottom: 30px;
+            }
+
+            .header h1 {
+                font-size: 20pt;
+            }
+
+            .content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 0;
+            }
+
+            .number {
+                font-size: 20pt;
+            }
+
+            .title {
+                font-size: 12pt;
+            }
+
+            .description {
+                font-size: 11pt;
+            }
+        }
+
+        /* 인쇄용 스타일 */
+        @media print {
+            .slide {
+                width: 25.6cm;
+                height: 14.4cm;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1>CONTENTS</h1>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Column 1 -->
+            <div class="column">
+                <div class="column-header">
+                    <div class="number">01</div>
+                    <div class="divider"></div>
+                    <div class="title">제목을 입력하세요.</div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>첫 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>두 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>세 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>네 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>다섯 번째 관련 주제에 대해 설명해주세요.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="column">
+                <div class="column-header">
+                    <div class="number">02</div>
+                    <div class="divider"></div>
+                    <div class="title">제목을 입력하세요.</div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>첫 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>두 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>세 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>네 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>다섯 번째 관련 주제에 대해 설명해주세요.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="column">
+                <div class="column-header">
+                    <div class="number">03</div>
+                    <div class="divider"></div>
+                    <div class="title">제목을 입력하세요.</div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>첫 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>두 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>세 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>네 번째 관련 주제에 대해 설명해주세요.</li>
+                        <li>다섯 번째 관련 주제에 대해 설명해주세요.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

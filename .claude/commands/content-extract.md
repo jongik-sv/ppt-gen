@@ -324,17 +324,12 @@ templates/contents/templates/cycle/cycle-4arrow1.yaml
 templates/contents/templates/comparison/comparison-2col1.yaml
 ```
 
-### Phase 3: 썸네일 생성
+### Phase 3: 썸네일 생성 (원본 PPTX에서)
+
+> **썸네일은 반드시 원본 PPTX 슬라이드에서 직접 캡처.**
+> HTML(example.html) 기반 캡처 금지 - 원본과 비교/검증이 불가능.
 
 ```bash
-# 방법 1: 원본 이미지 복사 (이미지 입력인 경우)
-cp {input}.png templates/contents/thumbnails/{category}/{id}.png
-
-# 방법 2: SVG 렌더링 (Playwright 필요)
-cd .claude/skills/ppt-gen
-node scripts/html2pptx.js --render-svg {yaml_path} --output {png_path}
-
-# 방법 3: PPTX에서 추출
 python scripts/thumbnail.py {input}.pptx output/ --slides {N} --single
 mv output/slide-{N}.png templates/contents/thumbnails/{category}/{id}.png
 ```

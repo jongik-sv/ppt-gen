@@ -1,0 +1,152 @@
+# 콘텐츠 템플릿 정의
+id: arch-list-3col
+name: 3열 아치형 리스트
+category: list
+description: 상단에 아치형 장식이 있는 3열 리스트 레이아웃
+
+# 출처 정보 (필수)
+source:
+  file: "동국시스템즈-템플릿(정리).pptx"
+  slide: 1
+  extracted_at: "2026-01-16"
+
+# 품질 설정
+quality: high
+
+# 레이아웃 정보
+layout:
+  type: list
+  structure: arch-columns
+  content_only: true
+  dimensions:
+    width: 1920px
+    height: 734px
+
+# 디자인 메타
+design_meta:
+  design_intent: "3개 열에 아치형 장식과 불릿 리스트를 배치한 정보 나열 레이아웃"
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+
+# 플레이스홀더 정의 (헤더 제외)
+placeholders:
+  - name: columns
+    type: array
+    min: 3
+    max: 3
+    item_schema:
+      - name: title
+        type: text
+        required: true
+        description: "열 제목 (아치 아래)"
+      - name: subtitle
+        type: text
+        required: false
+        description: "소제목"
+      - name: items
+        type: array
+        description: "불릿 리스트 항목"
+        item_schema:
+          - name: text
+            type: text
+    sample:
+      - title: "{{중제목}}"
+        subtitle: "{{소제목}}"
+        items:
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+      - title: "{{중제목}}"
+        subtitle: "{{소제목}}"
+        items:
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+      - title: "{{중제목}}"
+        subtitle: "{{소제목}}"
+        items:
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+          - text: "{{본문}}"
+
+# 테마 색상 (추출된 원본 색상)
+theme_colors:
+  arch_fill: "{{theme.background.neutral}}"
+  line: "{{theme.colors.primary}}"
+  title: "{{theme.colors.secondary}}"
+  subtitle: "{{theme.colors.primary}}"
+  text: "{{theme.colors.secondary}}"
+
+# 시맨틱 설명
+semantic_description: |
+  3개 열로 구성된 아치형 장식 리스트 레이아웃.
+
+  **캔버스:**
+  - 콘텐츠 영역: 1920 × 734px
+  - 배경: {{theme.background.light}}
+
+  **레이아웃 구조 (CSS Grid 3열):**
+  - 그리드: 3열 균등 배분
+  - 열 간격: 60px
+  - 좌우 마진: 80px
+
+  **각 열 구조:**
+  1. **아치형 장식 (상단):**
+     - 반원 아치 형태 (CSS border-radius 또는 SVG)
+     - 채우기: {{theme.background.neutral}} (회색 계열)
+     - 크기: 너비 220px, 높이 110px
+
+  2. **구분선:**
+     - 너비: 100%, 높이: 2px
+     - 색상: {{theme.colors.primary}}
+
+  3. **열 제목:**
+     - 폰트: {{theme.fonts.heading}}, 16px, medium
+     - 색상: {{theme.colors.secondary}}
+     - 위치: 아치 중앙
+
+  4. **콘텐츠 박스:**
+     - 소제목: {{theme.fonts.heading}}, 14px, bold
+     - 불릿 리스트: {{theme.fonts.body}}, 12px
+     - 불릿 스타일: 대시(-)
+     - line-height: 1.8
+
+  **디자인 토큰 매핑:**
+  - 아치 배경: {{theme.background.neutral}}
+  - 구분선: {{theme.colors.primary}}
+  - 텍스트: {{theme.colors.secondary}}
+
+keywords:
+  - 리스트
+  - 3열
+  - 아치
+  - 불릿
+  - 나열
+  - 비교
+
+use_for:
+  - "3가지 카테고리의 항목을 나열할 때"
+  - "부서별/영역별 업무 목록 정리"
+  - "비교 항목 리스트"

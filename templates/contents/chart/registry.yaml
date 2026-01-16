@@ -1,0 +1,33 @@
+type: contents
+category: chart
+updated_at: '2026-01-16 15:14:21'
+count: 1
+entries:
+- id: bar-deep-green-01
+  category: chart
+  name: 세로 막대 차트 - 딥그린 스타일
+  path: contents/chart/bar-deep-green-01
+  thumbnail: contents/thumbnails/chart/bar-deep-green-01.png
+  design_intent: data-visualization-columnar
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 막대 차트
+  - 세로 차트
+  - 컬럼 차트
+  - 다중 시리즈
+  - 비교 차트
+  - 성과 지표
+  - 딥그린
+  - 3시리즈
+  - 4카테고리
+  - 데이터 시각화
+  use_for:
+  - 분기별 부서 성과지표 비교
+  - 3개 이상의 카테고리를 3개 시리즈로 비교할 때
+  - 부서별 매출, 고객 만족도, 프로젝트 완료율 등 다중 지표 시각화
+  has_ooxml: true
+  render_method: library
+  source: ppt-sample/깔끔이-딥그린.pptx

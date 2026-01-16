@@ -1,0 +1,30 @@
+type: contents
+category: image
+updated_at: '2026-01-16 15:14:21'
+count: 1
+entries:
+- id: left-image-01
+  category: image
+  name: 좌측 이미지 + 우측 텍스트
+  path: contents/image/left-image-01
+  thumbnail: contents/thumbnails/image/left-image-01.png
+  design_intent: 이미지와 텍스트 콘텐츠의 균형잡힌 배치
+  quality_score: 9.5
+  visual_balance: asymmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 이미지
+  - 텍스트
+  - 좌측 레이아웃
+  - 콘텐츠
+  - 설명
+  - 이미지 + 텍스트
+  - 비율
+  use_for:
+  - 이미지와 텍스트를 함께 표현해야 하는 슬라이드
+  - 좌측에 주요 이미지, 우측에 설명 텍스트가 필요한 경우
+  - 제품 소개, 사례 연구, 사용자 피드백 등의 컨텐츠
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx

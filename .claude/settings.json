@@ -31,6 +31,15 @@
             "command": "powershell -NoProfile -Command \"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $d=$input|ConvertFrom-Json; if($d.tool_input.skill -like 'wf/*'){$a=if($d.tool_input.args){$d.tool_input.args}else{'unknown'}; $s=($d.tool_input.skill -split '/')[1]; Write-Output \\\"$a $s 워크플로우 종료\\\"}\""
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/skills/ppt-extract/scripts/auto_registry_update.sh"
+          }
+        ]
       }
     ],
     "Stop": [

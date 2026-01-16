@@ -1,0 +1,18 @@
+type: contents
+category: list
+updated_at: '2026-01-16 15:14:21'
+count: 1
+entries:
+- id: disk-3row-01
+  category: list
+  name: 3행 디스크 아이콘 리스트
+  path: contents/list/disk-3row-01
+  thumbnail: contents/list/disk-3row-01/thumbnail.png
+  layout_type: list
+  item_count_flexible: true
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 12
+    extracted_at: '2026-01-16'

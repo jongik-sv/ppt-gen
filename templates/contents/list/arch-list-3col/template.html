@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=734">
+  <title>3열 아치형 리스트</title>
+  <style>
+    /* ========================================
+       테마 변수 정의 (Handlebars 바인딩)
+       ======================================== */
+    :root {
+      /* 주요 색상 */
+      --color-primary: {{theme.colors.primary}};
+      --color-secondary: {{theme.colors.secondary}};
+      --color-accent: {{theme.colors.accent}};
+
+      /* 배경 */
+      --bg-light: {{theme.background.light}};
+      --bg-neutral: {{theme.background.neutral}};
+
+      /* 폰트 */
+      --font-heading: {{theme.fonts.heading}};
+      --font-body: {{theme.fonts.body}};
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* 콘텐츠 영역 (1920 × 734px) */
+    .content {
+      width: 1920px;
+      height: 734px;
+      background: var(--bg-light);
+      font-family: var(--font-body), 'Noto Sans KR', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 80px;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 아치형 장식 */
+    .arch-container {
+      position: relative;
+      width: 220px;
+      height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .arch {
+      width: 220px;
+      height: 110px;
+      background: var(--bg-neutral);
+      border-radius: 110px 110px 0 0;
+    }
+
+    .column-title {
+      position: absolute;
+      bottom: 25px;
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-secondary);
+      text-align: center;
+    }
+
+    /* 구분선 */
+    .divider {
+      width: 100%;
+      height: 2px;
+      background: var(--color-primary);
+      margin-top: -2px;
+    }
+
+    /* 콘텐츠 박스 */
+    .content-box {
+      width: 100%;
+      padding: 20px 10px;
+      text-align: left;
+    }
+
+    .subtitle {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--color-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .subtitle::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--color-primary);
+      margin-right: 8px;
+    }
+
+    .item-list {
+      list-style: none;
+    }
+
+    .item-list li {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--color-secondary);
+      line-height: 1.8;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .item-list li::before {
+      content: '-';
+      position: absolute;
+      left: 0;
+      color: var(--color-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="columns">
+      {{#each columns}}
+      <div class="column">
+        <div class="arch-container">
+          <div class="arch"></div>
+          <div class="column-title">{{this.title}}</div>
+        </div>
+        <div class="divider"></div>
+        <div class="content-box">
+          {{#if this.subtitle}}
+          <div class="subtitle">{{this.subtitle}}</div>
+          {{/if}}
+          <ul class="item-list">
+            {{#each this.items}}
+            <li>{{this.text}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</body>
+</html>

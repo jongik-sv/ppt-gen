@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percent Dot Grid Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* 콘텐츠 영역만 (1920 × 734px) */
+        .content {
+            width: 1920px;
+            height: 734px;
+            background: white;
+            margin: 0 auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 40px 100px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .item-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* Dot Grid */
+        .dot-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 24px);
+            grid-template-rows: repeat(10, 24px);
+            gap: 8px;
+            margin-bottom: 32px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #E8E8E8;
+            transition: background 0.3s ease;
+        }
+
+        .dot.filled {
+            background: #479374;
+        }
+
+        /* Percent Value */
+        .percent-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #153325;
+            text-align: center;
+            margin-bottom: 12px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Title */
+        .item-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #153325;
+            text-align: center;
+            margin-bottom: 8px;
+            min-height: 24px;
+        }
+
+        /* Description */
+        .item-description {
+            font-size: 14px;
+            font-weight: 400;
+            color: #666666;
+            text-align: center;
+            line-height: 1.4;
+            min-height: 42px;
+        }
+
+        /* Debug mode */
+        body.debug .dot-grid {
+            border: 2px dashed red;
+        }
+
+        body.debug .item-column {
+            border: 2px dashed blue;
+        }
+    </style>
+</head>
+<body>
+    <!-- 콘텐츠 영역만 (헤더/푸터 제외) -->
+    <div class="content" id="contentArea">
+        <!-- Items will be generated here -->
+    </div>
+
+    <script>
+        // Sample data - replace with actual data from placeholders
+        const sampleData = {
+            items: [
+                {
+                    percent: 56,
+                    title: "항목 1",
+                    description: "설명 텍스트",
+                    dot_color: "#479374"
+                },
+                {
+                    percent: 29,
+                    title: "항목 2",
+                    description: "설명 텍스트",
+                    dot_color: "#479374"
+                },
+                {
+                    percent: 63,
+                    title: "항목 3",
+                    description: "설명 텍스트",
+                    dot_color: "#479374"
+                }
+            ]
+        };
+
+        function generateDotGrid(percent, color = "#479374") {
+            const dots = [];
+            const filledCount = Math.round((percent / 100) * 100);
+
+            // Create 100 dots total
+            for (let i = 0; i < 100; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+
+                // Fill from bottom-up
+                if (i >= (100 - filledCount)) {
+                    dot.classList.add('filled');
+                }
+
+                dot.style.background = i >= (100 - filledCount) ? color : '#E8E8E8';
+                dots.push(dot);
+            }
+
+            return dots;
+        }
+
+        function renderItems(data) {
+            const contentArea = document.getElementById('contentArea');
+            contentArea.innerHTML = '';
+
+            data.items.forEach((item, index) => {
+                const column = document.createElement('div');
+                column.className = 'item-column';
+
+                // Dot grid
+                const grid = document.createElement('div');
+                grid.className = 'dot-grid';
+                const dots = generateDotGrid(item.percent, item.dot_color || "#479374");
+                dots.forEach(dot => grid.appendChild(dot));
+                column.appendChild(grid);
+
+                // Percent value
+                const percentValue = document.createElement('div');
+                percentValue.className = 'percent-value';
+                percentValue.textContent = `${item.percent}%`;
+                column.appendChild(percentValue);
+
+                // Title
+                if (item.title) {
+                    const title = document.createElement('div');
+                    title.className = 'item-title';
+                    title.textContent = item.title;
+                    column.appendChild(title);
+                }
+
+                // Description
+                if (item.description) {
+                    const desc = document.createElement('div');
+                    desc.className = 'item-description';
+                    desc.textContent = item.description;
+                    column.appendChild(desc);
+                }
+
+                contentArea.appendChild(column);
+            });
+        }
+
+        // Initialize with sample data
+        renderItems(sampleData);
+
+        // Expose render function globally for PowerPoint integration
+        window.renderPercentDotGrid = function(data) {
+            renderItems(data);
+        };
+    </script>
+</body>
+</html>

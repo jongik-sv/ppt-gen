@@ -52,12 +52,16 @@ class RegistryManager:
             count = self._rebuild_documents_registry()
             results['documents'] = count
 
-        # 콘텐츠 레지스트리 (카테고리별)
+        # 콘텐츠 레지스트리 (카테고리별 + 통합)
         if self.contents_dir.exists():
             for category_dir in self.contents_dir.iterdir():
-                if category_dir.is_dir():
+                if category_dir.is_dir() and category_dir.name != 'thumbnails':
                     count = self._rebuild_content_category_registry(category_dir)
                     results[f'contents/{category_dir.name}'] = count
+
+            # 통합 registry 생성
+            total = self._rebuild_unified_contents_registry()
+            results['contents/unified'] = total
 
         # 테마 레지스트리
         if self.themes_dir.exists():
@@ -122,7 +126,15 @@ class RegistryManager:
         return len(entries)
 
     def _rebuild_content_category_registry(self, category_dir: Path) -> int:
-        """콘텐츠 카테고리 레지스트리 재빌드."""
+        """콘텐츠 카테고리 레지스트리 재빌드.
+
+        확장된 스키마로 콘텐츠 선정에 필요한 정보를 포함합니다:
+        - design_intent: 설계 의도 설명
+        - layout_type, columns, rows: 레이아웃 구조
+        - item_count, item_count_flexible: 항목 수 정보
+        - keywords, use_for: 검색/매칭용
+        - quality_score, visual_balance: 품질 메타
+        """
         entries = []
 
         for template_dir in category_dir.iterdir():
@@ -137,28 +149,74 @@ class RegistryManager:
                 with open(template_yaml, 'r', encoding='utf-8') as f:
                     data = yaml.safe_load(f)
 
-                content = data.get('content', data)  # content 키 또는 루트
+                # 다양한 스키마 지원 (content_template, content, 또는 루트)
+                content = data.get('content_template', data.get('content', data))
+                design_meta = data.get('design_meta', {})
+                layout = data.get('layout', {})
+                customization = data.get('customization', {})
+                render_config = data.get('render_config', {})
+
+                # 기본 정보
                 entry = {
                     'id': content.get('id', template_dir.name),
+                    'category': category_dir.name,
                     'name': content.get('name', template_dir.name),
-                    'source_document': content.get('source_document', content.get('document_style', '')),
-                    'source_type': content.get('source_type', 'pptx'),  # pptx 또는 image
-                    'has_ooxml': content.get('has_ooxml', True),
-                    'path': str(template_dir.relative_to(self.templates_root)),
-                    'extracted_at': content.get('extracted_at', ''),
-                    'render_method': content.get('render_method', 'ooxml' if content.get('has_ooxml', True) else 'html'),
+                    'path': f"contents/{category_dir.name}/{template_dir.name}",
                 }
 
-                # vmin 메타데이터 (있으면 포함)
-                if content.get('vmin'):
-                    entry['vmin'] = content.get('vmin')
-                if content.get('slide_size'):
-                    entry['slide_size'] = content.get('slide_size')
-
-                # 썸네일 경로 추가
+                # 썸네일 경로
                 thumbnail = template_dir / 'thumbnail.png'
                 if thumbnail.exists():
-                    entry['thumbnail'] = str(thumbnail.relative_to(self.templates_root))
+                    entry['thumbnail'] = f"contents/{category_dir.name}/{template_dir.name}/thumbnail.png"
+                else:
+                    # thumbnails 폴더 확인
+                    alt_thumbnail = self.contents_dir / 'thumbnails' / category_dir.name / f"{template_dir.name}.png"
+                    if alt_thumbnail.exists():
+                        entry['thumbnail'] = f"contents/thumbnails/{category_dir.name}/{template_dir.name}.png"
+
+                # === 확장 필드: 설계 메타 ===
+                if design_meta.get('design_intent'):
+                    entry['design_intent'] = design_meta.get('design_intent')
+                if design_meta.get('quality_score'):
+                    entry['quality_score'] = design_meta.get('quality_score')
+                if design_meta.get('visual_balance'):
+                    entry['visual_balance'] = design_meta.get('visual_balance')
+                if design_meta.get('information_density'):
+                    entry['information_density'] = design_meta.get('information_density')
+
+                # === 확장 필드: 레이아웃 정보 ===
+                if layout.get('type'):
+                    entry['layout_type'] = layout.get('type')
+                grid_structure = layout.get('grid_structure', {})
+                if grid_structure.get('columns'):
+                    entry['columns'] = grid_structure.get('columns')
+                if grid_structure.get('rows'):
+                    entry['rows'] = grid_structure.get('rows')
+
+                # 항목 수 추출 (다양한 소스에서)
+                item_count = self._extract_item_count(data)
+                if item_count:
+                    entry['item_count'] = item_count
+                entry['item_count_flexible'] = customization.get('allow_item_count_change', True)
+
+                # === 확장 필드: 검색/매칭용 ===
+                keywords = data.get('keywords', [])
+                if keywords:
+                    entry['keywords'] = keywords[:10]  # 최대 10개
+
+                use_for = data.get('use_for', [])
+                if use_for:
+                    entry['use_for'] = use_for[:3]  # 최대 3개
+
+                # === 확장 필드: 렌더링 정보 ===
+                has_ooxml = (template_dir / 'template.ooxml').exists()
+                entry['has_ooxml'] = has_ooxml
+                entry['render_method'] = render_config.get('render_method', 'ooxml' if has_ooxml else 'html')
+
+                # 소스 정보 (선택적)
+                source = content.get('source', '')
+                if source:
+                    entry['source'] = source
 
                 entries.append(entry)
             except Exception as e:
@@ -178,6 +236,88 @@ class RegistryManager:
             yaml.dump(registry, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
         return len(entries)
+
+    def _extract_item_count(self, data: Dict[str, Any]) -> Optional[int]:
+        """템플릿 데이터에서 항목 수 추출.
+
+        다양한 소스에서 항목 수를 찾습니다:
+        - placeholder_data.items 배열 길이
+        - schema.properties.items.min_items/max_items
+        - layout.grid_structure.columns * rows
+        - shapes 배열에서 반복 패턴 감지
+        """
+        # 1. placeholder_data에서 추출
+        placeholder_data = data.get('placeholder_data', {})
+        items = placeholder_data.get('items', [])
+        if items and isinstance(items, list):
+            return len(items)
+
+        # 2. schema에서 추출
+        schema = data.get('schema', {})
+        props = schema.get('properties', {})
+        items_schema = props.get('items', {})
+        if items_schema.get('min_items') == items_schema.get('max_items') and items_schema.get('min_items'):
+            return items_schema.get('min_items')
+
+        # 3. grid_structure에서 계산
+        layout = data.get('layout', {})
+        grid = layout.get('grid_structure', {})
+        if grid.get('columns') and grid.get('rows'):
+            return grid.get('columns') * grid.get('rows')
+
+        # 4. shapes에서 반복 패턴 감지
+        shapes = data.get('shapes', [])
+        if shapes and isinstance(shapes, list):
+            # card, hexagon 등 주요 도형 개수
+            main_shapes = [s for s in shapes if s.get('type') in ['group', 'hexagon', 'card', 'rectangle']]
+            if len(main_shapes) >= 2:
+                return len(main_shapes)
+
+        return None
+
+    def _rebuild_unified_contents_registry(self) -> int:
+        """통합 콘텐츠 레지스트리 생성.
+
+        모든 카테고리의 콘텐츠를 하나의 registry.yaml로 통합합니다.
+        Stage 3 필터링/매칭에서 단일 파일로 모든 템플릿 접근 가능.
+        """
+        all_entries = []
+        categories_count = {}
+
+        for category_dir in sorted(self.contents_dir.iterdir()):
+            if not category_dir.is_dir():
+                continue
+            if category_dir.name == 'thumbnails':
+                continue
+
+            registry_path = category_dir / 'registry.yaml'
+            if not registry_path.exists():
+                continue
+
+            try:
+                with open(registry_path, 'r', encoding='utf-8') as f:
+                    registry = yaml.safe_load(f)
+
+                entries = registry.get('entries', [])
+                all_entries.extend(entries)
+                categories_count[category_dir.name] = len(entries)
+            except Exception as e:
+                print(f"Warning: {registry_path} 읽기 실패: {e}")
+
+        # 통합 registry 저장
+        unified = {
+            'version': '2.0',
+            'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'total': len(all_entries),
+            'categories': categories_count,
+            'templates': sorted(all_entries, key=lambda x: (x.get('category', ''), x.get('id', '')))
+        }
+
+        registry_path = self.contents_dir / 'registry.yaml'
+        with open(registry_path, 'w', encoding='utf-8') as f:
+            yaml.dump(unified, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+
+        return len(all_entries)
 
     def _rebuild_themes_registry(self) -> int:
         """테마 레지스트리 재빌드."""

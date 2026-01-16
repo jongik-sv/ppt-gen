@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4열 카드 그리드 + 하단 번호 - 예제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            width: 1920px;
+            height: 1080px;
+            background: #FFFFFF;
+            position: relative;
+            font-family: "나눔바른펜", sans-serif;
+        }
+
+        /* Header Section */
+        .header {
+            position: absolute;
+            left: 5.6%;
+            top: 8.2%;
+        }
+
+        .title {
+            font-family: "서평원 꺾깎체 TTF", sans-serif;
+            font-size: 18pt;
+            color: #22523B;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-family: "나눔바른펜", sans-serif;
+            font-size: 12pt;
+            color: #22523B;
+        }
+
+        /* Header Bar */
+        .header-bar {
+            position: absolute;
+            left: 6.3%;
+            top: 19.1%;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-bar-accent {
+            width: 69px;
+            height: 17px;
+            background: #22523B;
+        }
+
+        .header-bar-line {
+            width: 582px;
+            height: 17px;
+            background: #153325;
+        }
+
+        /* Cards Container */
+        .cards-container {
+            position: absolute;
+            left: 6.2%;
+            top: 28.6%;
+            display: flex;
+            gap: 43px;
+        }
+
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-label {
+            font-family: "서평원 꺾깎체 TTF", sans-serif;
+            font-size: 13pt;
+            color: #22523B;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .card {
+            width: 382px;
+            height: 563px;
+            background: #22523B;
+            padding: 46px 23px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-content {
+            font-family: "나눔바른펜", sans-serif;
+            font-size: 10pt;
+            color: #FFFFFF;
+            line-height: 1.6;
+        }
+
+        /* Indicators */
+        .indicators-container {
+            position: absolute;
+            left: 6.2%;
+            top: 81.3%;
+            width: 87.6%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 6.6%;
+        }
+
+        .indicator {
+            width: 119px;
+            height: 132px;
+            position: relative;
+        }
+
+        .indicator-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #22523B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .indicator-number {
+            font-family: "코트라 볼드체", sans-serif;
+            font-size: 16pt;
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">프로젝트 추진 단계</div>
+            <div class="subtitle">4단계 프로세스로 체계적인 프로젝트 관리</div>
+        </div>
+
+        <!-- Header Bar -->
+        <div class="header-bar">
+            <div class="header-bar-accent"></div>
+            <div class="header-bar-line"></div>
+        </div>
+
+        <!-- Cards -->
+        <div class="cards-container">
+            <div class="card-wrapper">
+                <div class="card-label">기획 단계</div>
+                <div class="card">
+                    <div class="card-content">
+                        프로젝트 목표 설정 및 범위 정의<br><br>
+                        이해관계자 분석 및 요구사항 수집<br><br>
+                        리스크 초기 평가 및 대응 계획 수립<br><br>
+                        프로젝트 헌장 작성 및 승인
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-wrapper">
+                <div class="card-label">설계 단계</div>
+                <div class="card">
+                    <div class="card-content">
+                        상세 요구사항 분석 및 문서화<br><br>
+                        시스템 아키텍처 설계<br><br>
+                        데이터베이스 스키마 설계<br><br>
+                        UI/UX 프로토타입 개발
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-wrapper">
+                <div class="card-label">개발 단계</div>
+                <div class="card">
+                    <div class="card-content">
+                        핵심 기능 모듈 개발<br><br>
+                        단위 테스트 및 통합 테스트<br><br>
+                        코드 리뷰 및 품질 관리<br><br>
+                        문서화 및 사용자 매뉴얼 작성
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-wrapper">
+                <div class="card-label">배포 단계</div>
+                <div class="card">
+                    <div class="card-content">
+                        시스템 통합 및 검증<br><br>
+                        사용자 교육 및 인수 테스트<br><br>
+                        운영 환경 배포 및 모니터링<br><br>
+                        유지보수 계획 수립
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicators -->
+        <div class="indicators-container">
+            <div class="indicator">
+                <div class="indicator-circle">
+                    <span class="indicator-number">01</span>
+                </div>
+            </div>
+            <div class="indicator">
+                <div class="indicator-circle">
+                    <span class="indicator-number">02</span>
+                </div>
+            </div>
+            <div class="indicator">
+                <div class="indicator-circle">
+                    <span class="indicator-number">03</span>
+                </div>
+            </div>
+            <div class="indicator">
+                <div class="indicator-circle">
+                    <span class="indicator-number">04</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

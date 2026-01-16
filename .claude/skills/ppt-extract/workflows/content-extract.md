@@ -666,7 +666,149 @@ python scripts/thumbnail.py input.pptx --slide 5 --size theme --output templates
 
 ### 9. 레지스트리 업데이트
 
-`templates/contents/grid/registry.yaml`에 항목 추가.
+`templates/contents/grid/registry.yaml`에 항목 추가 후, **통합 registry 자동 생성**.
+
+```bash
+python -c "
+import sys
+sys.path.insert(0, '.claude/skills/ppt-extract/scripts')
+from registry_manager import RegistryManager
+manager = RegistryManager()
+manager.rebuild_all()
+"
+```
+
+---
+
+## ⚠️ Registry 확장 필드 가이드 (v2.0)
+
+Registry는 **콘텐츠 선정에 필요한 핵심 정보**를 포함해야 합니다.
+Stage 3 필터링/매칭에서 각 template.yaml을 읽지 않고도 선정 가능하도록 설계.
+
+### 필수 필드 (기본)
+
+| 필드 | 설명 | 예시 |
+|------|------|------|
+| `id` | 템플릿 고유 ID | `process-6step-01` |
+| `category` | 카테고리 | `grid`, `diagram`, `chart` |
+| `name` | 한글 이름 | `6단계 프로세스 그리드` |
+| `path` | 상대 경로 | `contents/grid/process-6step-01` |
+| `thumbnail` | 썸네일 경로 | `contents/thumbnails/grid/...` |
+
+### 확장 필드 (콘텐츠 선정용)
+
+| 필드 | 설명 | 예시 | 용도 |
+|------|------|------|------|
+| `design_intent` | 설계 의도 설명 | `6개 카드를 3x2 그리드로 배열` | 시맨틱 매칭 |
+| `quality_score` | 품질 점수 (0~10) | `9.5` | 품질 필터링 |
+| `visual_balance` | 시각적 균형 | `symmetric`, `asymmetric` | 레이아웃 매칭 |
+| `information_density` | 정보 밀도 | `low`, `medium`, `high` | 복잡도 필터링 |
+
+### 확장 필드 (레이아웃 정보)
+
+| 필드 | 설명 | 예시 | 용도 |
+|------|------|------|------|
+| `layout_type` | 레이아웃 유형 | `grid`, `list`, `diagram` | 구조 필터링 |
+| `columns` | 열 수 | `3` | 그리드 매칭 |
+| `rows` | 행 수 | `2` | 그리드 매칭 |
+| `item_count` | 항목 수 | `6` | 항목 수 필터링 |
+| `item_count_flexible` | 항목 수 변경 가능 | `true`, `false` | 유연성 판단 |
+
+### 확장 필드 (검색/매칭용)
+
+| 필드 | 설명 | 예시 | 용도 |
+|------|------|------|------|
+| `keywords` | 검색 키워드 (최대 10개) | `["프로세스", "6단계", "그리드"]` | 키워드 매칭 |
+| `use_for` | 사용 사례 (최대 3개) | `["프로세스 플로우 표시", ...]` | 용도 매칭 |
+
+### 확장 필드 (렌더링 정보)
+
+| 필드 | 설명 | 예시 | 용도 |
+|------|------|------|------|
+| `has_ooxml` | OOXML 존재 여부 | `true` | 품질 옵션 |
+| `render_method` | 렌더링 방식 | `ooxml`, `html`, `library` | 렌더링 분기 |
+| `source` | 원본 파일 정보 | `ppt-sample/깔끔이.pptx` | 추적성 |
+
+### template.yaml 필수 메타데이터 (registry 연동)
+
+template.yaml에 아래 필드가 있어야 registry에 자동 반영됩니다:
+
+```yaml
+content_template:
+  id: process-6step-01
+  name: "6단계 프로세스 그리드"
+  source: "ppt-sample/깔끔이-딥그린.pptx"
+
+design_meta:
+  design_intent: "6개 카드를 3x2 그리드로 배열한 프로세스 흐름"
+  quality_score: 9.5
+  visual_balance: "symmetric"
+  information_density: "medium"
+
+layout:
+  type: "grid"
+  grid_structure:
+    columns: 3
+    rows: 2
+
+customization:
+  allow_item_count_change: false  # → item_count_flexible
+
+keywords:
+  - "프로세스"
+  - "6단계"
+  - "그리드"
+
+use_for:
+  - "6단계 프로세스 플로우를 순차적으로 표시"
+  - "프로젝트 진행 단계별 현황 설명"
+```
+
+### Registry 예시 (v2.0)
+
+```yaml
+version: "2.0"
+updated_at: "2026-01-16 15:00:00"
+total: 16
+categories:
+  grid: 4
+  diagram: 3
+  chart: 1
+  ...
+
+templates:
+  - id: process-6step-01
+    category: grid
+    name: 6단계 프로세스 그리드
+    path: contents/grid/process-6step-01
+    thumbnail: contents/grid/process-6step-01/thumbnail.png
+
+    # 설계 메타 (시맨틱 매칭용)
+    design_intent: 6개 카드를 3x2 그리드로 배열한 프로세스 흐름
+    quality_score: 9.5
+    visual_balance: symmetric
+    information_density: medium
+
+    # 레이아웃 정보 (구조 필터링용)
+    layout_type: grid
+    columns: 3
+    rows: 2
+    item_count: 6
+    item_count_flexible: false
+
+    # 검색/매칭용
+    keywords: [프로세스, 6단계, 그리드, 카드, 순차]
+    use_for:
+      - 6단계 프로세스 플로우를 순차적으로 표시
+      - 프로젝트 진행 단계별 현황 설명
+
+    # 렌더링 정보
+    has_ooxml: true
+    render_method: ooxml
+    source: ppt-sample/깔끔이-딥그린.pptx
+```
+
+이 구조로 **registry만 읽어도 콘텐츠 선정 가능**.
 
 ---
 
@@ -724,25 +866,42 @@ vmin = min(slide_width, slide_height)
 
 각 슬라이드 추출 시 아래 항목을 모두 확인:
 
+### 일반 내지 (grid, list, diagram, chart, process, timeline, infographic, image)
+
 - [ ] **template.yaml** 생성 완료
   - [ ] `source.file`: 원본 파일명
   - [ ] `source.slide`: 슬라이드 번호 (1-based)
   - [ ] `source.extracted_at`: 추출 일시
   - [ ] `quality: high`
-  - [ ] `layout.content_only: true` (일반 내지인 경우)
-  - [ ] ❌ **page_title, page_subtitle 플레이스홀더 없음** (일반 내지)
+  - [ ] `layout.content_only: true` ⚠️ **필수**
+  - [ ] `layout.dimensions: { width: 1920px, height: 734px }` ⚠️ **필수**
+  - [ ] ❌ `layout.header` 섹션 **없어야 함**
+  - [ ] ❌ `content_zones.header` **없어야 함**
+  - [ ] ❌ `placeholders`에 title, subtitle **없어야 함**
+  - [ ] ❌ `shapes`에 header-bar, header-accent 등 **없어야 함**
 - [ ] **template.html** 생성 완료
   - [ ] 콘텐츠 영역만 (1920x734px)
-  - [ ] ❌ **헤더 영역 없음** (일반 내지)
+  - [ ] ❌ `.header` 클래스/섹션 **없어야 함**
+  - [ ] ❌ `.title`, `.subtitle` 클래스 **없어야 함** (콘텐츠 내 제목 제외)
 - [ ] **template.ooxml/** 추출 완료 (필수)
-  - [ ] slide.xml (콘텐츠 영역 도형만)
+  - [ ] slide.xml (콘텐츠 영역 도형만, Y < 22% 제외)
   - [ ] _rels/slide.xml.rels
   - [ ] media/ (이미지 있는 경우)
 - [ ] **example.html** 생성 완료
   - [ ] 원본 플레이스홀더 텍스트 그대로 사용
+  - [ ] 헤더 영역 포함하지 않음
 - [ ] **썸네일** 생성 완료 (원본 PPTX에서 캡처)
   - [ ] `templates/thumbnails/contents/{category}/{id}.png`
   - [ ] 320x180px 크기
+
+### 전체 슬라이드 (cover, toc, divider, closing)
+
+- [ ] **template.yaml** 생성 완료
+  - [ ] `layout.full_slide: true`
+  - [ ] `layout.dimensions: { width: 1920px, height: 1080px }`
+  - [ ] 헤더 포함 가능
+- [ ] **template.html** 생성 완료
+  - [ ] 전체 슬라이드 (1920x1080px)
 
 **⚠️ 누락 시 추출 실패로 간주**
 

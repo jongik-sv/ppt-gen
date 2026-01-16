@@ -1,0 +1,32 @@
+type: contents
+category: process
+updated_at: '2026-01-16 15:14:21'
+count: 1
+entries:
+- id: circle-3step-01
+  category: process
+  name: 원형 3단계 프로세스
+  path: contents/process/circle-3step-01
+  thumbnail: contents/thumbnails/process/circle-3step-01.png
+  design_intent: circle-3step
+  quality_score: 9.2
+  visual_balance: symmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 프로세스
+  - 3단계
+  - 원형
+  - 순차
+  - 화살표
+  - 흐름도
+  - 방법론
+  - 단계별
+  - 다이어그램
+  use_for:
+  - 3단계 순차적 프로세스 시각화
+  - 단계별 업무 진행 과정 표시
+  - 순환 프로세스 흐름도 설명
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx

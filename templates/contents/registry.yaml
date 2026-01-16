@@ -1,0 +1,457 @@
+version: '2.0'
+updated_at: '2026-01-16 15:14:21'
+total: 16
+categories:
+  chart: 1
+  contents: 0
+  cover: 1
+  diagram: 3
+  divider: 1
+  grid: 4
+  image: 1
+  infographic: 1
+  list: 1
+  process: 1
+  section: 0
+  timeline: 1
+  toc: 1
+templates:
+- id: bar-deep-green-01
+  category: chart
+  name: 세로 막대 차트 - 딥그린 스타일
+  path: contents/chart/bar-deep-green-01
+  thumbnail: contents/thumbnails/chart/bar-deep-green-01.png
+  design_intent: data-visualization-columnar
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 막대 차트
+  - 세로 차트
+  - 컬럼 차트
+  - 다중 시리즈
+  - 비교 차트
+  - 성과 지표
+  - 딥그린
+  - 3시리즈
+  - 4카테고리
+  - 데이터 시각화
+  use_for:
+  - 분기별 부서 성과지표 비교
+  - 3개 이상의 카테고리를 3개 시리즈로 비교할 때
+  - 부서별 매출, 고객 만족도, 프로젝트 완료율 등 다중 지표 시각화
+  has_ooxml: true
+  render_method: library
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: cover-deep-green-01
+  category: cover
+  name: 깔끔이 딥그린 표지
+  path: contents/cover/cover-deep-green-01
+  thumbnail: contents/thumbnails/cover/cover-deep-green-01.png
+  design_intent: professional-corporate
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: low
+  item_count_flexible: true
+  keywords:
+  - 표지
+  - 커버
+  - 딥그린
+  - 기업
+  - 전문가
+  - 보고서
+  - 분기
+  - 평가
+  - 프로페셔널
+  - 정식
+  use_for:
+  - 회사 정기 평가보고회 표지 슬라이드
+  - 분기별 사업 성과 발표 커버 페이지
+  - 임원진 보고서 개시 슬라이드
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 1
+    extracted_at: '2026-01-16T00:00:00Z'
+- id: honeycomb-5-01
+  category: diagram
+  name: 5개 육각형 허니콤 다이어그램
+  path: contents/diagram/honeycomb-5-01
+  thumbnail: contents/thumbnails/diagram/honeycomb-5-01.png
+  design_intent: honeycomb-5-hex
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 5
+  item_count_flexible: true
+  keywords:
+  - 허니콤
+  - 육각형
+  - 5개
+  - 다이어그램
+  - 조직도
+  - 네트워크
+  - 계층
+  - 연결
+  - 구조
+  - 시각화
+  use_for:
+  - 5가지 핵심 요소를 시각적으로 표현할 때
+  - 부서, 팀, 역할을 허니콤 구조로 배치할 때
+  - 상호 연결된 5개 개념을 표시할 때
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: radial-5-01
+  category: diagram
+  name: 방사형 5방향 다이어그램
+  path: contents/diagram/radial-5-01
+  thumbnail: contents/thumbnails/diagram/radial-5-01.png
+  design_intent: radial-5-diagram
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 방사형
+  - 다이어그램
+  - 5방향
+  - SmartArt
+  - 중심
+  - 대칭
+  - 조직도
+  - 프로세스
+  - 관계도
+  - 시각화
+  use_for:
+  - 조직의 5개 부서/팀을 중앙 개념 중심으로 시각화
+  - 하나의 주제에 연결된 5가지 관점/접근법 설명
+  - 방사형 구조로 의존성이 있는 5개 항목 표현
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: smartart-left-01
+  category: diagram
+  name: SmartArt 좌측 배치
+  path: contents/diagram/smartart-left-01
+  thumbnail: contents/thumbnails/diagram/smartart-left-01.png
+  design_intent: smartart-diagram
+  quality_score: 8.5
+  visual_balance: asymmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 다이어그램
+  - SmartArt
+  - 매트릭스
+  - 2x2
+  - 4단계
+  - 흐름도
+  - 비즈니스
+  - 시각화
+  - 화살표
+  - 구조도
+  use_for:
+  - 2x2 매트릭스 다이어그램 표현
+  - 4개 항목의 관계도 시각화
+  - 비즈니스 프로세스 4단계 표현
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: divider-deep-green-01
+  category: divider
+  name: 섹션 구분 - 딥그린
+  path: contents/divider/divider-deep-green-01
+  thumbnail: contents/thumbnails/divider/divider-deep-green-01.png
+  design_intent: divider
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: low
+  item_count_flexible: true
+  keywords:
+  - 섹션
+  - 구분
+  - divider
+  - 딥그린
+  - 미니멀
+  - 수직
+  - 깔끔
+  - 제목
+  - 설명
+  - 버전
+  use_for:
+  - 프레젠테이션 섹션 간의 구분 페이지 표시
+  - 새로운 주제로 전환할 때의 시각적 강조
+  - 장 번호와 함께 섹션 제목 소개
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 3
+- id: card-4col-01
+  category: grid
+  name: 4열 카드 레이아웃
+  path: contents/grid/card-4col-01
+  thumbnail: contents/thumbnails/grid/card-4col-01.png
+  design_intent: card-grid
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 4
+  item_count_flexible: true
+  keywords:
+  - 4열
+  - 카드
+  - 그리드
+  - 컬러박스
+  - 대칭형
+  - 항목비교
+  - 기능소개
+  - 멀티카드
+  use_for:
+  - 4개 항목의 기능/특징을 카드로 표현
+  - 사각 컬러 박스를 이용한 콘텐츠 표현
+  - 색상 구분이 명확한 다중 항목 비교
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: card-4col-numbered-01
+  category: grid
+  name: 4열 카드 그리드 + 하단 번호
+  path: contents/grid/card-4col-numbered-01
+  thumbnail: contents/thumbnails/grid/card-4col-numbered-01.png
+  layout_type: grid
+  item_count: 4
+  item_count_flexible: true
+  keywords:
+  - 4열
+  - 카드
+  - 그리드
+  - 번호
+  - 인디케이터
+  - 딥그린
+  use_for:
+  - 4가지 항목을 나란히 비교
+  - 단계별 프로세스 설명
+  - 4가지 카테고리 분류
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 9
+    extracted_at: '2026-01-16'
+- id: card-4col-teal
+  category: grid
+  name: 4열 카드 그리드 - 원형 배경
+  path: contents/grid/card-4col-teal
+  thumbnail: contents/thumbnails/grid/card-4col-teal.png
+  design_intent: 4개 항목을 카드 형식으로 나열하는 그리드 레이아웃
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+  layout_type: card_grid
+  item_count_flexible: true
+  keywords:
+  - 카드
+  - 그리드
+  - 4열
+  - 원형배경
+  - 아이콘
+  - 항목나열
+  - 구분
+  use_for:
+  - 4가지 주요 기능 또는 서비스 소개
+  - 4단계의 프로세스 또는 순서 설명
+  - 팀 멤버 또는 담당자 소개
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: process-6step-01
+  category: grid
+  name: 6단계 프로세스 그리드
+  path: contents/grid/process-6step-01
+  thumbnail: contents/grid/process-6step-01/thumbnail.png
+  design_intent: 6개 카드를 3x2 그리드로 배열한 프로세스 흐름
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  layout_type: grid
+  columns: 3
+  rows: 2
+  item_count: 6
+  item_count_flexible: false
+  keywords:
+  - 프로세스
+  - 6단계
+  - 그리드
+  - 카드
+  - 흐름도
+  - 절차
+  - 순차
+  - 단계별
+  - 진행
+  - 업무흐름
+  use_for:
+  - 6단계 프로세스 플로우를 순차적으로 표시
+  - 프로젝트 진행 단계별 현황 설명
+  - 기간 또는 분기별 업무 계획 표현
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: left-image-01
+  category: image
+  name: 좌측 이미지 + 우측 텍스트
+  path: contents/image/left-image-01
+  thumbnail: contents/thumbnails/image/left-image-01.png
+  design_intent: 이미지와 텍스트 콘텐츠의 균형잡힌 배치
+  quality_score: 9.5
+  visual_balance: asymmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 이미지
+  - 텍스트
+  - 좌측 레이아웃
+  - 콘텐츠
+  - 설명
+  - 이미지 + 텍스트
+  - 비율
+  use_for:
+  - 이미지와 텍스트를 함께 표현해야 하는 슬라이드
+  - 좌측에 주요 이미지, 우측에 설명 텍스트가 필요한 경우
+  - 제품 소개, 사례 연구, 사용자 피드백 등의 컨텐츠
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: percent-dot-01
+  category: infographic
+  name: 퍼센트 도트 그리드 (3열)
+  path: contents/infographic/percent-dot-01
+  thumbnail: contents/thumbnails/infographic/percent-dot-01.png
+  design_intent: percent-dot-grid
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  layout_type: 3-column-grid
+  item_count_flexible: true
+  keywords:
+  - 퍼센트
+  - 도트
+  - 그리드
+  - 비율
+  - 인포그래픽
+  - 진행률
+  - 성과
+  - 3열
+  - 비교
+  - 시각화
+  use_for:
+  - 부서별 업무 처리율 시각화
+  - 프로젝트 완료도를 퍼센트로 표시
+  - 3가지 지표의 달성도 비교
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: disk-3row-01
+  category: list
+  name: 3행 디스크 아이콘 리스트
+  path: contents/list/disk-3row-01
+  thumbnail: contents/list/disk-3row-01/thumbnail.png
+  layout_type: list
+  item_count_flexible: true
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 12
+    extracted_at: '2026-01-16'
+- id: circle-3step-01
+  category: process
+  name: 원형 3단계 프로세스
+  path: contents/process/circle-3step-01
+  thumbnail: contents/thumbnails/process/circle-3step-01.png
+  design_intent: circle-3step
+  quality_score: 9.2
+  visual_balance: symmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 프로세스
+  - 3단계
+  - 원형
+  - 순차
+  - 화살표
+  - 흐름도
+  - 방법론
+  - 단계별
+  - 다이어그램
+  use_for:
+  - 3단계 순차적 프로세스 시각화
+  - 단계별 업무 진행 과정 표시
+  - 순환 프로세스 흐름도 설명
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: connector-2row-01
+  category: timeline
+  name: 2행 타임라인 (좌측 이미지 + 연결선)
+  path: contents/timeline/connector-2row-01
+  thumbnail: contents/timeline/connector-2row-01/thumbnail.png
+  design_intent: timeline-connector
+  quality_score: 9.2
+  visual_balance: asymmetric
+  information_density: medium
+  item_count: 2
+  item_count_flexible: true
+  keywords:
+  - 타임라인
+  - 2행
+  - 연결선
+  - 시간순
+  - 마일스톤
+  - 이벤트
+  - 시간축
+  - 프로세스
+  - 좌측이미지
+  - 이력
+  use_for:
+  - 시간 순서대로 진행되는 2단계 이벤트 표시
+  - 프로젝트 개발 과정의 주요 마일스톤 2개 소개
+  - 제품 개발 이력 또는 역사의 중요 시점 구분
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: toc-deep-green-01
+  category: toc
+  name: TOC 3열 구조 - 딥그린
+  path: contents/toc/toc-deep-green-01
+  thumbnail: contents/toc/toc-deep-green-01/thumbnail.png
+  design_intent: toc-3col
+  quality_score: 9.2
+  visual_balance: symmetric
+  information_density: medium
+  layout_type: 3-column
+  item_count: 3
+  item_count_flexible: true
+  keywords:
+  - 목차
+  - TOC
+  - 3열
+  - 깔끔한
+  - 구조화
+  - 딥그린
+  - 계층
+  - 균형
+  - 컨텐츠 분류
+  - 섹션 개요
+  use_for:
+  - 프레젠테이션 목차 및 목차 슬라이드 제작
+  - 3가지 주요 주제를 균등하게 분배하여 표시
+  - 각 섹션의 개요와 세부 항목을 계층적으로 구성
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 2

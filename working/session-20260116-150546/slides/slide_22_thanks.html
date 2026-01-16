@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>깔끔이 딥그린 표지 템플릿</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "나눔바른펜", "나눔고딕", sans-serif;
+            background: #f5f5f5;
+        }
+
+        .slide-container {
+            width: 1920px;
+            height: 1080px;
+            background: white;
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slide-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 0;
+        }
+
+        /* Label - Top section */
+        .label-box {
+            position: absolute;
+            left: 27.5%;
+            top: 7.2%;
+            width: 44.5%;
+            height: 12.1%;
+            background: #22523B;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .label-text {
+            color: white;
+            font-family: "코트라 볼드체", sans-serif;
+            font-size: 18pt;
+            font-weight: bold;
+            text-align: center;
+            padding: 0 20px;
+            line-height: 1.4;
+            word-break: keep-all;
+        }
+
+        /* Horizontal line - top */
+        .line-top {
+            position: absolute;
+            left: 9.9%;
+            top: 13.3%;
+            width: 80.3%;
+            height: 4px;
+            background: #153325;
+            z-index: 1;
+        }
+
+        /* Title section */
+        .title-box {
+            position: absolute;
+            left: 23.2%;
+            top: 28.4%;
+            width: 53.2%;
+            height: 14.6%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .title-text {
+            color: #22523B;
+            font-family: "코트라 볼드체", sans-serif;
+            font-size: 44pt;
+            font-weight: bold;
+            text-align: center;
+            padding: 0 20px;
+            line-height: 1.3;
+            word-break: keep-all;
+        }
+
+        /* Description section */
+        .description-box {
+            position: absolute;
+            left: 18.5%;
+            top: 45.5%;
+            width: 62.5%;
+            height: 17.0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .description-text {
+            color: #666666;
+            font-family: "나눔바른펜", sans-serif;
+            font-size: 12pt;
+            text-align: center;
+            padding: 0 30px;
+            line-height: 1.5;
+            word-break: keep-all;
+            white-space: pre-wrap;
+            overflow: hidden;
+        }
+
+        /* Horizontal line - bottom */
+        .line-bottom {
+            position: absolute;
+            left: 9.9%;
+            top: 69.6%;
+            width: 80.3%;
+            height: 4px;
+            background: #153325;
+            z-index: 1;
+        }
+
+        /* Triangle accent */
+        .triangle-accent {
+            position: absolute;
+            left: 49.1%;
+            top: 71.9%;
+            width: 1.8%;
+            height: 3.2%;
+            z-index: 1;
+        }
+
+        .triangle-accent::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-top: 35px solid #153325;
+            top: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Presenter info section */
+        .presenter-box {
+            position: absolute;
+            left: 33.0%;
+            top: 80.5%;
+            width: 34.1%;
+            height: 6.4%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .presenter-text {
+            color: #22523B;
+            font-family: "카페24 써라운드", sans-serif;
+            font-size: 16pt;
+            text-align: center;
+            padding: 0 20px;
+            line-height: 1.4;
+            word-break: keep-all;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1920px) {
+            .slide-container {
+                transform: scale(calc(100vw / 1920px));
+                transform-origin: top left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="slide-background"></div>
+
+        <!-- Decorative line - top -->
+        <div class="line-top"></div>
+
+        <!-- Label section -->
+        <div class="label-box">
+            <div class="label-text">Q&A</div>
+        </div>
+
+        <!-- Title section -->
+        <div class="title-box">
+            <div class="title-text">감사합니다</div>
+        </div>
+
+        <!-- Description section -->
+        <div class="description-box">
+            <div class="description-text">문의사항이 있으시면 질문해 주세요</div>
+        </div>
+
+        <!-- Decorative line - bottom -->
+        <div class="line-bottom"></div>
+
+        <!-- Triangle accent -->
+        <div class="triangle-accent"></div>
+
+        <!-- Presenter info section -->
+        <div class="presenter-box">
+            <div class="presenter-text">PM 김철수 | kim.cs@techsolution.co.kr</div>
+        </div>
+    </div>
+</body>
+</html>

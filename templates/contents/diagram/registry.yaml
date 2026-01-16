@@ -1,0 +1,90 @@
+type: contents
+category: diagram
+updated_at: '2026-01-16 15:14:21'
+count: 3
+entries:
+- id: honeycomb-5-01
+  category: diagram
+  name: 5개 육각형 허니콤 다이어그램
+  path: contents/diagram/honeycomb-5-01
+  thumbnail: contents/thumbnails/diagram/honeycomb-5-01.png
+  design_intent: honeycomb-5-hex
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 5
+  item_count_flexible: true
+  keywords:
+  - 허니콤
+  - 육각형
+  - 5개
+  - 다이어그램
+  - 조직도
+  - 네트워크
+  - 계층
+  - 연결
+  - 구조
+  - 시각화
+  use_for:
+  - 5가지 핵심 요소를 시각적으로 표현할 때
+  - 부서, 팀, 역할을 허니콤 구조로 배치할 때
+  - 상호 연결된 5개 개념을 표시할 때
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: radial-5-01
+  category: diagram
+  name: 방사형 5방향 다이어그램
+  path: contents/diagram/radial-5-01
+  thumbnail: contents/thumbnails/diagram/radial-5-01.png
+  design_intent: radial-5-diagram
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 방사형
+  - 다이어그램
+  - 5방향
+  - SmartArt
+  - 중심
+  - 대칭
+  - 조직도
+  - 프로세스
+  - 관계도
+  - 시각화
+  use_for:
+  - 조직의 5개 부서/팀을 중앙 개념 중심으로 시각화
+  - 하나의 주제에 연결된 5가지 관점/접근법 설명
+  - 방사형 구조로 의존성이 있는 5개 항목 표현
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: smartart-left-01
+  category: diagram
+  name: SmartArt 좌측 배치
+  path: contents/diagram/smartart-left-01
+  thumbnail: contents/thumbnails/diagram/smartart-left-01.png
+  design_intent: smartart-diagram
+  quality_score: 8.5
+  visual_balance: asymmetric
+  information_density: medium
+  item_count_flexible: true
+  keywords:
+  - 다이어그램
+  - SmartArt
+  - 매트릭스
+  - 2x2
+  - 4단계
+  - 흐름도
+  - 비즈니스
+  - 시각화
+  - 화살표
+  - 구조도
+  use_for:
+  - 2x2 매트릭스 다이어그램 표현
+  - 4개 항목의 관계도 시각화
+  - 비즈니스 프로세스 4단계 표현
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx

@@ -194,8 +194,7 @@ def extract_ooxml(pptx_path, slide_num, output_dir):
 | `scripts/object_extractor.py` | 오브젝트 추출 및 저장 |
 | `scripts/pattern_matcher.py` | 유사 패턴 통합 (variants) |
 | `scripts/registry_manager.py` | 레지스트리 자동 관리 |
-| `scripts/thumbnail.py` | PPTX 썸네일 생성 (PowerPoint COM) |
-| `scripts/html_thumbnail.py` | HTML 썸네일 생성 (Playwright) |
+| `scripts/thumbnail.py` | PPTX 썸네일 생성 (PowerPoint COM / LibreOffice) |
 | `shared/ooxml_parser.py` | OOXML 파싱 유틸리티 |
 | `shared/color_utils.py` | 색상 분석 유틸리티 |
 | `shared/llm_interface.py` | Claude API 호출 인터페이스 |

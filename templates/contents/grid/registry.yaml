@@ -1,0 +1,115 @@
+type: contents
+category: grid
+updated_at: '2026-01-16 15:14:21'
+count: 4
+entries:
+- id: card-4col-01
+  category: grid
+  name: 4열 카드 레이아웃
+  path: contents/grid/card-4col-01
+  thumbnail: contents/thumbnails/grid/card-4col-01.png
+  design_intent: card-grid
+  quality_score: 9.0
+  visual_balance: symmetric
+  information_density: medium
+  item_count: 4
+  item_count_flexible: true
+  keywords:
+  - 4열
+  - 카드
+  - 그리드
+  - 컬러박스
+  - 대칭형
+  - 항목비교
+  - 기능소개
+  - 멀티카드
+  use_for:
+  - 4개 항목의 기능/특징을 카드로 표현
+  - 사각 컬러 박스를 이용한 콘텐츠 표현
+  - 색상 구분이 명확한 다중 항목 비교
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: card-4col-numbered-01
+  category: grid
+  name: 4열 카드 그리드 + 하단 번호
+  path: contents/grid/card-4col-numbered-01
+  thumbnail: contents/thumbnails/grid/card-4col-numbered-01.png
+  layout_type: grid
+  item_count: 4
+  item_count_flexible: true
+  keywords:
+  - 4열
+  - 카드
+  - 그리드
+  - 번호
+  - 인디케이터
+  - 딥그린
+  use_for:
+  - 4가지 항목을 나란히 비교
+  - 단계별 프로세스 설명
+  - 4가지 카테고리 분류
+  has_ooxml: true
+  render_method: ooxml
+  source:
+    file: ppt-sample/깔끔이-딥그린.pptx
+    slide: 9
+    extracted_at: '2026-01-16'
+- id: card-4col-teal
+  category: grid
+  name: 4열 카드 그리드 - 원형 배경
+  path: contents/grid/card-4col-teal
+  thumbnail: contents/thumbnails/grid/card-4col-teal.png
+  design_intent: 4개 항목을 카드 형식으로 나열하는 그리드 레이아웃
+  quality_score: 8.5
+  visual_balance: symmetric
+  information_density: medium
+  layout_type: card_grid
+  item_count_flexible: true
+  keywords:
+  - 카드
+  - 그리드
+  - 4열
+  - 원형배경
+  - 아이콘
+  - 항목나열
+  - 구분
+  use_for:
+  - 4가지 주요 기능 또는 서비스 소개
+  - 4단계의 프로세스 또는 순서 설명
+  - 팀 멤버 또는 담당자 소개
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
+- id: process-6step-01
+  category: grid
+  name: 6단계 프로세스 그리드
+  path: contents/grid/process-6step-01
+  thumbnail: contents/grid/process-6step-01/thumbnail.png
+  design_intent: 6개 카드를 3x2 그리드로 배열한 프로세스 흐름
+  quality_score: 9.5
+  visual_balance: symmetric
+  information_density: medium
+  layout_type: grid
+  columns: 3
+  rows: 2
+  item_count: 6
+  item_count_flexible: false
+  keywords:
+  - 프로세스
+  - 6단계
+  - 그리드
+  - 카드
+  - 흐름도
+  - 절차
+  - 순차
+  - 단계별
+  - 진행
+  - 업무흐름
+  use_for:
+  - 6단계 프로세스 플로우를 순차적으로 표시
+  - 프로젝트 진행 단계별 현황 설명
+  - 기간 또는 분기별 업무 계획 표현
+  has_ooxml: true
+  render_method: ooxml
+  source: ppt-sample/깔끔이-딥그린.pptx
