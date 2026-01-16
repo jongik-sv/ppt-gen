@@ -1,0 +1,643 @@
+slides:
+  - slide: 1
+    title: 표지
+    layout: cover-center
+    description: |
+      중앙 정렬형 표지 슬라이드
+      - 메인 제목: 60pt 이상, Bold, 최상단 또는 중앙 배치 (슬라이드의 주인공)
+      - 부제목: 제목의 50-60% 크기, Regular, "프로젝트 수행계획서"
+      - 프로젝트 정보: 하단 또는 좌하단, 작은 폰트 (이름, 직책, 날짜)
+      - 배경: 단색 또는 그라디언트, 텍스트 가독성 확보
+      - 로고: 우상단 또는 우하단 코너 배치, 작고 절제된 크기
+      - 여백: 모든 가장자리에 최소 40-60px 여백 확보
+      - 정렬: 모든 요소 수평/수직 중앙 정렬
+    content:
+      main_title: 스마트 물류관리 시스템 구축
+      subtitle: 프로젝트 수행계획서
+      project_name: 스마트 물류관리 시스템 구축
+      client: (주)글로벌물류
+      vendor: (주)테크솔루션
+      period: 2025-01-06 ~ 2025-12-31
+
+  - slide: 2
+    title: 목차
+    layout: toc-timeline
+    description: |
+      타임라인형 목차 슬라이드
+      - 항목 수: 5개 섹션 (인지 부하 최소화)
+      - 넘버링: 숫자로 시각적 구분 (01, 02, 03, 04, 05)
+      - 형태: 수평 흐름으로 섹션 표시 (순차적 스토리텔링)
+      - 각 섹션: 대표 아이콘 + 제목 + 하위 항목 (2개씩)
+      - 하위 항목: 불릿 포인트로 나열
+      - 진행 위치 표시: 현재 섹션 하이라이트 (브랜드 컬러)
+      - 여백: 섹션 간 충분한 간격 (최소 30px)
+    content:
+      sections:
+        - title: 프로젝트 개요
+          items:
+            - 프로젝트 배경 및 목적
+            - 프로젝트 범위
+        - title: 추진 전략
+          items:
+            - 추진 전략 및 방법론
+            - 프로젝트 조직
+        - title: 실행 계획
+          items:
+            - 일정 및 마일스톤
+            - WBS
+        - title: 기술 전략
+          items:
+            - 기술 아키텍처
+            - 인프라 구성
+        - title: 관리 계획
+          items:
+            - 품질 및 위험 관리
+            - 기대 효과
+
+  - slide: 3
+    title: 프로젝트 배경
+    layout: answer-first
+    description: |
+      답변 우선형 (Answer-First) 컨설팅 슬라이드
+      - 핵심 결론: 최상단에 대형 볼드 텍스트로 배치 (40-60pt)
+      - 메인 메시지: "글로벌물류는 국내 Top 5 물류기업..."
+      - 근거 데이터: 하단에 3-4개 핵심 포인트로 나열
+      - 각 포인트: 아이콘 + 텍스트 조합
+      - 정렬: 좌측 정렬 (가독성 확보)
+      - 여백: 상단 여백 60px, 항목 간 20px 간격
+      - 폰트 계층: 메시지 (Bold 24pt+) > 포인트 (Regular 14-16pt)
+    content:
+      main_message: 글로벌물류는 국내 Top 5 물류기업으로, 연간 500만건 이상의 물류를 처리합니다.
+      key_points:
+        - 10년 이상 운영된 레거시 시스템으로 인한 처리 속도 저하
+        - 실시간 재고 파악 불가, 타 시스템 연동 한계
+        - AI 기반 스마트 물류 시스템 구축으로 경쟁력 강화 필요
+
+  - slide: 4
+    title: 추진 목적
+    layout: problem-solution
+    description: |
+      문제/해결책 대조형 (Problem/Solution Split) 슬라이드
+      - 레이아웃: 좌우 50:50 분할
+      - 좌측 (현황 및 문제점): "고통(Pain)" 강조, 붉은계열 어큰트 색상
+      - 우측 (기대 효과): "치유(Cure)" 강조, 녹색계열 긍정 색상
+      - 각 섹션 헤더: 24pt Bold, 아이콘과 함께 배치
+      - 항목: 4개씩 나열, 불릿 포인트
+      - 중앙 구분: 수직선 또는 화살표로 변화 시각화
+      - 정렬: 양측 좌측 정렬
+      - 여백: 중앙 구분선 40px, 항목 간 15px
+    content:
+      left:
+        title: 현황 및 문제점
+        items:
+          - 10년 이상된 레거시 시스템
+          - 처리 속도 저하
+          - 실시간 재고 파악 불가
+          - 타 시스템 연동 한계
+      right:
+        title: 기대 효과
+        items:
+          - 물류 처리 효율 30% 향상
+          - 재고 정확도 99.5% 달성
+          - 운영 비용 20% 절감
+          - 출고 리드타임 50% 단축
+
+  - slide: 5
+    title: 프로젝트 범위
+    layout: hub-spoke
+    description: |
+      허브 앤 스포크 (Hub & Spoke) 다이어그램
+      - 중심 허브: "스마트 물류관리 시스템" 대형 원형, 브랜드 컬러
+      - 스포크: 4개 시스템 (WMS, TMS, OMS, Dashboard)
+      - 배치: 중심에서 방사형으로 연결
+      - 각 스포크: 원형 박스, 아이콘 + 이름
+      - 연결선: 굵은 선, 화살표 없음 (양방향 관계)
+      - 색상: 각 시스템별 구분 색상 (#3B82F6, #10B981, #F59E0B, #8B5CF6)
+      - 여백: 중심-스포크 간 80px, 스포크 간 40px
+    content:
+      center: 스마트 물류관리 시스템
+      spokes:
+        - WMS (창고관리)
+        - TMS (배송관리)
+        - OMS (주문관리)
+        - Dashboard (통합모니터링)
+
+  - slide: 6
+    title: 추진 전략
+    layout: step-list
+    description: |
+      번호 리스트 / 스텝 박스 (Step List) 슬라이드
+      - 단계 수: 3개 핵심 전략
+      - 형태: 번호 박스 (01, 02, 03) + 제목 + 설명
+      - 번호 박스: 고스트 넘버 스타일 (투명도 10%, 초대형 100pt+)
+      - 제목: 24pt Bold, 번호 박스 오른쪽
+      - 설명: 16pt Regular, 제목 아래
+      - 배치: 수직 나열 (좌측 정렬)
+      - 아이콘: 각 단계별 대표 아이콘 (step-forward, code, users)
+      - 여백: 단계 간 30px 간격
+    content:
+      steps:
+        - title: 단계적 전환
+          description: 모듈별 순차 전환으로 리스크 최소화
+        - title: 애자일 기반 개발
+          description: 2주 단위 스프린트로 빠른 피드백
+        - title: 현업 밀착 협업
+          description: 주 2회 현업 리뷰로 요구사항 정합성 확보
+
+  - slide: 7
+    title: 수행 방법론
+    layout: chevron-process
+    description: |
+      쉐브론 프로세스 (Chevron Process) 슬라이드
+      - 단계 수: 4개 (분석 → 설계 → 개발 → 테스트/이행)
+      - 형태: 쉐브론(V자형 화살표) 형태 박스 연결
+      - 배치: 수평 방향, 왼쪽에서 오른쪽으로 흐름
+      - 각 박스: 단계명 + 기간 + 주요 산출물
+      - 단계명: 20pt Bold, 박스 상단
+      - 기간: 16pt Regular, 중간
+      - 산출물: 14pt Regular, 하단, 불릿 포인트
+      - 색상: 각 단계별 구분 색상 (파란색 계열 그라데이션)
+      - 여백: 박스 간 10px 겹침, 텍스트 패딩 20px
+    content:
+      phases:
+        - name: 분석
+          period: 8주
+          output: 요구사항정의서, AS-IS 분석서
+        - name: 설계
+          period: 8주
+          output: 아키텍처, DB, 화면 설계서
+        - name: 개발
+          period: 16주
+          output: 소스코드, 단위테스트결과서
+        - name: 테스트/이행
+          period: 12주
+          output: 테스트결과서, 이행계획서
+
+  - slide: 8
+    title: 프로젝트 조직
+    layout: org-hierarchy
+    description: |
+      계층형 조직도 (Hierarchy Tree) 슬라이드
+      - 형태: 피라미드형 계층 구조 (3레벨)
+      - 최상위: 발주기관 PM (Level 1)
+      - 중간: 수행사 PM, PMO (Level 2)
+      - 하단: 실행팀 (AA, 개발리더, QA, DBA) (Level 3)
+      - 박스: 사각형, 둥근 코너 (8px)
+      - 연결선: 직선, 직각 연결
+      - 내용: 이름 (Bold) + 직책 (Regular)
+      - 하단: 팀 규모 요약 (총 8명, 78MM)
+      - 색상: 레벨별 색상 구분 (진한색 → 연한색)
+      - 여백: 박스 간 30px, 레벨 간 50px
+    content:
+      title: 조직별 역할 및 책임 (R&R)
+      levels:
+        - level: 발주기관 PM
+          name: 정민호 부장
+          role: 프로젝트 총괄, 의사결정
+        - level: 수행사 PM
+          name: 김철수 차장
+          role: 프로젝트 수행 총괄, 품질/위험 관리
+        - level: 실행팀
+          members:
+            - 박준형 책임 (AA)
+            - 최수진 선임 (개발 리더)
+            - 한미영 대리 (QA)
+            - 오현우 대리 (DBA)
+      team_size: 총 8명, 78MM
+
+  - slide: 9
+    title: 프로젝트 일정
+    layout: gantt-chart
+    description: |
+      간트 차트 (Gantt Chart) 슬라이드
+      - X축: 시간 (2025.01 ~ 2025.12, 월별 표시)
+      - Y축: 프로젝트 단계 (착수, 분석, 설계, 개발, 테스트, 이행/안정화)
+      - 바: 수평 막대, 시작일~종료일 기간 표시
+      - 바 색상: 단계별 구분 (#3B82F6, #10B981, #F59E0B, #EF4444, #8B5CF6, #EC4899)
+      - 바 라벨: 단계명 + 기간 (예: "착수 4주")
+      - 겹침: 인접 단계 간 10% 겹침으로 의존성 표현
+      - 그리드: 수직선으로 월 구분
+      - 여백: 상단 60px (제목), 바 간 20px
+    content:
+      title: 마스터 일정 (2025.01 ~ 2025.12)
+      phases:
+        - name: 착수
+          start: 2025-01-06
+          end: 2025-01-31
+          duration: 4주
+        - name: 분석
+          start: 2025-02-01
+          end: 2025-03-31
+          duration: 8주
+        - name: 설계
+          start: 2025-04-01
+          end: 2025-05-31
+          duration: 8주
+        - name: 개발
+          start: 2025-06-01
+          end: 2025-09-30
+          duration: 16주
+        - name: 테스트
+          start: 2025-10-01
+          end: 2025-11-15
+          duration: 6주
+        - name: 이행/안정화
+          start: 2025-11-16
+          end: 2025-12-31
+          duration: 6주
+
+  - slide: 10
+    title: 주요 마일스톤
+    layout: milestone-chart
+    description: |
+      마일스톤 차트 (Milestone Chart) 슬라이드
+      - 형태: 수평 타임라인 + 다이아몬드 마커
+      - X축: 시간 (2025.01 ~ 2025.12)
+      - 마일스톤: 6개 핵심 체크포인트
+      - 마커: 다이아몬드 형태 (◆), 브랜드 컬러
+      - 라벨: 마일스톤 ID (M1~M6) + 이름 + 날짜
+      - 배치: 시간 순서대로 좌→우 배치
+      - 날짜: YY.MM.DD 형식 (25.01.10)
+      - 산출물: 선택적 하단 표시 (회색 작은 텍스트)
+      - 여백: 마커 간 최소 80px
+    content:
+      milestones:
+        - id: M1
+          name: 착수보고
+          date: 2025-01-10
+        - id: M2
+          name: 요구사항 확정
+          date: 2025-03-31
+        - id: M3
+          name: 설계 완료
+          date: 2025-05-31
+        - id: M4
+          name: 개발 완료
+          date: 2025-09-30
+        - id: M5
+          name: 통합테스트 완료
+          date: 2025-11-15
+        - id: M6
+          name: 시스템 오픈
+          date: 2025-12-01
+
+  - slide: 11
+    title: WBS
+    layout: wbs-tree
+    description: |
+      WBS 트리 (Work Breakdown Structure) 슬라이드
+      - 형태: 수직 트리 구조 (6레벨)
+      - 루트: 프로젝트 명 (최상단)
+      - 레벨 1: 6대 단계 (관리, 분석, 설계, 개발, 테스트, 이행)
+      - 하위 요소: 트리 가지로 확장
+      - 박스: 직사각형, 둥근 코너 (4px)
+      - 연결선: 직각 선, 계층 명확화
+      - 인덴트: 레벨별 30px씩 증가
+      - 색상: 레벨별 색상 그라데이션
+      - 여백: 박스 간 20px, 레벨 간 30px
+    content:
+      title: 작업분류체계 (WBS)
+      structure:
+        - level: 1
+          name: 프로젝트 관리
+          children:
+            - 착수 관리
+            - 진행 관리
+            - 종료 관리
+        - level: 2
+          name: 분석
+          children:
+            - 현행 분석
+            - 요구사항 분석
+            - TO-BE 설계
+        - level: 3
+          name: 설계
+          children:
+            - 아키텍처 설계
+            - 애플리케이션 설계
+            - 인터페이스 설계
+            - 데이터베이스 설계
+        - level: 4
+          name: 개발
+          children:
+            - 공통 모듈 개발
+            - WMS/TMS/OMS/Dashboard 개발
+            - 인터페이스 개발
+        - level: 5
+          name: 테스트
+          children:
+            - 단위/통합/성능/보안 테스트
+            - UAT
+        - level: 6
+          name: 이행
+          children:
+            - 이행 준비
+            - 시스템 전환
+            - 안정화
+
+  - slide: 12
+    title: 기술 스택
+    layout: layered-stack
+    description: |
+      레이어드 스택 (Layered Stack) 슬라이드
+      - 형태: 수직 적층 구조 (5개 레이어)
+      - 순서: 상단 → 하단 (Frontend → Backend → Database → Infra → AI/ML)
+      - 각 레이어: 직사각형 박스, 전체 너비
+      - 레이어 내용: 기술명 + 버전 + 설명
+      - 기술 로고: Devicon/Simple Icons 사용 (48x48px)
+      - 색상: 각 레이어별 구분 색상
+      - 화살표: 레이어 간 하향 화살표 (데이터 흐름)
+      - 여백: 레이어 간 20px, 내부 패딩 20px
+    content:
+      title: 기술 아키텍처
+      layers:
+        - name: Frontend
+          technologies:
+            - Vue.js 3 (TypeScript)
+          description: SPA 구조
+        - name: Backend
+          technologies:
+            - Spring Boot 3.2
+            - Java 17
+          description: MSA 구조
+        - name: Database
+          technologies:
+            - PostgreSQL 16
+            - Redis 7
+          description: RDBMS + Cache
+        - name: Infra
+          technologies:
+            - AWS (EKS, RDS, S3)
+          description: 클라우드 네이티브
+        - name: AI/ML
+          technologies:
+            - Python 3.11
+            - TensorFlow 2.15
+          description: 수요예측, 경로최적화
+
+  - slide: 13
+    title: 시스템 아키텍처
+    layout: microservice-hub
+    description: |
+      마이크로서비스 허브 앤 스포크 (Microservice Hub & Spoke) 슬라이드
+      - 중심 허브: API Gateway (ALB), 대형 원형
+      - 서비스 스포크: 4개 마이크로서비스 (WMS, TMS, OMS, Dashboard Pods)
+      - 배치: 허브 주변 방사형 배치
+      - 인프라: 하단에 EKS, RDS, Redis, S3 아이콘으로 표시
+      - 연결선: 허브 → 서비스 (실선), 서비스 → 인프라 (점선)
+      - 색상: 각 서비스별 구분 (#3B82F6, #10B981, #F59E0B, #8B5CF6)
+      - 여백: 허브-서비스 간 60px, 서비스 간 40px
+    content:
+      title: AWS 클라우드 기반 MSA 아키텍처
+      center: API Gateway (ALB)
+      services:
+        - WMS Pods
+        - TMS Pods
+        - OMS Pods
+        - Dashboard Pods
+      infrastructure:
+        - EKS Cluster
+        - RDS PostgreSQL
+        - ElastiCache Redis
+        - S3 (파일저장)
+
+  - slide: 14
+    title: 인프라 구성
+    layout: isometric-diagram
+    description: |
+      아이소메트릭 다이어그램 (2.5D Isometric) 슬라이드
+      - 형태: 2.5D 등각 투영, 깊이감 표현
+      - VPC: 대형 직사각형 박스, 점선 테두리
+      - 서브넷: 3개 구역 (Public, Private, Data)
+      - 각 구역: 직사각형, 다른 색상/투명도
+      - 컴포넌트: 입체적 박스로 표시 (ALB, EKS, RDS 등)
+      - 라벨: 컴포넌트명 + 사양 (예: "m6i.xlarge × 6")
+      - 연결: 구역 간 화살표로 트래픽 흐름
+      - 여백: 구역 간 30px, 컴포넌트 간 20px
+    content:
+      title: AWS 기반 서버 구성
+      vpc: VPC (10.0.0.0/16)
+      subnets:
+        - name: Public Subnet
+          components:
+            - ALB
+            - NAT Gateway
+        - name: Private Subnet
+          components:
+            - EKS Worker Nodes (m6i.xlarge × 6)
+        - name: Data Subnet
+          components:
+            - RDS PostgreSQL (db.r6g.xlarge × 2)
+            - ElastiCache Redis (cache.r6g.large × 2)
+            - S3
+
+  - slide: 15
+    title: 기능 요구사항
+    layout: bento-grid
+    description: |
+      벤토 그리드 (Bento Grid) 슬라이드
+      - 형태: 2×2 그리드 레이아웃 (모듈형 카드 배치)
+      - 카드: 4개 모듈 (WMS, TMS, OMS, Dashboard)
+      - 각 카드: 제목 + 색상 헤더 + 기능 리스트 (4개씩)
+      - 색상: 각 모듈별 브랜드 컬러 (#3B82F6, #10B981, #F59E0B, #8B5CF6)
+      - 그림자: 2-4px 드롭 섀도 (떠있는 느낌)
+      - 아이콘: 각 기능별 라인 아이콘
+      - 여백: 카드 간 20px, 내부 패딩 20px
+    content:
+      title: 시스템 기능 요구사항
+      modules:
+        - title: WMS
+          color: "#3B82F6"
+          features:
+            - 입고 예정/검수
+            - 로케이션 관리
+            - 재고 조회/실사
+            - 피킹/패킹/출고
+        - title: TMS
+          color: "#10B981"
+          features:
+            - 배차 계획
+            - 경로 최적화
+            - 실시간 추적
+            - 운임 정산
+        - title: OMS
+          color: "#F59E0B"
+          features:
+            - 주문 수집/검증
+            - 창고 할당
+            - 상태 관리
+            - 정산 관리
+        - title: Dashboard
+          color: "#8B5CF6"
+          features:
+            - 실시간 현황판
+            - KPI 모니터링
+            - 알림/경보
+            - 리포트 생성
+
+  - slide: 16
+    title: 품질 및 보안 관리
+    layout: t-chart
+    description: |
+      T자형 레이아웃 (T-Chart) 슬라이드
+      - 레이아웃: 좌우 50:50 분할, 중앙 수직선 구분
+      - 좌측: 품질 보증 활동 (🛡️ 아이콘)
+      - 우측: 보안 관리 계획 (🔒 아이콘)
+      - 각 섹션 헤더: 24pt Bold, 아이콘과 함께
+      - 항목: 4개씩 불릿 포인트
+      - 색상: 좌측 녹색계열, 우측 붉은계열
+      - 상단: 전체 제목 "품질 및 보안 관리 계획"
+      - 여백: 중앙선 40px, 항목 간 15px
+    content:
+      title: 품질 및 보안 관리 계획
+      left:
+        title: 품질 보증 활동
+        items:
+          - 산출물 검토 (단계별 말)
+          - 코드 리뷰 (GitHub PR 필수)
+          - 정적 분석 (SonarQube)
+          - 시나리오 기반 테스트
+      right:
+        title: 보안 관리 계획
+        items:
+          - 인적 보안 (보안서약, 교육)
+          - 물리 보안 (출입 관리)
+          - 기술 보안 (보안진단, 암호화)
+          - PC 보안 (백신, DLP)
+
+  - slide: 17
+    title: 위험 관리
+    layout: risk-matrix
+    description: |
+      리스크 매트릭스 (Risk Matrix) 슬라이드
+      - 형태: 2×2 히트맵 (영향도 vs 발생가능성)
+      - Y축: 영향도 (하, 중, 상)
+      - X축: 발생가능성 (하, 중, 상)
+      - 색상: 녹색(저위험) → 노란색(중위험) → 붉은색(고위험)
+      - 위험 요소: 5개 (요구사항 변경, 일정 지연, 기술 난제, 인력 이탈, 데이터 마이그레이션)
+      - 각 위험: 마커 배치 + 라벨 (요인, 대응, 담당)
+      - 범례: 우측 상단 색상 설명
+      - 여백: 매트릭스 주변 40px
+    content:
+      title: 주요 위험 및 대응
+      risks:
+        - risk: 요구사항 변경
+          impact: 상
+          probability: 상
+          response: CCB 통제, 영향도 분석
+          owner: PM
+        - risk: 일정 지연
+          impact: 상
+          probability: 중
+          response: 주간 진척관리, CP 모니터링
+          owner: PM
+        - risk: 기술적 난제
+          impact: 중
+          probability: 중
+          response: PoC 선행, 자문
+          owner: AA
+        - risk: 인력 이탈
+          impact: 상
+          probability: 하
+          response: 대체 인력 풀, 문서화
+          owner: PM
+        - risk: 데이터 마이그레이션
+          impact: 상
+          probability: 중
+          response: 사전 검증, 롤백 계획
+          owner: DBA
+
+  - slide: 18
+    title: 핵심 성과 지표 (KPI)
+    layout: big-number-cards
+    description: |
+      빅 넘버 카드 (Big Number Cards) 슬라이드
+      - 형태: 5개 카드 (수평 배치 또는 2+3 그리드)
+      - 각 카드: 대형 숫자 (50pt+) + 라벨 + 개선율
+      - 숫자: 현재/목표 비교 (예: "95% → 99.5%")
+      - 개선율: "+4.5%p" 형식, 녹색/붉은색 화살표
+      - 색상: 각 지표별 구분 (#10B981, #3B82F6, #F59E0B, #8B5CF6, #EC4899)
+      - 아이콘: 각 카드 상단 대표 아이콘
+      - 여백: 카드 간 20px, 내부 패딩 25px
+    content:
+      title: AS-IS vs TO-BE 비교
+      metrics:
+        - name: 재고 정확도
+          current: 95%
+          target: 99.5%
+          improvement: "+4.5%p"
+          color: "#10B981"
+        - name: 출고 리드타임
+          current: 4시간
+          target: 2시간
+          improvement: "-50%"
+          color: "#3B82F6"
+        - name: 오출고율
+          current: 0.5%
+          target: 0.05%
+          improvement: "-90%"
+          color: "#F59E0B"
+        - name: 배송 완료율 (D+1)
+          current: 85%
+          target: 95%
+          improvement: "+10%p"
+          color: "#8B5CF6"
+        - name: 월 물류비 (건당)
+          current: 3,500원
+          target: 2,800원
+          improvement: "-20%"
+          color: "#EC4899"
+
+  - slide: 19
+    title: 프로젝트 성공 기준
+    layout: next-steps
+    description: |
+      넥스트 스텝 (Next Steps) 리스트 슬라이드
+      - 형태: 번호 리스트 + 담당자/기한 포함
+      - 항목 수: 5개 성공 기준 (일정, 비용, 품질, 성능, 고객만족)
+      - 각 항목: 아이콘 + 제목 + 설명 + 목표
+      - 아이콘: 각 기준별 대표 아이콘 (calendar, wallet, shield, gauge, smile)
+      - 진행 바: 각 항목 하단 목표 달성률 표시
+      - 색상: 달성 시 녹색, 미달 시 붉은색
+      - 여백: 항목 간 25px, 내부 패딩 20px
+    content:
+      title: 프로젝트 성공 기준
+      criteria:
+        - title: 일정
+          description: 계약 기간 내 완료
+          target: 마일스톤 달성률 100%
+        - title: 비용
+          description: 예산 범위 내 완료
+          target: 비용 집행률 100% 이내
+        - title: 품질
+          description: 요구사항 충족
+          target: 요구사항 커버리지 100%
+        - title: 성능
+          description: 성능 목표 달성
+          target: 성능 테스트 100% 충족
+        - title: 고객만족
+          description: 사용자 만족도
+          target: 설문조사 4.0 이상 (5점 척도)
+
+  - slide: 20
+    title: 감사합니다
+    layout: closing-contact
+    description: |
+      연락처형 마무리 (Closing Contact) 슬라이드
+      - 중앙: "감사합니다" 대형 텍스트 (60pt+, Bold)
+      - 부제목: "Smart Logistics Management System" (24pt, Regular)
+      - 연락처 정보: 하단 정렬
+      - 항목: 이름, 직책, 회사, 이메일, 전화번호
+      - 아이콘: 각 연락처 항목별 아이콘
+      - QR 코드: 선택적, 우측에 배치
+      - 배경: 브랜드 컬러 그라데이트
+      - 여백: 상단 80px, 연락처 영역 60px
+    content:
+      main_message: 감사합니다
+      subtitle: Smart Logistics Management System
+      contact:
+        name: 김철수
+        role: PM
+        company: (주)테크솔루션
+        email: cs.kim@techsolution.co.kr
+        phone: 02-1234-5678

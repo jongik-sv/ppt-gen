@@ -1,0 +1,137 @@
+# 4열 카드 그리드 템플릿 (깔끔이 딥그린 스타일)
+# Source: ppt-sample/깔끔이-딥그린.pptx:slide7
+
+content_template:
+  id: card-4col-teal
+  name: "4열 카드 그리드 - 원형 배경"
+  version: "1.0"
+  source: "ppt-sample/깔끔이-딥그린.pptx"
+  source_slide_index: 6
+  category: grid
+
+design_meta:
+  quality_score: 8.5
+  design_intent: "4개 항목을 카드 형식으로 나열하는 그리드 레이아웃"
+  visual_balance: symmetric
+  information_density: medium
+  color_scheme: teal_green
+
+canvas:
+  reference_width: 1920
+  reference_height: 1080
+  aspect_ratio: "16:9"
+  slide_dimensions:
+    width_emu: 12192000
+    height_emu: 6858000
+
+layout:
+  type: "card_grid"
+  columns: 4
+  rows: 1
+  card_count: 4
+
+card_structure:
+  elements:
+    - name: "background_oval_large"
+      type: "oval"
+      description: "큰 배경 원형 (메인 배경)"
+      properties:
+        fill: "solid"
+        dimensions: "2.24\" x 2.24\""
+      color_variants:
+        - name: "teal_light"
+          hex: "#C7DBD4"
+        - name: "teal_medium"
+          hex: "#A4C4B9"
+        - name: "teal_dark"
+          hex: "#85B1A1"
+        - name: "teal_darker"
+          hex: "#418787"
+
+    - name: "background_oval_small"
+      type: "oval"
+      description: "작은 배경 원형 (강조용 오버레이)"
+      properties:
+        fill: "solid"
+        dimensions: "1.82\" x 1.82\""
+
+    - name: "icon"
+      type: "picture"
+      description: "카드 아이콘 (사각형 위치)"
+      properties:
+        dimensions: "0.88\" x 0.88\""
+        position: "top-center, centered in oval"
+
+    - name: "title"
+      type: "textbox"
+      description: "카드 제목"
+      properties:
+        dimensions: "3.07\" x 0.37\""
+        font_size: "14-16pt"
+        alignment: "left"
+        weight: "bold"
+
+    - name: "description"
+      type: "textbox"
+      description: "카드 설명 텍스트"
+      properties:
+        dimensions: "2.73\" x 2.03\""
+        font_size: "11-12pt"
+        alignment: "left"
+        line_height: "1.2"
+
+spacing:
+  card_column_gap: "2.99\"  # 약 2.99\" from center to center"
+  card_vertical_alignment: "top-aligned at y=2.09\""
+
+card_positions:
+  card_1:
+    position: "x=1.04\", y=2.09\""
+    oval_large: "x=1.04\", y=2.09\""
+    oval_small: "x=1.25\", y=2.30\""
+    icon: "x=1.75\", y=2.72\""
+    title: "x=0.62\", y=4.60\""
+    description: "x=0.79\", y=4.97\""
+
+  card_2:
+    position: "x=4.03\", y=2.09\""
+    oval_large: "x=4.03\", y=2.09\""
+    oval_small: "x=4.24\", y=2.30\""
+    icon: "x=4.76\", y=2.72\""
+    title: "x=3.67\", y=4.60\""
+    description: "x=3.84\", y=4.97\""
+
+  card_3:
+    position: "x=7.03\", y=2.09\""
+    oval_large: "x=7.03\", y=2.09\""
+    oval_small: "x=7.24\", y=2.30\""
+    icon: "x=7.71\", y=2.72\""
+    title: "x=6.71\", y=4.60\""
+    description: "x=6.89\", y=4.97\""
+
+  card_4:
+    position: "x=10.02\", y=2.09\""
+    oval_large: "x=10.02\", y=2.09\""
+    oval_small: "x=10.23\", y=2.30\""
+    icon: "x=10.70\", y=2.77\""
+    title: "x=9.64\", y=4.60\""
+    description: "x=9.81\", y=4.97\""
+
+thumbnail: "thumbnails/card-4col-teal.png"
+
+use_for:
+  - "4가지 주요 기능 또는 서비스 소개"
+  - "4단계의 프로세스 또는 순서 설명"
+  - "팀 멤버 또는 담당자 소개"
+  - "상품/서비스의 주요 특징 비교"
+  - "4가지 전략 또는 목표 제시"
+  - "분기별 또는 계절별 컨텐츠 표시"
+
+keywords:
+  - "카드"
+  - "그리드"
+  - "4열"
+  - "원형배경"
+  - "아이콘"
+  - "항목나열"
+  - "구분"

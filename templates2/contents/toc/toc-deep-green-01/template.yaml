@@ -1,0 +1,326 @@
+# TOC (Table of Contents) - 3열 딥그린 디자인 v1.0
+# 원본: ppt-sample/깔끔이-딥그린.pptx
+# 추출일: 2026-01-16
+
+content_template:
+  id: toc-deep-green-01
+  name: "TOC 3열 구조 - 딥그린"
+  version: "1.0"
+  source: "ppt-sample/깔끔이-딥그린.pptx"
+  source_slide_index: 1
+  extracted_at: "2026-01-16T00:00:00Z"
+
+design_meta:
+  quality_score: 9.2
+  design_intent: "toc-3col"
+  visual_balance: symmetric
+  information_density: medium
+
+canvas:
+  reference_width: 1980
+  reference_height: 1080
+  aspect_ratio: "16:9"
+
+layout:
+  type: "3-column"
+  header:
+    text: "CONTENTS"
+    position: "top-center"
+    margin_bottom: "50px"
+  columns: 3
+  gap_between_columns: "48px"
+
+placeholders:
+  items:
+    - type: "item"
+      index: 0
+      fields:
+        - name: "number"
+          type: "text"
+          default_value: "01"
+          font_size: "24pt"
+          font_weight: "bold"
+          color: "#22523B"
+          position: "top-center"
+        - name: "title"
+          type: "text"
+          default_value: "제목을 입력하세요."
+          font_size: "13pt"
+          font_weight: "normal"
+          color: "#22523B"
+          position: "below-number"
+          margin_top: "10px"
+        - name: "description"
+          type: "rich-text"
+          default_value: "• 첫 번째 관련 주제에 대해 설명해주세요.\n• 두 번째 관련 주제에 대해 설명해주세요.\n• 세 번째 관련 주제에 대해 설명해주세요.\n• 네 번째 관련 주제에 대해 설명해주세요.\n• 다섯 번째 관련 주제에 대해 설명해주세요."
+          font_size: "12pt"
+          color: "#22523B"
+          position: "below-title"
+          margin_top: "15px"
+          bullet_char: "•"
+          line_spacing: "1.5"
+
+colors:
+  primary_text: "#22523B"
+  secondary_text: "#22523B"
+  divider_line: "#153325"
+  background: "#FFFFFF"
+
+typography:
+  header:
+    font_family: "코트라 볼드체"
+    font_size: "24pt"
+    font_weight: "bold"
+    color: "#22523B"
+    shadow: "outer-shadow-3px"
+  number:
+    font_family: "코트라 볼드체"
+    font_size: "24pt"
+    font_weight: "bold"
+    color: "#22523B"
+  title:
+    font_family: "서평원 꺾깎체 TTF"
+    font_size: "13pt"
+    font_weight: "normal"
+    color: "#22523B"
+  description:
+    font_family: "나눔바른펜"
+    font_size: "12pt"
+    font_weight: "normal"
+    color: "#22523B"
+
+shapes:
+  - id: "header"
+    type: "textbox"
+    name: "CONTENTS"
+    position:
+      x: "43%"
+      y: "17%"
+    size:
+      width: "14%"
+      height: "4.3%"
+    style:
+      text_align: "center"
+      fill: "none"
+    content:
+      text: "CONTENTS"
+      font_size: "24pt"
+      font_weight: "bold"
+
+  - id: "column-1"
+    type: "group"
+    position:
+      x: "4.3%"
+      y: "21%"
+    size:
+      width: "31%"
+      height: "65%"
+    children:
+      - id: "col1-number"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "0%"
+        size:
+          width: "100%"
+          height: "5%"
+        content:
+          placeholder: "{items[0].number}"
+          default: "01"
+
+      - id: "col1-divider"
+        type: "line"
+        position:
+          x: "5%"
+          y: "5.5%"
+        size:
+          width: "90%"
+          height: "0%"
+        style:
+          stroke_color: "#153325"
+          stroke_width: "1pt"
+
+      - id: "col1-title"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "7%"
+        size:
+          width: "100%"
+          height: "8%"
+        content:
+          placeholder: "{items[0].title}"
+          default: "제목을 입력하세요."
+
+      - id: "col1-description"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "17%"
+        size:
+          width: "100%"
+          height: "50%"
+        style:
+          text_align: "left"
+        content:
+          placeholder: "{items[0].description}"
+          default: "• 첫 번째 관련 주제에 대해 설명해주세요."
+
+  - id: "column-2"
+    type: "group"
+    position:
+      x: "37%"
+      y: "21%"
+    size:
+      width: "31%"
+      height: "65%"
+    children:
+      - id: "col2-number"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "0%"
+        size:
+          width: "100%"
+          height: "5%"
+        content:
+          placeholder: "{items[1].number}"
+          default: "02"
+
+      - id: "col2-divider"
+        type: "line"
+        position:
+          x: "5%"
+          y: "5.5%"
+        size:
+          width: "90%"
+          height: "0%"
+        style:
+          stroke_color: "#153325"
+          stroke_width: "1pt"
+
+      - id: "col2-title"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "7%"
+        size:
+          width: "100%"
+          height: "8%"
+        content:
+          placeholder: "{items[1].title}"
+          default: "제목을 입력하세요."
+
+      - id: "col2-description"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "17%"
+        size:
+          width: "100%"
+          height: "50%"
+        style:
+          text_align: "left"
+        content:
+          placeholder: "{items[1].description}"
+          default: "• 첫 번째 관련 주제에 대해 설명해주세요."
+
+  - id: "column-3"
+    type: "group"
+    position:
+      x: "70%"
+      y: "21%"
+    size:
+      width: "31%"
+      height: "65%"
+    children:
+      - id: "col3-number"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "0%"
+        size:
+          width: "100%"
+          height: "5%"
+        content:
+          placeholder: "{items[2].number}"
+          default: "03"
+
+      - id: "col3-divider"
+        type: "line"
+        position:
+          x: "5%"
+          y: "5.5%"
+        size:
+          width: "90%"
+          height: "0%"
+        style:
+          stroke_color: "#153325"
+          stroke_width: "1pt"
+
+      - id: "col3-title"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "7%"
+        size:
+          width: "100%"
+          height: "8%"
+        content:
+          placeholder: "{items[2].title}"
+          default: "제목을 입력하세요."
+
+      - id: "col3-description"
+        type: "textbox"
+        position:
+          x: "0%"
+          y: "17%"
+        size:
+          width: "100%"
+          height: "50%"
+        style:
+          text_align: "left"
+        content:
+          placeholder: "{items[2].description}"
+          default: "• 첫 번째 관련 주제에 대해 설명해주세요."
+
+gap_config:
+  between_columns: "48px"
+  header_to_content: "50px"
+  number_to_title: "10px"
+  title_to_description: "15px"
+  title_to_divider: "5.5px"
+
+responsive:
+  mobile:
+    columns: 1
+    layout: "stacked"
+  tablet:
+    columns: 2
+    layout: "grid"
+
+use_for:
+  - "프레젠테이션 목차 및 목차 슬라이드 제작"
+  - "3가지 주요 주제를 균등하게 분배하여 표시"
+  - "각 섹션의 개요와 세부 항목을 계층적으로 구성"
+  - "대칭적이고 균형잡힌 레이아웃으로 시각적 안정성 확보"
+  - "번호, 제목, 설명 구조로 정보 계층화"
+
+keywords:
+  - "목차"
+  - "TOC"
+  - "3열"
+  - "깔끔한"
+  - "구조화"
+  - "딥그린"
+  - "계층"
+  - "균형"
+  - "컨텐츠 분류"
+  - "섹션 개요"
+
+notes:
+  - "CONTENTS 헤더 텍스트는 선택사항입니다"
+  - "각 열의 높이와 너비는 동일하게 유지됩니다"
+  - "설명 텍스트는 최대 5개의 불릿 포인트를 권장합니다"
+  - "색상은 딥그린 테마에 맞게 조정되어 있습니다"
+  - "저작권 정보는 포함하지 않습니다"

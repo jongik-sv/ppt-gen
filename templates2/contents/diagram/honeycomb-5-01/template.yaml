@@ -1,0 +1,413 @@
+# 허니콤(5개 육각형) 다이어그램 템플릿 v2.0
+# 원본: ppt-sample/깔끔이-딥그린.pptx:11
+# 추출일: 2026-01-16
+
+content_template:
+  id: honeycomb-5-01
+  name: "5개 육각형 허니콤 다이어그램"
+  version: "2.0"
+  source: "ppt-sample/깔끔이-딥그린.pptx"
+  source_slide_index: 10
+  extracted_at: "2026-01-16T00:00:00Z"
+  category: "diagram"
+
+design_meta:
+  quality_score: 9.0
+  design_intent: "honeycomb-5-hex"
+  visual_balance: "symmetric"
+  information_density: "medium"
+  color_scheme: "deep-green"
+
+canvas:
+  reference_width: 1920
+  reference_height: 1080
+  aspect_ratio: "16:9"
+
+# 콘텐츠 구조: 5개 육각형 허니콤 패턴
+# 상단: 2개 육각형 (좌상, 우상)
+# 하단: 3개 육각형 (좌, 중, 우)
+
+layout:
+  pattern: "honeycomb-5"
+  hexagon_count: 5
+  arrangement: "staggered"
+  spacing: 16  # 육각형 간 간격 (%)
+
+shapes:
+  # ===== 육각형 배치 (허니콤 패턴) =====
+
+  # [상단 좌측 육각형]
+  - id: "hexagon-0"
+    name: "상단 좌측 육각형"
+    type: "hexagon"
+    z_index: 1
+    position: "top-left"
+    geometry:
+      x: 22.7
+      y: 31.8
+      width: 20.4
+      height: 31.3
+      rotation: 0
+      original_aspect_ratio: 1.16
+    style:
+      fill:
+        type: "solid"
+        color: "#83A99B"  # 중간 녹색
+        opacity: 1.0
+      stroke:
+        enabled: false
+      shadow:
+        enabled: true
+        blur_radius: 3.7
+        offset_x: 2.8
+        offset_y: 2.8
+        opacity: 0.4
+    content:
+      type: "editable_text"
+      placeholder: "items[0].title"
+      font:
+        family: "카페24 써라운드"
+        size_pt: 20
+        weight: "normal"
+        color: "#153325"
+      alignment: "center"
+      vertical_align: "middle"
+
+  # [상단 우측 육각형]
+  - id: "hexagon-1"
+    name: "상단 우측 육각형"
+    type: "hexagon"
+    z_index: 1
+    position: "top-right"
+    geometry:
+      x: 56.8
+      y: 31.8
+      width: 20.4
+      height: 31.3
+      rotation: 0
+      original_aspect_ratio: 1.16
+    style:
+      fill:
+        type: "solid"
+        color: "#E8E8E8"  # 라이트 그레이
+        opacity: 1.0
+      stroke:
+        enabled: false
+      shadow:
+        enabled: true
+        blur_radius: 3.7
+        offset_x: 2.8
+        offset_y: 2.8
+        opacity: 0.4
+    content:
+      type: "editable_text"
+      placeholder: "items[1].title"
+      font:
+        family: "카페24 써라운드"
+        size_pt: 20
+        weight: "normal"
+        color: "#153325"
+      alignment: "center"
+      vertical_align: "middle"
+
+  # [하단 좌측 육각형]
+  - id: "hexagon-2"
+    name: "하단 좌측 육각형"
+    type: "hexagon"
+    z_index: 1
+    position: "bottom-left"
+    geometry:
+      x: 5.7
+      y: 49.8
+      width: 20.4
+      height: 31.3
+      rotation: 0
+      original_aspect_ratio: 1.16
+    style:
+      fill:
+        type: "solid"
+        color: "#DCF0EF"  # 연한 청록
+        opacity: 1.0
+      stroke:
+        enabled: false
+      shadow:
+        enabled: true
+        blur_radius: 3.7
+        offset_x: 2.8
+        offset_y: 2.8
+        opacity: 0.4
+    content:
+      type: "editable_text"
+      placeholder: "items[2].title"
+      font:
+        family: "카페24 써라운드"
+        size_pt: 20
+        weight: "normal"
+        color: "#153325"
+      alignment: "center"
+      vertical_align: "middle"
+
+  # [하단 중앙 육각형]
+  - id: "hexagon-3"
+    name: "하단 중앙 육각형"
+    type: "hexagon"
+    z_index: 1
+    position: "bottom-center"
+    geometry:
+      x: 39.9
+      y: 49.8
+      width: 20.4
+      height: 31.3
+      rotation: 0
+      original_aspect_ratio: 1.16
+    style:
+      fill:
+        type: "solid"
+        color: "#A1BFB4"  # 밝은 녹색
+        opacity: 1.0
+      stroke:
+        enabled: false
+      shadow:
+        enabled: true
+        blur_radius: 3.7
+        offset_x: 2.8
+        offset_y: 2.8
+        opacity: 0.4
+    content:
+      type: "editable_text"
+      placeholder: "items[3].title"
+      font:
+        family: "카페24 써라운드"
+        size_pt: 20
+        weight: "normal"
+        color: "#153325"
+      alignment: "center"
+      vertical_align: "middle"
+
+  # [하단 우측 육각형]
+  - id: "hexagon-4"
+    name: "하단 우측 육각형"
+    type: "hexagon"
+    z_index: 1
+    position: "bottom-right"
+    geometry:
+      x: 73.8
+      y: 49.8
+      width: 20.4
+      height: 31.3
+      rotation: 0
+      original_aspect_ratio: 1.16
+    style:
+      fill:
+        type: "solid"
+        color: "#578F76"  # 진한 녹색
+        opacity: 1.0
+      stroke:
+        enabled: false
+      shadow:
+        enabled: true
+        blur_radius: 3.7
+        offset_x: 2.8
+        offset_y: 2.8
+        opacity: 0.4
+    content:
+      type: "editable_text"
+      placeholder: "items[4].title"
+      font:
+        family: "카페24 써라운드"
+        size_pt: 20
+        weight: "normal"
+        color: "#153325"
+      alignment: "center"
+      vertical_align: "middle"
+
+  # ===== 연결 아이콘 (선택 사항) =====
+
+  - id: "icon-0"
+    name: "좌측 아이콘"
+    type: "icon"
+    z_index: 2
+    geometry:
+      x: 11.9
+      y: 58.8
+      size: 32
+      size_ratio: 0.03
+    style:
+      fill:
+        type: "solid"
+        color: "#578F76"
+        opacity: 1.0
+
+  - id: "icon-1"
+    name: "좌상단 아이콘"
+    type: "icon"
+    z_index: 2
+    geometry:
+      x: 29.2
+      y: 40.8
+      size: 32
+      size_ratio: 0.03
+    style:
+      fill:
+        type: "solid"
+        color: "#578F76"
+        opacity: 1.0
+
+  - id: "icon-2"
+    name: "중앙 아이콘"
+    type: "icon"
+    z_index: 2
+    geometry:
+      x: 46.4
+      y: 58.8
+      size: 32
+      size_ratio: 0.03
+    style:
+      fill:
+        type: "solid"
+        color: "#578F76"
+        opacity: 1.0
+
+  - id: "icon-3"
+    name: "우상단 아이콘"
+    type: "icon"
+    z_index: 2
+    geometry:
+      x: 63.3
+      y: 40.8
+      size: 32
+      size_ratio: 0.03
+    style:
+      fill:
+        type: "solid"
+        color: "#578F76"
+        opacity: 1.0
+
+  - id: "icon-4"
+    name: "우측 아이콘"
+    type: "icon"
+    z_index: 2
+    geometry:
+      x: 80.3
+      y: 58.8
+      size: 32
+      size_ratio: 0.03
+    style:
+      fill:
+        type: "solid"
+        color: "#578F76"
+        opacity: 1.0
+
+gaps:
+  global:
+    column_gap: 16
+    row_gap: 18
+  between_hexagons: 15
+
+spatial_relationships:
+  - type: "horizontal_alignment"
+    elements: ["hexagon-0", "hexagon-1"]
+    offset_y: 0
+    description: "상단 2개 육각형 수평 정렬"
+
+  - type: "horizontal_alignment"
+    elements: ["hexagon-2", "hexagon-3", "hexagon-4"]
+    offset_y: 18
+    description: "하단 3개 육각형 수평 정렬"
+
+  - type: "visual_connection"
+    elements: ["hexagon-0", "hexagon-2"]
+    connector: "icon-0"
+    description: "좌측 육각형 연결"
+
+  - type: "visual_connection"
+    elements: ["hexagon-0", "hexagon-3"]
+    connector: "icon-1"
+    description: "좌상단-중앙 연결"
+
+  - type: "visual_connection"
+    elements: ["hexagon-1", "hexagon-3"]
+    connector: "icon-2"
+    description: "중앙 연결"
+
+  - type: "visual_connection"
+    elements: ["hexagon-1", "hexagon-4"]
+    connector: "icon-3"
+    description: "우상단-우측 연결"
+
+  - type: "visual_connection"
+    elements: ["hexagon-4", "hexagon-3"]
+    connector: "icon-4"
+    description: "우측 육각형 연결"
+
+# 데이터 스키마
+schema:
+  type: "object"
+  properties:
+    items:
+      type: "array"
+      min_items: 5
+      max_items: 5
+      items:
+        type: "object"
+        properties:
+          title:
+            type: "string"
+            description: "육각형 내 제목 텍스트"
+            max_length: 20
+          icon_name:
+            type: "string"
+            description: "연결 아이콘 이름 (선택)"
+            enum: ["blog", "city", "handshake", "hourglass", "lightbulb"]
+
+# 색상 팔레트
+colors:
+  primary:
+    light: "#83A99B"    # 상단 좌측
+    medium: "#A1BFB4"   # 하단 중앙
+    dark: "#578F76"     # 하단 우측
+  secondary:
+    light: "#DCF0EF"    # 하단 좌측
+    gray: "#E8E8E8"     # 상단 우측
+  text: "#153325"       # 다크 그린
+
+# 폰트
+fonts:
+  title:
+    family: "카페24 써라운드"
+    size: 20
+    weight: "normal"
+  description:
+    family: "카페24 써라운드"
+    size: 14
+    weight: "normal"
+
+thumbnail: "thumbnails/diagram/honeycomb-5-01.png"
+
+use_for:
+  - "5가지 핵심 요소를 시각적으로 표현할 때"
+  - "부서, 팀, 역할을 허니콤 구조로 배치할 때"
+  - "상호 연결된 5개 개념을 표시할 때"
+  - "조직 구조나 시스템 구성 요소 설명"
+  - "제품 기능 또는 서비스 요소를 계층적으로 표현"
+
+keywords:
+  - "허니콤"
+  - "육각형"
+  - "5개"
+  - "다이어그램"
+  - "조직도"
+  - "네트워크"
+  - "계층"
+  - "연결"
+  - "구조"
+  - "시각화"
+
+metadata:
+  type: "diagram"
+  complexity: "medium"
+  editability: "high"
+  animation_support: true
+  responsive: true
+  min_items: 5
+  max_items: 5

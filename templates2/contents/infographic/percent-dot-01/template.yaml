@@ -1,0 +1,130 @@
+# Percent Dot Grid 인포그래픽 템플릿 v2.0
+# 원본: ppt-sample/깔끔이-딥그린.pptx:5
+# 추출일: 2026-01-16T00:00:00Z
+
+content_template:
+  id: percent-dot-01
+  name: "퍼센트 도트 그리드 (3열)"
+  version: "2.0"
+  source: ppt-sample/깔끔이-딥그린.pptx
+  source_slide_index: 5
+  extracted_at: "2026-01-16T00:00:00Z"
+
+design_meta:
+  quality_score: 9.5
+  design_intent: percent-dot-grid
+  visual_balance: symmetric
+  information_density: medium
+  color_scheme: deep-green
+  primary_colors:
+    - "#479374"  # Dot color (deep green)
+    - "#153325"  # Text color (very dark green)
+
+canvas:
+  reference_width: 1920
+  reference_height: 1080
+  aspect_ratio: "16:9"
+
+# Dot grid structure: 10x10 per column (100 dots total per item)
+# Each row has 10 dots, each column has 10 dots
+# Filled dots = (percent/100) * 100 dots
+
+layout:
+  type: 3-column-grid
+  columns: 3
+  spacing: equal
+
+  column_config:
+    width_ratio: 1
+    gap_between_columns: 0.08  # 8% of canvas width
+
+  dot_grid:
+    rows: 10
+    cols: 10
+    total_per_item: 100
+    dot_size_ratio: 0.015  # relative to canvas height
+    dot_spacing: 0.022    # row gap, relative to canvas height
+    fill_logic: "bottom-up"  # dots filled from bottom to top
+
+placeholders:
+  items:
+    type: array
+    min_items: 1
+    max_items: 6
+    item_schema:
+      percent:
+        type: number
+        min: 0
+        max: 100
+        description: "Percentage value (0-100)"
+        required: true
+      title:
+        type: string
+        description: "Item title (optional)"
+        required: false
+      description:
+        type: string
+        description: "Item description (optional)"
+        required: false
+      dot_color:
+        type: string
+        description: "Hex color for filled dots (default: #479374)"
+        pattern: "^#[0-9A-F]{6}$"
+        default: "#479374"
+        required: false
+
+colors:
+  dot_filled: "#479374"
+  dot_empty: "#E8E8E8"
+  text_primary: "#153325"
+  text_secondary: "#666666"
+  background: "#FFFFFF"
+
+typography:
+  percent_value:
+    font_size: 48px
+    font_weight: 700
+    color: "#153325"
+    alignment: center
+    margin_bottom: 16px
+
+  title:
+    font_size: 18px
+    font_weight: 600
+    color: "#153325"
+    alignment: center
+    margin_top: 24px
+
+  description:
+    font_size: 14px
+    font_weight: 400
+    color: "#666666"
+    alignment: center
+    margin_top: 8px
+
+spatial_relationships:
+  - type: vertical-sequence
+    description: "Dot grid -> Percent number -> Title -> Description"
+    spacing: "16px"
+
+use_for:
+  - "부서별 업무 처리율 시각화"
+  - "프로젝트 완료도를 퍼센트로 표시"
+  - "3가지 지표의 달성도 비교"
+  - "만족도 조사 결과 3개 항목 표시"
+  - "분기별 성과 달성률 시각화"
+  - "팀별 목표 달성도 인포그래픽"
+
+keywords:
+  - "퍼센트"
+  - "도트"
+  - "그리드"
+  - "비율"
+  - "인포그래픽"
+  - "진행률"
+  - "성과"
+  - "3열"
+  - "비교"
+  - "시각화"
+
+thumbnail: thumbnails/infographic/percent-dot-01.png

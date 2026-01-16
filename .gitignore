@@ -33,3 +33,9 @@ nul
 workspace
 
 ~$*
+
+templates-bak
+
+# Vendor dependencies
+vendor/ppt2html/node_modules/
+vendor/ppt2html/pptxjs-cli/node_modules/

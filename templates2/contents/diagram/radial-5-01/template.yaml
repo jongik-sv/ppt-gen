@@ -1,0 +1,272 @@
+# 방사형 5방향 다이어그램 콘텐츠 템플릿
+# 원본: ppt-sample/깔끔이-딥그린.pptx:slide15
+# 추출일: 2026-01-16
+
+content_template:
+  id: radial-5-01
+  name: "방사형 5방향 다이어그램"
+  version: "2.0"
+  source: ppt-sample/깔끔이-딥그린.pptx
+  source_slide_index: 14  # 0-based (15번 슬라이드)
+  extracted_at: "2026-01-16T00:00:00Z"
+
+design_meta:
+  quality_score: 9.5
+  design_intent: radial-5-diagram
+  visual_balance: symmetric
+  information_density: medium
+  description: "중앙 SmartArt 방사형 다이어그램을 중심으로 5개 방향(상, 좌상, 우상, 좌하, 우하)에 설명 텍스트를 배치한 레이아웃"
+
+canvas:
+  reference_width: 1920
+  reference_height: 1080
+  aspect_ratio: "16:9"
+
+shapes:
+  - id: "shape-0"
+    name: "다이어그램 1"
+    type: smartart
+    z_index: 1
+    geometry:
+      x: 29.7
+      y: 42.4
+      cx: 40.5
+      cy: 42.0
+      rotation: 0
+      original_aspect_ratio: 0.964
+    style:
+      fill:
+        type: none
+      stroke: none
+      shadow: false
+    text:
+      has_text: false
+      placeholder_type: null
+    notes: "중앙 방사형 SmartArt 다이어그램 (5개 방향)"
+
+  - id: "shape-1"
+    name: "TextBox 28"
+    type: textbox
+    z_index: 2
+    position: top
+    geometry:
+      x: 34.8
+      y: 29.0
+      cx: 30.3
+      cy: 12.1
+      rotation: 0
+      original_aspect_ratio: 2.501
+    style:
+      fill:
+        type: none
+      stroke: none
+      shadow: false
+      text_align: center
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: center
+      font_size_ratio: 0.013
+      original_font_size_pt: 11
+      font_weight: normal
+      font_color: rgb(21, 51, 37)
+    content: "Then you say I wanna dance..."
+    role: "상단 방향 설명"
+
+  - id: "shape-2"
+    name: "TextBox 21"
+    type: textbox
+    z_index: 3
+    position: left
+    geometry:
+      x: 4.5
+      y: 51.7
+      cx: 30.3
+      cy: 12.1
+      rotation: 0
+      original_aspect_ratio: 2.501
+    style:
+      fill:
+        type: none
+      stroke: none
+      shadow: false
+      text_align: center
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: center
+      font_size_ratio: 0.013
+      original_font_size_pt: 11
+      font_weight: normal
+      font_color: rgb(21, 51, 37)
+    content: "Then you say I wanna dance..."
+    role: "좌측 방향 설명"
+
+  - id: "shape-3"
+    name: "TextBox 27"
+    type: textbox
+    z_index: 4
+    position: right
+    geometry:
+      x: 65.2
+      y: 51.5
+      cx: 30.3
+      cy: 12.1
+      rotation: 0
+      original_aspect_ratio: 2.501
+    style:
+      fill:
+        type: none
+      stroke: none
+      shadow: false
+      text_align: center
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: center
+      font_size_ratio: 0.013
+      original_font_size_pt: 11
+      font_weight: normal
+      font_color: rgb(21, 51, 37)
+    content: "Then you say I wanna dance..."
+    role: "우측 방향 설명"
+
+  - id: "shape-4"
+    name: "TextBox 23"
+    type: textbox
+    z_index: 5
+    position: bottom-left
+    geometry:
+      x: 8.1
+      y: 76.3
+      cx: 30.3
+      cy: 12.1
+      rotation: 0
+      original_aspect_ratio: 2.501
+    style:
+      fill:
+        type: none
+      stroke: none
+      shadow: false
+      text_align: center
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: center
+      font_size_ratio: 0.013
+      original_font_size_pt: 11
+      font_weight: normal
+      font_color: rgb(21, 51, 37)
+    content: "Then you say I wanna dance..."
+    role: "좌하측 방향 설명"
+
+  - id: "shape-5"
+    name: "TextBox 24"
+    type: textbox
+    z_index: 6
+    position: bottom-right
+    geometry:
+      x: 61.6
+      y: 75.7
+      cx: 30.3
+      cy: 12.1
+      rotation: 0
+      original_aspect_ratio: 2.501
+    style:
+      fill:
+        type: none
+      stroke: none
+      shadow: false
+      text_align: center
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: center
+      font_size_ratio: 0.013
+      original_font_size_pt: 11
+      font_weight: normal
+      font_color: rgb(21, 51, 37)
+    content: "Then you say I wanna dance..."
+    role: "우하측 방향 설명"
+
+gaps:
+  global:
+    column_gap: 5
+    row_gap: 3
+  between_shapes:
+    - shapes: [shape-0, shape-1]
+      gap_percent: 7.0
+    - shapes: [shape-0, shape-2]
+      gap_percent: 10.0
+    - shapes: [shape-0, shape-3]
+      gap_percent: 10.0
+    - shapes: [shape-0, shape-4]
+      gap_percent: 8.0
+    - shapes: [shape-0, shape-5]
+      gap_percent: 8.0
+
+spatial_relationships:
+  - type: radial
+    center: shape-0
+    items: [shape-1, shape-2, shape-3, shape-4, shape-5]
+    description: "중앙 SmartArt를 중심으로 5방향에 텍스트 배치"
+  - type: symmetric
+    axis: vertical
+    items: [shape-2, shape-3]
+    description: "좌우 대칭 배치"
+  - type: symmetric
+    axis: vertical
+    items: [shape-4, shape-5]
+    description: "하단 좌우 대칭 배치"
+
+groups: []
+
+thumbnail: thumbnails/diagram/radial-5-01.png
+
+content_placeholders:
+  center:
+    type: smartart
+    editable: true
+    description: "중앙 SmartArt 방사형 다이어그램"
+    config:
+      diagram_type: radial
+      segments: 5
+
+  items:
+    type: array
+    count: 5
+    item_schema:
+      text:
+        type: string
+        placeholder: "상/좌/우/좌하/우하 방향별 설명 텍스트"
+      position:
+        type: enum
+        values: [top, left, right, bottom-left, bottom-right]
+      icon:
+        type: string
+        optional: true
+        description: "각 항목의 아이콘 (선택사항)"
+
+use_for:
+  - "조직의 5개 부서/팀을 중앙 개념 중심으로 시각화"
+  - "하나의 주제에 연결된 5가지 관점/접근법 설명"
+  - "방사형 구조로 의존성이 있는 5개 항목 표현"
+  - "중앙의 핵심 개념으로부터 파생되는 5가지 내용 구성"
+  - "5방향 비즈니스 프로세스 또는 이해관계자 맵핑"
+
+keywords:
+  - "방사형"
+  - "다이어그램"
+  - "5방향"
+  - "SmartArt"
+  - "중심"
+  - "대칭"
+  - "조직도"
+  - "프로세스"
+  - "관계도"
+  - "시각화"
+
+dependencies:
+  - type: smartart
+    description: "PowerPoint SmartArt (방사형)"
+    required: true

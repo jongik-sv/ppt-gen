@@ -1,0 +1,123 @@
+{
+  "status": "success",
+  "timestamp": "2026-01-16T09:39:00.157065",
+  "extraction": {
+    "pptx_file": "ppt-sample/깔끔이-딥그린.pptx",
+    "slide_index": 10,
+    "slide_display_number": 11,
+    "category": "diagram",
+    "template_id": "honeycomb-5-01"
+  },
+  "output": {
+    "yaml_path": "templates2/contents/diagram/honeycomb-5-01/template.yaml",
+    "html_template_path": "templates2/contents/diagram/honeycomb-5-01/template.html",
+    "html_example_path": "templates2/contents/diagram/honeycomb-5-01/example.html",
+    "readme_path": "templates2/contents/diagram/honeycomb-5-01/README.md",
+    "thumbnail_path": "templates2/contents/thumbnails/diagram/honeycomb-5-01.png"
+  },
+  "content_analysis": {
+    "shapes_extracted": 5,
+    "hexagon_count": 5,
+    "icon_count": 5,
+    "textbox_count": 5,
+    "layout_pattern": "honeycomb-5",
+    "arrangement": "staggered (top: 2, bottom: 3)"
+  },
+  "color_scheme": {
+    "theme": "deep-green",
+    "colors": {
+      "hex_0_top_left": "#83A99B",
+      "hex_1_top_right": "#E8E8E8",
+      "hex_2_bottom_left": "#DCF0EF",
+      "hex_3_bottom_center": "#A1BFB4",
+      "hex_4_bottom_right": "#578F76"
+    }
+  },
+  "geometry": {
+    "hexagon_size_percent": {
+      "width": 20.4,
+      "height": 31.3
+    },
+    "aspect_ratio": 1.16,
+    "canvas_width": 1920,
+    "canvas_height": 1080,
+    "aspect_ratio_16_9": true
+  },
+  "files_generated": {
+    "template_yaml": {
+      "lines": 413,
+      "size_bytes": 9021,
+      "encoding": "UTF-8"
+    },
+    "template_html": {
+      "lines": 291,
+      "size_bytes": 8563,
+      "encoding": "UTF-8"
+    },
+    "example_html": {
+      "lines": 468,
+      "size_bytes": 15981,
+      "encoding": "UTF-8"
+    },
+    "readme_md": {
+      "lines": 300,
+      "size_bytes": null,
+      "encoding": "UTF-8"
+    },
+    "thumbnail_png": {
+      "width": 400,
+      "height": 225,
+      "size_bytes": 2908,
+      "aspect_ratio": "16:9"
+    }
+  },
+  "schema": {
+    "items_count": 5,
+    "items_fixed": true,
+    "fields": [
+      "title",
+      "icon_name"
+    ],
+    "required": [
+      "title"
+    ],
+    "optional": [
+      "icon_name"
+    ]
+  },
+  "use_for": [
+    "5가지 핵심 요소를 시각적으로 표현할 때",
+    "부서, 팀, 역할을 허니콤 구조로 배치할 때",
+    "상호 연결된 5개 개념을 표시할 때",
+    "조직 구조나 시스템 구성 요소 설명",
+    "제품 기능 또는 서비스 요소를 계층적으로 표현"
+  ],
+  "keywords": [
+    "허니콤",
+    "육각형",
+    "5개",
+    "다이어그램",
+    "조직도",
+    "네트워크",
+    "계층",
+    "연결",
+    "구조",
+    "시각화"
+  ],
+  "features": {
+    "responsive": true,
+    "editable": true,
+    "animation_support": true,
+    "css_clip_path": true,
+    "shadow_effects": true,
+    "hover_effects": true
+  },
+  "quality_metrics": {
+    "design_quality_score": 9.0,
+    "visual_balance": "symmetric",
+    "information_density": "medium",
+    "color_harmony": "excellent",
+    "typography_consistency": "high",
+    "layout_precision": "high"
+  }
+}

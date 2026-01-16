@@ -1,0 +1,25 @@
+{
+  "name": "pptxjs-cli",
+  "version": "1.0.0",
+  "description": "PPTX를 HTML, PNG로 변환하는 CLI 도구",
+  "main": "extract.js",
+  "scripts": {
+    "start": "node extract.js"
+  },
+  "keywords": [
+    "pptx",
+    "powerpoint",
+    "html",
+    "png",
+    "converter",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^21.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

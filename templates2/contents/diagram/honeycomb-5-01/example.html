@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>허니콤 다이어그램 - 예제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "카페24 써라운드", -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7f6 0%, #eef2f0 100%);
+            padding: 40px 20px;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #153325;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .example-title {
+            padding: 20px;
+            background: linear-gradient(135deg, #578F76 0%, #4d7f66 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .example-content {
+            padding: 30px;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* ===== 허니콤 다이어그램 스타일 ===== */
+        .honeycomb-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .honeycomb-grid {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hexagon {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+            font-weight: normal;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            line-height: 1.3;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .hexagon:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .hexagon-text {
+            display: block;
+            word-wrap: break-word;
+            word-break: keep-all;
+            font-weight: 500;
+        }
+
+        /* ===== 예제 1: 조직 구조 ===== */
+        .org-hex-0 {
+            background: linear-gradient(135deg, #83A99B 0%, #7a9f91 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 22%;
+            top: 30%;
+            color: white;
+        }
+
+        .org-hex-1 {
+            background: linear-gradient(135deg, #A1BFB4 0%, #98b5aa 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 56%;
+            top: 30%;
+            color: white;
+        }
+
+        .org-hex-2 {
+            background: linear-gradient(135deg, #578F76 0%, #4d7f66 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 6%;
+            top: 48%;
+            color: white;
+        }
+
+        .org-hex-3 {
+            background: linear-gradient(135deg, #66a385 0%, #5a9977 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 40%;
+            top: 48%;
+            color: white;
+        }
+
+        .org-hex-4 {
+            background: linear-gradient(135deg, #5a9977 0%, #4d8f6b 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 74%;
+            top: 48%;
+            color: white;
+        }
+
+        /* ===== 예제 2: 프로세스 플로우 ===== */
+        .proc-hex-0 {
+            background: linear-gradient(135deg, #3B7BA6 0%, #2f6a94 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 22%;
+            top: 30%;
+            color: white;
+        }
+
+        .proc-hex-1 {
+            background: linear-gradient(135deg, #4A8FB8 0%, #3d7ca6 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 56%;
+            top: 30%;
+            color: white;
+        }
+
+        .proc-hex-2 {
+            background: linear-gradient(135deg, #5A9FCA 0%, #4d8cb8 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 6%;
+            top: 48%;
+            color: white;
+        }
+
+        .proc-hex-3 {
+            background: linear-gradient(135deg, #6AAFDC 0%, #5d9cca 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 40%;
+            top: 48%;
+            color: white;
+        }
+
+        .proc-hex-4 {
+            background: linear-gradient(135deg, #7ABFEE 0%, #6dacdc 100%);
+            width: 20%;
+            aspect-ratio: 1.16;
+            left: 74%;
+            top: 48%;
+            color: white;
+        }
+
+        /* 아이콘 스타일 */
+        .connector-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .icon {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-size: 20px;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .icon-0 { left: 12%; top: 59%; }
+        .icon-1 { left: 29%; top: 41%; }
+        .icon-2 { left: 46%; top: 59%; }
+        .icon-3 { left: 63%; top: 41%; }
+        .icon-4 { left: 80%; top: 59%; }
+
+        /* 설명 영역 */
+        .description {
+            padding: 20px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+
+        .description h3 {
+            color: #153325;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .description ul {
+            list-style: none;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .description li {
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .description li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #578F76;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hexagon {
+                font-size: 13px;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="header">
+            <h1>허니콤 다이어그램 예제</h1>
+            <p>5개 육각형으로 구성된 허니콤 패턴 다이어그램</p>
+        </div>
+
+        <div class="example-grid">
+            <!-- 예제 1: 조직 구조 -->
+            <div class="example-card">
+                <div class="example-title">예제 1: 조직 구조</div>
+                <div class="example-content">
+                    <div class="honeycomb-container">
+                        <div class="honeycomb-grid">
+                            <div class="hexagon org-hex-0">
+                                <span class="hexagon-text">경영진</span>
+                            </div>
+                            <div class="hexagon org-hex-1">
+                                <span class="hexagon-text">이사회</span>
+                            </div>
+                            <div class="hexagon org-hex-2">
+                                <span class="hexagon-text">재무팀</span>
+                            </div>
+                            <div class="hexagon org-hex-3">
+                                <span class="hexagon-text">개발팀</span>
+                            </div>
+                            <div class="hexagon org-hex-4">
+                                <span class="hexagon-text">마케팅팀</span>
+                            </div>
+                            <div class="connector-icons">
+                                <div class="icon icon-0">📋</div>
+                                <div class="icon icon-1">🤝</div>
+                                <div class="icon icon-2">📊</div>
+                                <div class="icon icon-3">⚙️</div>
+                                <div class="icon icon-4">📢</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    <h3>특징:</h3>
+                    <ul>
+                        <li>회사 조직도 표현</li>
+                        <li>부서 간 관계 시각화</li>
+                        <li>계층 구조 명확</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 예제 2: 프로세스 플로우 -->
+            <div class="example-card">
+                <div class="example-title">예제 2: 개발 프로세스</div>
+                <div class="example-content">
+                    <div class="honeycomb-container">
+                        <div class="honeycomb-grid">
+                            <div class="hexagon proc-hex-0">
+                                <span class="hexagon-text">기획</span>
+                            </div>
+                            <div class="hexagon proc-hex-1">
+                                <span class="hexagon-text">설계</span>
+                            </div>
+                            <div class="hexagon proc-hex-2">
+                                <span class="hexagon-text">개발</span>
+                            </div>
+                            <div class="hexagon proc-hex-3">
+                                <span class="hexagon-text">테스트</span>
+                            </div>
+                            <div class="hexagon proc-hex-4">
+                                <span class="hexagon-text">배포</span>
+                            </div>
+                            <div class="connector-icons">
+                                <div class="icon icon-0">✏️</div>
+                                <div class="icon icon-1">📐</div>
+                                <div class="icon icon-2">💻</div>
+                                <div class="icon icon-3">✓</div>
+                                <div class="icon icon-4">🚀</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    <h3>특징:</h3>
+                    <ul>
+                        <li>5단계 개발 프로세스</li>
+                        <li>순차적 흐름 표현</li>
+                        <li>단계별 아이콘 포함</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 예제 3: 마케팅 채널 -->
+            <div class="example-card">
+                <div class="example-title">예제 3: 마케팅 채널</div>
+                <div class="example-content">
+                    <div class="honeycomb-container">
+                        <div class="honeycomb-grid">
+                            <div class="hexagon org-hex-0">
+                                <span class="hexagon-text">소셜미디어</span>
+                            </div>
+                            <div class="hexagon org-hex-1">
+                                <span class="hexagon-text">이메일</span>
+                            </div>
+                            <div class="hexagon org-hex-2">
+                                <span class="hexagon-text">블로그</span>
+                            </div>
+                            <div class="hexagon org-hex-3">
+                                <span class="hexagon-text">웹사이트</span>
+                            </div>
+                            <div class="hexagon org-hex-4">
+                                <span class="hexagon-text">광고</span>
+                            </div>
+                            <div class="connector-icons">
+                                <div class="icon icon-0">📱</div>
+                                <div class="icon icon-1">📧</div>
+                                <div class="icon icon-2">📝</div>
+                                <div class="icon icon-3">🌐</div>
+                                <div class="icon icon-4">📺</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    <h3>특징:</h3>
+                    <ul>
+                        <li>5가지 마케팅 채널</li>
+                        <li>채널 간 연결 관계</li>
+                        <li>균형잡힌 레이아웃</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 예제 4: 제품 기능 -->
+            <div class="example-card">
+                <div class="example-title">예제 4: 제품 핵심 기능</div>
+                <div class="example-content">
+                    <div class="honeycomb-container">
+                        <div class="honeycomb-grid">
+                            <div class="hexagon proc-hex-0">
+                                <span class="hexagon-text">분석</span>
+                            </div>
+                            <div class="hexagon proc-hex-1">
+                                <span class="hexagon-text">보고</span>
+                            </div>
+                            <div class="hexagon proc-hex-2">
+                                <span class="hexagon-text">자동화</span>
+                            </div>
+                            <div class="hexagon proc-hex-3">
+                                <span class="hexagon-text">통합</span>
+                            </div>
+                            <div class="hexagon proc-hex-4">
+                                <span class="hexagon-text">보안</span>
+                            </div>
+                            <div class="connector-icons">
+                                <div class="icon icon-0">📊</div>
+                                <div class="icon icon-1">📄</div>
+                                <div class="icon icon-2">⚙️</div>
+                                <div class="icon icon-3">🔗</div>
+                                <div class="icon icon-4">🔒</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">
+                    <h3>특징:</h3>
+                    <ul>
+                        <li>5개 핵심 기능 표현</li>
+                        <li>제품 가치 제안 강조</li>
+                        <li>인터랙티브 다이어그램</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>허니콤 다이어그램 템플릿 예제 | 카페24 써라운드 폰트 사용</p>
+            <p>5개 요소를 시각적으로 표현하기에 최적화된 디자인입니다.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,290 @@
+# Timeline 2-Row Connector 템플릿 v2.0
+# 원본: ppt-sample/깔끔이-딥그린.pptx:17
+# 추출일: 2026-01-16T00:00:00Z
+
+content_template:
+  id: connector-2row-01
+  name: "2행 타임라인 (좌측 이미지 + 연결선)"
+  version: "2.0"
+  source: ppt-sample/깔끔이-딥그린.pptx
+  source_slide_index: 16
+  extracted_at: "2026-01-16T00:00:00Z"
+
+design_meta:
+  quality_score: 9.2
+  design_intent: timeline-connector
+  visual_balance: asymmetric
+  information_density: medium
+
+canvas:
+  reference_width: 1980
+  reference_height: 1080
+  aspect_ratio: "16:9"
+
+colors:
+  palette:
+    label_background_primary: "#22523B"   # 첫 번째 레이블 배경 (진한 녹색)
+    label_background_secondary: "#83A99B" # 두 번째 레이블 배경 (밝은 녹색)
+    text_dark: "#333333"
+    text_light: "#666666"
+    background: "#FFFFFF"
+
+shapes:
+  # 좌측 이미지 - 타임라인 시각화
+  - id: "shape-image"
+    name: "그래픽 9 - 타임라인 이미지"
+    type: picture
+    z_index: 1
+    geometry:
+      x: -1.5%
+      y: 12.4%
+      cx: 39.9%
+      cy: 88.9%
+      rotation: 0
+      original_aspect_ratio: 1.0
+    placeholder: "image"
+    role: "timeline-visual"
+
+  # ===== 첫 번째 항목 =====
+
+  # 첫 번째 레이블 (둥근 사각형)
+  - id: "shape-label-1"
+    name: "사각형: 둥근 모서리 17"
+    type: rectangle
+    z_index: 2
+    geometry:
+      x: 47.9%
+      y: 10.9%
+      cx: 16.8%
+      cy: 9.1%
+      rotation: 0
+      original_aspect_ratio: 4.132
+    style:
+      fill:
+        type: solid
+        color: "#22523B"
+        opacity: 1.0
+      stroke:
+        type: none
+      rounded_corners: 6pt
+    placeholder: "items[0].label_shape"
+    role: "label-background"
+
+  # 첫 번째 제목
+  - id: "shape-title-1"
+    name: "TextBox 19"
+    type: textbox
+    z_index: 3
+    geometry:
+      x: 45.6%
+      y: 12.5%
+      cx: 21.7%
+      cy: 6.6%
+      rotation: 0
+      original_aspect_ratio: 7.354
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: left
+      font_size_ratio: 0.035
+      original_font_size_pt: 18
+      font_weight: bold
+      font_color: "#333333"
+    content:
+      placeholder: "items[0].label"
+      editable: true
+    role: "date-label"
+
+  # 첫 번째 설명
+  - id: "shape-description-1"
+    name: "TextBox 21"
+    type: textbox
+    z_index: 3
+    geometry:
+      x: 47.9%
+      y: 21.4%
+      cx: 50.6%
+      cy: 26.0%
+      rotation: 0
+      original_aspect_ratio: 4.333
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: left
+      font_size_ratio: 0.026
+      original_font_size_pt: 14
+      font_weight: normal
+      font_color: "#333333"
+    content:
+      placeholder: "items[0].description"
+      editable: true
+    role: "description-text"
+
+  # ===== 두 번째 항목 =====
+
+  # 두 번째 레이블 (둥근 사각형)
+  - id: "shape-label-2"
+    name: "사각형: 둥근 모서리 23"
+    type: rectangle
+    z_index: 2
+    geometry:
+      x: 47.9%
+      y: 52.7%
+      cx: 16.8%
+      cy: 9.1%
+      rotation: 0
+      original_aspect_ratio: 4.132
+    style:
+      fill:
+        type: solid
+        color: "#83A99B"
+        opacity: 1.0
+      stroke:
+        type: none
+      rounded_corners: 6pt
+    placeholder: "items[1].label_shape"
+    role: "label-background"
+
+  # 두 번째 제목
+  - id: "shape-title-2"
+    name: "TextBox 24"
+    type: textbox
+    z_index: 3
+    geometry:
+      x: 45.6%
+      y: 54.4%
+      cx: 21.7%
+      cy: 6.6%
+      rotation: 0
+      original_aspect_ratio: 7.354
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: left
+      font_size_ratio: 0.035
+      original_font_size_pt: 18
+      font_weight: bold
+      font_color: "#333333"
+    content:
+      placeholder: "items[1].label"
+      editable: true
+    role: "date-label"
+
+  # 두 번째 설명
+  - id: "shape-description-2"
+    name: "TextBox 28"
+    type: textbox
+    z_index: 3
+    geometry:
+      x: 47.9%
+      y: 64.1%
+      cx: 50.6%
+      cy: 26.0%
+      rotation: 0
+      original_aspect_ratio: 4.333
+    text:
+      has_text: true
+      placeholder_type: BODY
+      alignment: left
+      font_size_ratio: 0.026
+      original_font_size_pt: 14
+      font_weight: normal
+      font_color: "#333333"
+    content:
+      placeholder: "items[1].description"
+      editable: true
+    role: "description-text"
+
+gaps:
+  global:
+    column_gap: 3.2%
+    row_gap: 20.8%
+  between_shapes:
+    - from: "shape-label-1"
+      to: "shape-title-1"
+      distance: -2.3%
+      direction: horizontal
+    - from: "shape-label-1"
+      to: "shape-description-1"
+      distance: 10.5%
+      direction: vertical
+    - from: "shape-label-2"
+      to: "shape-title-2"
+      distance: -2.3%
+      direction: horizontal
+    - from: "shape-label-2"
+      to: "shape-description-2"
+      distance: 10.5%
+      direction: vertical
+
+spatial_relationships:
+  - type: left-right
+    left: "shape-image"
+    right: "shape-label-1"
+    spacing: 8.0%
+  - type: vertical-alignment
+    shapes:
+      - "shape-label-1"
+      - "shape-label-2"
+    alignment: left
+  - type: vertical-spacing
+    shapes:
+      - "shape-description-1"
+      - "shape-label-2"
+    spacing: 4.3%
+
+groups: []
+
+thumbnail: thumbnails/timeline/connector-2row-01.png
+
+placeholders:
+  image:
+    type: picture
+    description: "타임라인 좌측 시각화 이미지 (세로 형식)"
+    size: "480x480px"
+    aspect_ratio: 1.0
+    required: true
+
+  items:
+    type: array
+    min_items: 2
+    max_items: 2
+    description: "타임라인 이벤트 (2개 고정)"
+
+    item_schema:
+      label:
+        type: string
+        description: "날짜, 연도 또는 단계 이름 (예: '2020년', 'Phase 1')"
+        required: true
+        max_length: 50
+
+      title:
+        type: string
+        description: "이벤트 제목"
+        required: true
+        max_length: 100
+
+      description:
+        type: string
+        description: "이벤트 상세 설명 (3-5줄)"
+        required: true
+        max_length: 300
+
+use_for:
+  - "시간 순서대로 진행되는 2단계 이벤트 표시"
+  - "프로젝트 개발 과정의 주요 마일스톤 2개 소개"
+  - "제품 개발 이력 또는 역사의 중요 시점 구분"
+  - "좌측 이미지(그래프/일러스트)와 우측 설명 텍스트 조합"
+  - "타임라인과 함께 상세 내용을 순차적으로 설명하는 슬라이드"
+
+keywords:
+  - "타임라인"
+  - "2행"
+  - "연결선"
+  - "시간순"
+  - "마일스톤"
+  - "이벤트"
+  - "시간축"
+  - "프로세스"
+  - "좌측이미지"
+  - "이력"

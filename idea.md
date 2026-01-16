@@ -184,3 +184,13 @@ ooxml 없다. 썸네일 없다.
 금지 패턴 예 : 인력 구성에 percent-dot-01 사용하면 안됨
 
 /home/jji/.config/Code/User/markdown-preview.css
+
+---
+
+## TODO: Ruby 서버 연동 (ppt-manager 앱)
+
+> 📄 **상세 설계**: [research/Ruby_서버_Claude_Code_연동.md](./research/Ruby_서버_Claude_Code_연동.md)
+
+- Ruby(Sinatra) 웹 서버에서 `claude -p "/ppt-extract ..." --print` 로 CLI 비대화형 실행
+- 파일 업로드 → 자동 추출, 버튼 클릭 → PPT 생성 트리거 가능
+- SSE 스트리밍으로 실시간 진행 상황 표시, 백그라운드 프로세스로 장시간 작업 처리

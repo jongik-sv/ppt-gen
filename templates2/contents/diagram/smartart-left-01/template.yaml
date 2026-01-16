@@ -1,0 +1,331 @@
+# SmartArt 좌측 배치 콘텐츠 템플릿 v2.0
+# 원본: ppt-sample/깔끔이-딥그린.pptx:10
+# 추출일: 2026-01-16
+
+content_template:
+  id: smartart-left-01
+  name: "SmartArt 좌측 배치"
+  version: "2.0"
+  source: ppt-sample/깔끔이-딥그린.pptx
+  source_slide_index: 10
+  extracted_at: "2026-01-16T00:00:00Z"
+
+design_meta:
+  quality_score: 8.5
+  design_intent: smartart-diagram
+  visual_balance: asymmetric
+  information_density: medium
+  diagram_type: matrix2
+  layout_style: 2x2_grid_with_arrows
+
+canvas:
+  reference_width: 1920
+  reference_height: 1080
+  aspect_ratio: "16:9"
+
+# 콘텐츠 영역 (헤더 제외)
+content_zone:
+  top: 28.0%
+  left: -3.7%
+  width: 53.7%
+  height: 62.3%
+  description: "SmartArt 다이어그램이 배치되는 좌측 영역"
+
+shapes:
+  - id: "smartart-container"
+    name: "다이어그램 4"
+    type: group
+    z_index: 1
+    geometry:
+      x: -3.7%
+      y: 28.0%
+      cx: 53.7%
+      cy: 62.3%
+      original_aspect_ratio: 1.530
+    description: "SmartArt 그룹 컨테이너"
+
+    # 내부 도형들 (정규화된 좌표)
+    children:
+      - id: "arrow-background"
+        name: "화살표 배경"
+        type: quadArrow
+        geometry:
+          x: 17.3%    # SmartArt 내부 좌표
+          y: 0%
+          cx: 65.4%
+          cy: 100%
+        style:
+          fill:
+            type: solid
+            color: light_gray
+            opacity: 0.05
+          stroke:
+            type: none
+
+      - id: "box-1-top-left"
+        name: "상단좌측 박스"
+        type: roundRect
+        geometry:
+          x: 21.6%
+          y: 6.5%
+          cx: 26.2%
+          cy: 40.0%
+          rounded_corners: 8px
+        style:
+          fill:
+            type: solid
+            color: "#448E87"
+            opacity: 1.0
+          stroke:
+            color: white
+            width: 2pt
+          shadow:
+            enabled: true
+            blur: 4px
+            offset_x: 0px
+            offset_y: 2px
+            opacity: 0.15
+        text:
+          has_text: true
+          alignment: center
+          vertical_alignment: middle
+          font_color: white
+          font_size_ratio: 0.024
+          original_font_size_pt: 18
+          font_name: "서평원 꺾깎체 TTF"
+          content: "제목을 입력해주세요."
+
+      - id: "box-1-top-right"
+        name: "상단우측 박스"
+        type: roundRect
+        geometry:
+          x: 52.3%
+          y: 6.5%
+          cx: 26.2%
+          cy: 40.0%
+          rounded_corners: 8px
+        style:
+          fill:
+            type: solid
+            color: "#9DC3CF"
+            opacity: 1.0
+          stroke:
+            color: white
+            width: 2pt
+          shadow:
+            enabled: true
+            blur: 4px
+            offset_x: 0px
+            offset_y: 2px
+            opacity: 0.15
+        text:
+          has_text: true
+          alignment: center
+          vertical_alignment: middle
+          font_color: white
+          font_size_ratio: 0.024
+          original_font_size_pt: 18
+          font_name: "서평원 꺾깎체 TTF"
+          content: "제목을 입력해 주세요."
+
+      - id: "box-2-bottom-left"
+        name: "하단좌측 박스"
+        type: roundRect
+        geometry:
+          x: 21.6%
+          y: 53.5%
+          cx: 26.2%
+          cy: 40.0%
+          rounded_corners: 8px
+        style:
+          fill:
+            type: solid
+            color: "#418787"
+            opacity: 1.0
+          stroke:
+            color: white
+            width: 2pt
+          shadow:
+            enabled: true
+            blur: 4px
+            offset_x: 0px
+            offset_y: 2px
+            opacity: 0.15
+        text:
+          has_text: true
+          alignment: center
+          vertical_alignment: middle
+          font_color: white
+          font_size_ratio: 0.024
+          original_font_size_pt: 18
+          font_name: "서평원 꺾깎체 TTF"
+          content: "제목을입력해 주세요."
+
+      - id: "box-2-bottom-right"
+        name: "하단우측 박스"
+        type: roundRect
+        geometry:
+          x: 52.3%
+          y: 53.5%
+          cx: 26.2%
+          cy: 40.0%
+          rounded_corners: 8px
+        style:
+          fill:
+            type: solid
+            color: "#A4C4B9"
+            opacity: 1.0
+          stroke:
+            color: white
+            width: 2pt
+          shadow:
+            enabled: true
+            blur: 4px
+            offset_x: 0px
+            offset_y: 2px
+            opacity: 0.15
+        text:
+          has_text: true
+          alignment: center
+          vertical_alignment: middle
+          font_color: white
+          font_size_ratio: 0.024
+          original_font_size_pt: 18
+          font_name: "서평원 꺾깎체 TTF"
+          content: "제목을 입력해 주세요."
+
+  - id: "divider-line"
+    name: "직선 연결선 8"
+    type: line
+    z_index: 2
+    geometry:
+      x: 44.4%
+      y: 32.5%
+      cx: 0%
+      cy: 52.7%
+    style:
+      stroke:
+        color: "#CCCCCC"
+        width: 2pt
+        style: solid
+
+  - id: "right-section-title"
+    name: "우측 제목"
+    type: textbox
+    z_index: 3
+    geometry:
+      x: 47.8%
+      y: 28.0%
+      cx: 20.3%
+      cy: 4.3%
+    style:
+      fill:
+        type: none
+    text:
+      has_text: true
+      alignment: left
+      vertical_alignment: top
+      font_color: "#333333"
+      font_size_ratio: 0.0343
+      original_font_size_pt: 20
+      font_weight: normal
+      content: "제목을 입력하세요."
+
+  - id: "right-section-body"
+    name: "우측 본문"
+    type: textbox
+    z_index: 3
+    geometry:
+      x: 47.8%
+      y: 32.5%
+      cx: 45.4%
+      cy: 57.5%
+    style:
+      fill:
+        type: none
+    text:
+      has_text: true
+      alignment: left
+      vertical_alignment: top
+      font_color: "#666666"
+      font_size_ratio: 0.0213
+      original_font_size_pt: 14
+      font_weight: normal
+      line_spacing: 1.5
+      content: "영화 미비포유의 줄거리… 이별을 준비하는 마지막에 나타난 짜증나는 여자 내 평생 최고의"
+
+gaps:
+  global:
+    column_gap: 4.5%
+    row_gap: 13.5%
+  between_boxes: 4.5%
+  box_to_divider: 3.5%
+
+spatial_relationships:
+  - type: horizontal_alignment
+    elements: ["box-1-top-left", "box-2-bottom-left"]
+    alignment: left_edge
+
+  - type: horizontal_alignment
+    elements: ["box-1-top-right", "box-2-bottom-right"]
+    alignment: left_edge
+
+  - type: vertical_alignment
+    elements: ["box-1-top-left", "box-1-top-right"]
+    alignment: top_edge
+
+  - type: vertical_alignment
+    elements: ["box-2-bottom-left", "box-2-bottom-right"]
+    alignment: top_edge
+
+  - type: center_alignment
+    element: divider-line
+    reference: canvas
+    axis: vertical
+
+thumbnail: thumbnails/diagram/smartart-left-01.png
+
+use_for:
+  - "2x2 매트릭스 다이어그램 표현"
+  - "4개 항목의 관계도 시각화"
+  - "비즈니스 프로세스 4단계 표현"
+  - "사분면 분석 차트 제작"
+  - "조직도 또는 의사결정 트리 표시"
+  - "제품 기능 또는 특징 4가지 설명"
+  - "시간대별 프로젝트 진행 상황 표현"
+
+keywords:
+  - "다이어그램"
+  - "SmartArt"
+  - "매트릭스"
+  - "2x2"
+  - "4단계"
+  - "흐름도"
+  - "비즈니스"
+  - "시각화"
+  - "화살표"
+  - "구조도"
+
+colors_used:
+  - name: "primary_teal"
+    hex: "#448E87"
+    description: "상단 좌측 박스"
+
+  - name: "secondary_light_blue"
+    hex: "#9DC3CF"
+    description: "상단 우측 박스"
+
+  - name: "accent_dark_teal"
+    hex: "#418787"
+    description: "하단 좌측 박스"
+
+  - name: "accent_light_green"
+    hex: "#A4C4B9"
+    description: "하단 우측 박스"
+
+customization_notes:
+  - "각 박스의 텍스트는 독립적으로 편집 가능"
+  - "색상은 테마 설정에 따라 변경 가능"
+  - "박스 크기 및 모서리 반경 조정 가능"
+  - "우측 섹션의 제목과 본문은 필요에 따라 추가/제거 가능"
+  - "디바이더 라인 색상 및 스타일 커스터마이징 가능"

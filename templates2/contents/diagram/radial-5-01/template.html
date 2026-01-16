@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방사형 5방향 다이어그램 - 템플릿</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: '나눔바른펜', '나눔고딕', sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            width: 960px;
+            height: 540px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .radial-diagram {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SVG 컨테이너 */
+        svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        /* 중앙 원 (SmartArt) */
+        .center-circle {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22523B 0%, #2D6B50 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(34, 82, 59, 0.3);
+            z-index: 10;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            line-height: 1.4;
+        }
+
+        .center-text {
+            word-wrap: break-word;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        /* 5방향 텍스트 박스 */
+        .text-box {
+            position: absolute;
+            width: 145px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 11px;
+            text-align: center;
+            color: #153325;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 65px;
+            z-index: 5;
+        }
+
+        .text-box:hover {
+            background-color: #f0f7f3;
+            border-color: #22523B;
+            box-shadow: 0 2px 6px rgba(34, 82, 59, 0.15);
+        }
+
+        .text-box-content {
+            word-wrap: break-word;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        /* 위치별 텍스트 박스 */
+        .box-top {
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .box-left {
+            top: 50%;
+            left: 22px;
+            transform: translateY(-50%);
+        }
+
+        .box-right {
+            top: 50%;
+            right: 22px;
+            transform: translateY(-50%);
+        }
+
+        .box-bottom-left {
+            bottom: 35px;
+            left: 40px;
+            transform: translateX(-10%);
+        }
+
+        .box-bottom-right {
+            bottom: 35px;
+            right: 40px;
+            transform: translateX(10%);
+        }
+
+        /* 커넥터 라인 */
+        .connector {
+            stroke: #22523B;
+            stroke-width: 2;
+            fill: none;
+            opacity: 0.6;
+        }
+
+        /* 라벨 */
+        .label {
+            font-size: 10px;
+            color: #666;
+            position: absolute;
+            z-index: 3;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .container {
+                width: 100%;
+                max-width: 960px;
+            }
+
+            .center-circle {
+                width: 150px;
+                height: 150px;
+                font-size: 12px;
+            }
+
+            .text-box {
+                width: 120px;
+                font-size: 10px;
+                padding: 10px;
+                min-height: 55px;
+            }
+
+            .box-top {
+                top: 20px;
+            }
+
+            .box-left {
+                left: 15px;
+            }
+
+            .box-right {
+                right: 15px;
+            }
+
+            .box-bottom-left {
+                bottom: 25px;
+                left: 30px;
+            }
+
+            .box-bottom-right {
+                bottom: 25px;
+                right: 30px;
+            }
+        }
+
+        /* 인쇄 스타일 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="radial-diagram">
+            <!-- SVG 커넥터 라인 -->
+            <svg viewBox="0 0 960 540">
+                <!-- 상단 라인 -->
+                <line x1="480" y1="180" x2="480" y2="90" class="connector" />
+                <!-- 좌측 라인 -->
+                <line x1="180" y1="270" x2="90" y2="270" class="connector" />
+                <!-- 우측 라인 -->
+                <line x1="780" y1="270" x2="870" y2="270" class="connector" />
+                <!-- 좌하측 라인 -->
+                <line x1="280" y1="360" x2="180" y2="420" class="connector" />
+                <!-- 우하측 라인 -->
+                <line x1="680" y1="360" x2="780" y2="420" class="connector" />
+            </svg>
+
+            <!-- 중앙 원 (SmartArt) -->
+            <div class="center-circle">
+                <div class="center-text">{{center}}</div>
+            </div>
+
+            <!-- 5방향 텍스트 박스 -->
+            <!-- 상단 -->
+            <div class="text-box box-top">
+                <div class="text-box-content">{{items[0].text}}</div>
+            </div>
+
+            <!-- 좌측 -->
+            <div class="text-box box-left">
+                <div class="text-box-content">{{items[1].text}}</div>
+            </div>
+
+            <!-- 우측 -->
+            <div class="text-box box-right">
+                <div class="text-box-content">{{items[2].text}}</div>
+            </div>
+
+            <!-- 좌하측 -->
+            <div class="text-box box-bottom-left">
+                <div class="text-box-content">{{items[3].text}}</div>
+            </div>
+
+            <!-- 우하측 -->
+            <div class="text-box box-bottom-right">
+                <div class="text-box-content">{{items[4].text}}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

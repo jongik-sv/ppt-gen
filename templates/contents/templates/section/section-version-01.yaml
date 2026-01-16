@@ -1,0 +1,147 @@
+content_template:
+  id: section-version-01
+  name: Section 버전 타입
+  version: '2.0'
+  source: /home/jji/project/ppt-gen/ppt-sample/깔끔이-딥그린.pptx
+  source_slide_index: 2
+  extracted_at: '2026-01-16T09:20:31.568884'
+design_meta:
+  quality_score: 8.5
+  design_intent: section-version
+  visual_balance: asymmetric
+  information_density: low
+canvas:
+  reference_width: 1980
+  reference_height: 1080
+  aspect_ratio: '16:9'
+shapes:
+- id: shape-0
+  name: 직선 연결선 8
+  type: line
+  z_index: 0
+  geometry:
+    x: 28.07
+    y: 27.79
+    cx: 42.12
+    cy: 0.0
+    rotation: 0
+    original_aspect_ratio: 1.0
+  style:
+    fill:
+      type: none
+    stroke:
+      type: none
+    shadow:
+      enabled: false
+    rounded_corners: 0
+  text:
+    has_text: false
+- id: shape-1
+  name: TextBox 34
+  type: rectangle
+  z_index: 1
+  geometry:
+    x: 37.36
+    y: 11.23
+    cx: 23.53
+    cy: 11.37
+    rotation: 0
+    original_aspect_ratio: 4.611
+  style:
+    fill:
+      type: none
+    stroke:
+      type: none
+    shadow:
+      enabled: false
+    rounded_corners: 0
+  text:
+    has_text: true
+    content: VERSION. 01
+    placeholder_type: null
+    alignment: center
+    font_size_ratio: 4.2667
+    original_font_size_pt: 32
+    font_weight: normal
+    font_color: primary
+- id: shape-2
+  name: TextBox 36
+  type: rectangle
+  z_index: 2
+  geometry:
+    x: 36.91
+    y: 35.19
+    cx: 24.44
+    cy: 7.78
+    rotation: 0
+    original_aspect_ratio: 6.999
+  style:
+    fill:
+      type: none
+    stroke:
+      type: none
+    shadow:
+      enabled: false
+    rounded_corners: 0
+  text:
+    has_text: true
+    content: 제목을 입력하세요.
+    placeholder_type: null
+    alignment: center
+    font_size_ratio: 2.6667
+    original_font_size_pt: 20
+    font_weight: normal
+    font_color: primary
+- id: shape-3
+  name: TextBox 37
+  type: rectangle
+  z_index: 3
+  geometry:
+    x: 26.3
+    y: 44.55
+    cx: 47.4
+    cy: 17.46
+    rotation: 0
+    original_aspect_ratio: 6.048
+  style:
+    fill:
+      type: none
+    stroke:
+      type: none
+    shadow:
+      enabled: false
+    rounded_corners: 0
+  text:
+    has_text: true
+    content: Side step right left to my beat (heartbeat) High like the moon rock with
+      me babyKnow that I got that heat Let me show you 'cause talk is cheapSide step
+      right left to my beat (heartbeat) Get it, let it roll Smooth like butter
+    placeholder_type: null
+    alignment: center
+    font_size_ratio: 1.6
+    original_font_size_pt: 12
+    font_weight: normal
+    font_color: primary
+gaps:
+  global:
+    column_gap: 3
+    row_gap: 3
+  between_shapes: []
+spatial_relationships: []
+groups: []
+thumbnail: thumbnails/section/section-version-01.png
+use_for:
+- 섹션 제목 슬라이드로 프레젠테이션 구간 구분
+- 버전 표시와 함께 주요 주제 강조
+- 점진적 전개되는 콘텐츠 구조 시각화
+- 깔끔한 디자인으로 전문성 표현
+- 대사나 인용구와 함께 감정적 임팩트 전달
+keywords:
+- 섹션
+- 버전
+- 타이틀
+- 구분
+- 전환
+- 강조
+- 심플
+- 미니멀

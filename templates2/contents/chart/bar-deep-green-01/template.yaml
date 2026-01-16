@@ -1,0 +1,174 @@
+# Bar Chart - Deep Green 콘텐츠 템플릿 v2.0
+# 원본: ppt-sample/깔끔이-딥그린.pptx:4
+# 추출일: 2026-01-16T00:00:00Z
+
+content_template:
+  id: bar-deep-green-01
+  name: "세로 막대 차트 - 딥그린 스타일"
+  version: "2.0"
+  source: ppt-sample/깔끔이-딥그린.pptx
+  source_slide_index: 3
+  extracted_at: "2026-01-16T00:00:00Z"
+
+design_meta:
+  quality_score: 9.5
+  design_intent: "data-visualization-columnar"
+  visual_balance: symmetric
+  information_density: medium
+  chart_type: "column-clustered"
+
+canvas:
+  reference_width: 1920
+  reference_height: 1080
+  aspect_ratio: "16:9"
+
+chart_config:
+  title:
+    text: "경영지원팀 2분기 성과지표"
+    enabled: true
+    font_size: 18
+    font_weight: normal
+    font_color: primary
+    alignment: center
+
+  geometry:
+    x_percent: 10.9
+    y_percent: 30.1
+    width_percent: 78.2
+    height_percent: 59.3
+
+  legend:
+    enabled: false
+    position: "top"
+
+  axes:
+    x_axis:
+      type: "category"
+      title: ""
+      visible: true
+      categories: ["카테고리 1", "카테고리 2", "카테고리 3", "카테고리 4"]
+      labels:
+        font_size: 12
+        color: dark_text
+
+    y_axis:
+      type: "value"
+      title: ""
+      visible: true
+      min: 0
+      max: null
+      labels:
+        font_size: 12
+        color: dark_text
+
+  series:
+    - id: "series-1"
+      name: "계열 1"
+      type: "column"
+      data: [4.3, 2.5, 3.5, 4.5]
+      color: primary        # #22523B - 짙은 녹색
+      opacity: 1.0
+      stroke:
+        width: 0
+        color: null
+
+    - id: "series-2"
+      name: "계열 2"
+      type: "column"
+      data: [2.4, 4.4, 1.8, 2.8]
+      color: secondary      # #43A375 - 중간 녹색
+      opacity: 1.0
+      stroke:
+        width: 0
+        color: null
+
+    - id: "series-3"
+      name: "계열 3"
+      type: "column"
+      data: [2.0, 2.0, 3.0, 5.0]
+      color: accent         # #A1BFB4 - 밝은 녹색
+      opacity: 1.0
+      stroke:
+        width: 0
+        color: null
+
+  styling:
+    background:
+      type: "solid"
+      color: "background"
+      opacity: 1.0
+
+    grid_lines:
+      horizontal:
+        enabled: true
+        style: "solid"
+        color: "light_text"
+        width: 0.5
+      vertical:
+        enabled: false
+        style: "solid"
+        color: "light_text"
+        width: 0.5
+
+    spacing:
+      column_padding: 10
+      series_gap: 40
+
+colors:
+  palette:
+    primary: "#22523B"      # 짙은 녹색 (계열 1)
+    secondary: "#43A375"    # 중간 녹색 (계열 2)
+    accent: "#A1BFB4"       # 밝은 녹색 (계열 3)
+    dark_text: "#153325"
+    light_text: "#999999"
+    background: "#FFFFFF"
+
+fonts:
+  title:
+    family: "서평원 꺾깎체 TTF"
+    size: 18
+    weight: normal
+    color: primary
+
+  axis_label:
+    family: "서평원 꺾깎체 TTF"
+    size: 12
+    weight: normal
+    color: dark_text
+
+  legend:
+    family: "서평원 꺾깎체 TTF"
+    size: 11
+    weight: normal
+    color: dark_text
+
+render_config:
+  render_method: "library"
+  library: "chart.js"
+  cdn_url: "https://cdn.jsdelivr.net/npm/chart.js"
+  version: "4.4.0"
+  format: "html"
+  include_legend: false
+  responsive: true
+  maintainable_data: true
+
+thumbnail: thumbnails/chart/bar-deep-green-01.png
+
+use_for:
+  - "분기별 부서 성과지표 비교"
+  - "3개 이상의 카테고리를 3개 시리즈로 비교할 때"
+  - "부서별 매출, 고객 만족도, 프로젝트 완료율 등 다중 지표 시각화"
+  - "시간 순서대로 진행되는 성과 데이터 표시"
+  - "여러 부서의 동일 지표를 병렬 비교"
+
+keywords:
+  - "막대 차트"
+  - "세로 차트"
+  - "컬럼 차트"
+  - "다중 시리즈"
+  - "비교 차트"
+  - "성과 지표"
+  - "딥그린"
+  - "3시리즈"
+  - "4카테고리"
+  - "데이터 시각화"

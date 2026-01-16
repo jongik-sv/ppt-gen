@@ -1,6 +1,6 @@
 ---
 name: content-slide-extractor
-description: 단일 PPT 슬라이드를 분석하여 콘텐츠 템플릿 YAML과 썸네일을 생성합니다. 병렬 추출에 사용합니다.
+description: 단일 PPT 슬라이드를 분석하여 콘텐츠 템플릿 YAML, HTML을 생성합니다. 병렬 추출에 사용합니다.
 tools: Read, Write, Bash, Glob, Grep
 model: haiku
 ---
@@ -14,6 +14,7 @@ You are a PPT slide content extractor specialized in analyzing individual slides
 ```yaml
 pptx_path: path/to/file.pptx           # 원본 PPTX 파일 경로
 unpacked_dir: workspace/unpacked        # 언팩된 디렉토리 경로
+html_dir: workspace/html                # ppt2html 출력 디렉토리
 slide_index: 5                          # 추출할 슬라이드 인덱스 (0-based)
 design_intent: stats-dotgrid            # 사전 분석된 디자인 의도
 category: stats                         # 카테고리 (폴더명)
@@ -23,40 +24,44 @@ source_aspect_ratio: "16:9"             # 원본 슬라이드 비율
 
 **카테고리 목록**: chart, comparison, content, cycle, diagram, feature, funnel, grid, hierarchy, matrix, process, quote, roadmap, stats, table, timeline, cover, toc, section, closing
 
-## Workflow
+## Output Files
 
-### 1. 슬라이드 XML 읽기
+3개 파일을 생성합니다:
 
-```bash
-# 슬라이드 XML 경로
-{unpacked_dir}/ppt/slides/slide{slide_index + 1}.xml
+```
+templates/contents/{category}/{output_filename}/
+├── template.yaml      # 상세 스키마 (원본 재현용)
+├── template.html      # {{변수}} 포함 HTML
+└── example.html       # 정리된 샘플 데이터
 ```
 
-XML에서 추출할 정보:
-- `<p:sp>`: 도형 (shape)
-- `<p:pic>`: 이미지
-- `<p:grpSp>`: 그룹
-- `<a:xfrm>`: 위치/크기 (EMU 단위)
-- `<a:solidFill>`, `<a:gradFill>`: 색상
-- `<a:rPr>`: 텍스트 속성
+## Workflow
+
+### 1. 입력 파일 읽기
+
+```bash
+# 슬라이드 XML (도형 정보)
+{unpacked_dir}/ppt/slides/slide{slide_index + 1}.xml
+
+# 슬라이드 HTML (ppt2html 출력, 참조용)
+{html_dir}/{basename}_slide{slide_index + 1}.html
+
+# 테마 XML (색상 정보)
+{unpacked_dir}/ppt/theme/theme1.xml
+```
 
 ### 2. Zone 경계 동적 감지
 
 **CRITICAL**: 콘텐츠 추출 전 타이틀/푸터 영역을 동적으로 감지하여 제외합니다.
 
-#### 2.1 Zone 감지 함수
-
 ```python
 def is_title_shape(shape, slide_height_emu):
     """타이틀/서브타이틀 도형 판별"""
-    # placeholder 타입으로 판별
     if shape.placeholder_type in ['TITLE', 'CENTER_TITLE', 'SUBTITLE']:
         return True
-    # 이름으로 판별
     name_lower = shape.name.lower()
     if any(kw in name_lower for kw in ['title', 'subtitle', '제목', '타이틀']):
         return True
-    # 위치 기반: 상단 25% 이내 + 높이 15% 미만
     if shape.y < slide_height_emu * 0.25 and shape.cy < slide_height_emu * 0.15:
         return True
     return False
@@ -66,53 +71,9 @@ def is_footer_shape(shape, slide_height_emu):
     name_lower = shape.name.lower()
     if any(kw in name_lower for kw in ['footer', 'page', 'slide', '페이지', '푸터']):
         return True
-    # 위치 기반: 하단 10% 이내
     if shape.y > slide_height_emu * 0.90:
         return True
     return False
-
-def detect_content_zone(shapes, slide_height_emu):
-    """Content Zone 경계 동적 감지"""
-    # 타이틀 도형들의 하단 경계
-    title_shapes = [s for s in shapes if is_title_shape(s, slide_height_emu)]
-    if title_shapes:
-        title_bottom = max(s.y + s.cy for s in title_shapes)
-        content_top = title_bottom + (slide_height_emu * 0.02)  # 2% 여유
-    else:
-        content_top = slide_height_emu * 0.20  # Fallback: 20%
-
-    # 푸터 도형들의 상단 경계
-    footer_shapes = [s for s in shapes if is_footer_shape(s, slide_height_emu)]
-    if footer_shapes:
-        footer_top = min(s.y for s in footer_shapes)
-        content_bottom = footer_top - (slide_height_emu * 0.02)  # 2% 여유
-    else:
-        content_bottom = slide_height_emu * 0.92  # Fallback: 92%
-
-    return content_top, content_bottom
-```
-
-#### 2.2 콘텐츠 도형 필터링
-
-```python
-# 모든 도형 로드 후 Zone 경계 감지
-all_shapes = load_shapes_from_xml(slide_xml)
-content_top, content_bottom = detect_content_zone(all_shapes, SLIDE_HEIGHT_EMU)
-
-# 콘텐츠 영역 내 도형만 추출 (중심점 기준)
-shapes_to_extract = []
-excluded_shapes = []
-
-for shape in all_shapes:
-    shape_center_y = shape.y + (shape.cy / 2)
-
-    if content_top <= shape_center_y <= content_bottom:
-        shapes_to_extract.append(shape)
-    else:
-        excluded_shapes.append(shape)
-        zone = "title" if shape_center_y < content_top else "bottom"
-        # 로그 기록 (디버깅용)
-        print(f"Excluded: {shape.name} (y={shape.y/SLIDE_HEIGHT_EMU*100:.1f}%, zone={zone})")
 ```
 
 **필터링 기준** (중심점 기준):
@@ -123,39 +84,7 @@ for shape in all_shapes:
 | content_top ≤ 중심점 ≤ content_bottom | **추출** |
 | 중심점 > content_bottom | **제외** (푸터 영역) |
 
-### 3. 도형 정보 추출 (Zone 필터링 적용)
-
-각 도형에서 추출 (**content zone 내 도형만**):
-
-```yaml
-shapes:
-  - id: "shape-{index}"
-    name: "{shape name from XML}"
-    type: rectangle | oval | textbox | picture | group | arrow | line
-    z_index: {layer order}
-    geometry:
-      x: {x_percent}%
-      y: {y_percent}%
-      cx: {width_percent}%
-      cy: {height_percent}%
-      rotation: {degrees}
-      original_aspect_ratio: {width_px / height_px}  # REQUIRED
-    style:
-      fill: {type: solid|gradient|none, color: semantic_color, opacity: 0-1}
-      stroke: {color: semantic_color, width: pt}
-      shadow: {enabled: bool, blur: px, offset_x: px, offset_y: px, opacity: 0-1}
-      rounded_corners: {pt}
-    text:
-      has_text: bool
-      placeholder_type: TITLE | BODY | SUBTITLE
-      alignment: left | center | right
-      font_size_ratio: {font_size_pt / canvas_height}
-      original_font_size_pt: {actual_pt}  # REQUIRED
-      font_weight: normal | bold
-      font_color: semantic_color
-```
-
-### 4. EMU → % 변환 공식
+### 3. EMU → 좌표 변환
 
 ```python
 # PowerPoint EMU (English Metric Units)
@@ -166,177 +95,303 @@ PX_PER_INCH = 96
 SLIDE_WIDTH_EMU = 12192000   # 1920px
 SLIDE_HEIGHT_EMU = 6858000   # 1080px
 
-# 콘텐츠 영역 (마진 제외)
-CONTENT_LEFT = 0.03          # 3%
-CONTENT_RIGHT = 0.97         # 97%
-CONTENT_TOP = 0.20           # 20% (타이틀 영역 아래)
-CONTENT_BOTTOM = 0.95        # 95%
+# EMU → px 변환
+x_px = shape_x / EMU_PER_INCH * PX_PER_INCH
+y_px = shape_y / EMU_PER_INCH * PX_PER_INCH
+width_px = shape_cx / EMU_PER_INCH * PX_PER_INCH
+height_px = shape_cy / EMU_PER_INCH * PX_PER_INCH
 
-# 변환
-content_width = SLIDE_WIDTH_EMU * 0.94
-content_height = SLIDE_HEIGHT_EMU * 0.75
-
-x_percent = (shape_x - SLIDE_WIDTH_EMU * CONTENT_LEFT) / content_width * 100
-y_percent = (shape_y - SLIDE_HEIGHT_EMU * CONTENT_TOP) / content_height * 100
-cx_percent = shape_cx / content_width * 100
-cy_percent = shape_cy / content_height * 100
-
-# 원본 비율 계산 (REQUIRED)
-shape_width_px = shape_cx / EMU_PER_INCH * PX_PER_INCH
-shape_height_px = shape_cy / EMU_PER_INCH * PX_PER_INCH
-original_aspect_ratio = round(shape_width_px / shape_height_px, 3)
+# % 변환 (캔버스 대비)
+x_percent = x_px / 1920 * 100
+y_percent = y_px / 1080 * 100
+width_percent = width_px / 1920 * 100
+height_percent = height_px / 1080 * 100
 ```
 
-### 5. 테마 색상 → 시맨틱 매핑
+### 4. 테마 색상 → 시맨틱 매핑
 
 `{unpacked_dir}/ppt/theme/theme1.xml`에서 색상 로드:
 
-| 테마 색상 | 시맨틱 |
-|----------|--------|
-| dk1 | dark_text |
-| lt1 | background |
-| dk2 | primary |
-| accent1 | secondary |
-| accent2-6 | accent |
+| 테마 색상 | 시맨틱 | 용도 |
+|----------|--------|------|
+| dk1 | dark_text | 어두운 텍스트 |
+| lt1 | background | 배경색 |
+| dk2 | primary | 주 강조색 |
+| accent1 | secondary | 보조 강조색 |
+| accent2-6 | accent | 추가 강조색 |
 
-### 6. 아이콘 크기 필수
+### 5. template.yaml 생성
 
-아이콘이 있으면 반드시 size 또는 size_ratio 기록:
-
-```yaml
-icons:
-  - id: "icon-0"
-    type: font-awesome
-    icon_name: "fa-chart-bar"
-    position: {x: 100, y: 300}
-    size: 32                      # REQUIRED
-    # 또는
-    size_ratio: 0.03              # 캔버스 높이 대비
-    color: primary
-```
-
-### 7. YAML 생성
-
-**저장 경로**: `templates/contents/templates/{category}/{output_filename}.yaml`
-
-**CRITICAL**: 반드시 카테고리 폴더에 저장합니다. 폴더가 없으면 생성하세요.
-
-```bash
-mkdir -p templates/contents/templates/{category}
-```
+**저장 경로**: `templates/contents/{category}/{output_filename}/template.yaml`
 
 ```yaml
-# {design_intent} 콘텐츠 템플릿 v2.0
-# 원본: {pptx_path}:{slide_index}
-# 추출일: {ISO 8601 timestamp}
-
-content_template:
-  id: {output_filename}
+# ============================================
+# 메타데이터
+# ============================================
+meta:
+  id: "{output_filename}"
   name: "{한글 이름}"
-  version: "2.0"
-  source: {pptx_path}
-  source_slide_index: {slide_index}
-  extracted_at: "{ISO 8601}"
+  version: "1.0"
+  created_at: "{ISO 8601}"
 
-design_meta:
-  quality_score: {0.0-10.0}
-  design_intent: {design_intent}
-  visual_balance: symmetric | asymmetric
-  information_density: low | medium | high
+  # 출처 정보 (추적용)
+  source:
+    file: "{pptx_path 파일명}"
+    slide_number: {slide_index + 1}  # 1-based
+    slide_title: "{원본 슬라이드 제목}"
+    extracted_at: "{ISO 8601}"
+    extracted_by: "content-slide-extractor"
 
+# ============================================
+# 용도 및 검색 (ppt-gen 매칭용)
+# ============================================
+usage:
+  # 이 템플릿을 사용해야 하는 상황 (상세하게, 최소 5개)
+  use_when:
+    - "{구체적인 사용 상황 1}"
+    - "{구체적인 사용 상황 2}"
+    - "{구체적인 사용 상황 3}"
+    - "{구체적인 사용 상황 4}"
+    - "{구체적인 사용 상황 5}"
+
+  # 이 템플릿을 사용하면 안 되는 상황
+  avoid_when:
+    - "{부적합한 상황 1}"
+    - "{부적합한 상황 2}"
+
+  # 적합한 문서 유형
+  document_types:
+    - "사업계획서"
+    - "프로젝트 제안서"
+    - "회사소개서"
+
+  # 검색 키워드 (한글 + 영문, 최소 5개)
+  keywords:
+    - "{키워드1}"
+    - "{키워드2}"
+    - "{키워드3}"
+    - "{키워드4}"
+    - "{키워드5}"
+
+  # 카테고리
+  category: "{category}"
+
+# ============================================
+# 캔버스 정보
+# ============================================
 canvas:
-  reference_width: 1980
-  reference_height: 1080
-  aspect_ratio: {source_aspect_ratio}
+  width: 1920
+  height: 1080
+  aspect_ratio: "{source_aspect_ratio}"
 
+  # 콘텐츠 영역 (타이틀/푸터 제외)
+  content_zone:
+    top: {content_top_px}
+    bottom: {content_bottom_px}
+    left: 60
+    right: 1860
+
+# ============================================
+# 레이아웃 구조
+# ============================================
+layout:
+  type: "{horizontal-flow | vertical-flow | grid | radial | freeform}"
+  direction: "{ltr | rtl | ttb | btt}"
+  alignment: "{start | center | end}"
+
+  grid:
+    columns: {N}
+    rows: {N}
+    column_gap: {px}
+    row_gap: {px}
+
+  bounds:
+    x: {px}
+    y: {px}
+    width: {px}
+    height: {px}
+
+# ============================================
+# 도형 정의 (상세하게 - 원본 재현용)
+# ============================================
 shapes:
-  # ... 도형 배열
+  - id: "{shape_id}"
+    name: "{도형 이름}"
+    type: "{rectangle | rounded-rectangle | oval | textbox | picture | group | arrow | line}"
 
-icons:
-  # ... 아이콘 배열 (있는 경우)
+    # 위치/크기 (절대값 + 비율 둘 다)
+    geometry:
+      x: {px}
+      y: {px}
+      width: {px}
+      height: {px}
+      x_percent: "{N}%"
+      y_percent: "{N}%"
+      width_percent: "{N}%"
+      height_percent: "{N}%"
+      rotation: {degrees}
+      corner_radius: {px}  # rounded-rectangle인 경우
 
-gaps:
-  global: {column_gap: %, row_gap: %}
-  between_shapes: []
+    # 스타일 (테마 변수 + 구체적 값)
+    style:
+      fill:
+        type: "{solid | gradient | none | pattern}"
+        color: "{시맨틱 컬러}"
+        color_hex: "{#RRGGBB}"
+        opacity: {0.0-1.0}
+      stroke:
+        color: "{시맨틱 컬러 또는 none}"
+        color_hex: "{#RRGGBB}"
+        width: {px}
+      shadow:
+        enabled: {true | false}
+        color: "{rgba(r,g,b,a)}"
+        blur: {px}
+        offset_x: {px}
+        offset_y: {px}
 
-spatial_relationships: []
+    # 텍스트 (있는 경우)
+    text:
+      content: "{{placeholder_id}}"  # 플레이스홀더
+      sample: "{예시 텍스트}"
 
-groups: []
+      alignment:
+        horizontal: "{left | center | right}"
+        vertical: "{top | middle | bottom}"
 
-thumbnail: thumbnails/{category}/{output_filename}.png
+      font:
+        family: "{폰트명}"
+        size: {pt}
+        size_ratio: {캔버스 높이 대비}
+        weight: "{normal | bold}"
+        color: "{시맨틱 컬러}"
+        color_hex: "{#RRGGBB}"
 
-use_for:
-  - "{용도1 - 한글로 구체적인 사용 상황}"
-  - "{용도2}"
-  - "{용도3}"
-  - "{용도4}"
-  - "{용도5}"
-keywords:
-  - "{키워드1 - 한글}"
-  - "{키워드2}"
-  - "{키워드3}"
-  - "{키워드4}"
-  - "{키워드5}"
+      padding:
+        top: {px}
+        bottom: {px}
+        left: {px}
+        right: {px}
+
+    z_index: {레이어 순서}
+
+# ============================================
+# 플레이스홀더 정의 (데이터 바인딩)
+# ============================================
+placeholders:
+  - id: "{placeholder_id}"
+    label: "{라벨}"
+    type: "text"
+    required: {true | false}
+    max_length: {N}
+    sample: "{예시 값}"
+    description: "{설명}"
+
+# ============================================
+# 테마 바인딩 (색상/폰트 연동)
+# ============================================
+theme_bindings:
+  colors:
+    primary: "{primary 사용 도형들}"
+    secondary: "{secondary 사용 도형들}"
+
+  fonts:
+    heading: "{heading 폰트 사용처}"
+    body: "{body 폰트 사용처}"
+
+# ============================================
+# 품질 메타데이터
+# ============================================
+quality:
+  score: {0-10}
+  completeness: "{high | medium | low}"
+  extraction_notes:
+    - "{추출 시 발생한 특이사항}"
 ```
 
-### 8. 썸네일 생성 (MANDATORY)
+### 6. template.html 생성
 
-**CRITICAL**: 썸네일 없이는 추출이 완료되지 않습니다. 반드시 실행하세요.
+**저장 경로**: `templates/contents/{category}/{output_filename}/template.html`
 
-**저장 경로**: `templates/contents/thumbnails/{category}/{output_filename}.png`
+ppt2html 출력을 기반으로 `{{placeholder}}` 변수를 삽입합니다.
 
-```bash
-# 카테고리 폴더 생성
-mkdir -p templates/contents/thumbnails/{category}
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* ppt2html 스타일 복사 */
+    .slide-container { ... }
+    .shape { ... }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <!-- 각 도형을 변수화 -->
+    <div class="shape" style="...">
+      {{step1_title}}
+    </div>
+    <div class="shape" style="...">
+      {{step1_desc}}
+    </div>
+    <!-- ... -->
+  </div>
+</body>
+</html>
 ```
 
-#### 방법 A: PPTX에서 직접 생성 (LibreOffice 필요)
+**변수화 규칙**:
+- 텍스트 내용 → `{{placeholder_id}}`
+- 반복 요소 → `{{#items}}...{{/items}}`
+- 조건부 → `{{#if condition}}...{{/if}}`
 
-```bash
-cd .claude/skills/ppt-gen && python scripts/thumbnail.py {pptx_path} templates/contents/thumbnails/{category}/ --slides {slide_index} --single
+### 7. example.html 생성
 
-# 파일명 변경
-mv templates/contents/thumbnails/{category}/slide-{slide_index}.png templates/contents/thumbnails/{category}/{output_filename}.png
+**저장 경로**: `templates/contents/{category}/{output_filename}/example.html`
 
-# 썸네일 확인
-test -f templates/contents/thumbnails/{category}/{output_filename}.png && echo "Thumbnail OK" || echo "ERROR!"
+template.html의 플레이스홀더를 실제 샘플 데이터로 채웁니다.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* 동일한 스타일 */
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="shape" style="...">
+      기획
+    </div>
+    <div class="shape" style="...">
+      요구사항 분석 및 기획안 수립
+    </div>
+    <!-- ... -->
+  </div>
+</body>
+</html>
 ```
 
-#### 방법 B: 기존 이미지에서 생성 (LibreOffice 불필요)
+**샘플 데이터 생성 규칙**:
 
-```bash
-cd .claude/skills/ppt-gen && python scripts/thumbnail.py --from-images {image_dir}/ templates/contents/thumbnails/{category}/ --slides {slide_index} --single
+| 원본 상태 | LLM 처리 |
+|-----------|----------|
+| 정상 텍스트 | 그대로 사용 |
+| 깨진 문자, 더미 텍스트 | 실제와 비슷한 샘플로 교체 |
+| 의미 없는 숫자 | 적절한 예시 데이터로 교체 |
 
-# 파일명 변경
-mv templates/contents/thumbnails/{category}/slide-{slide_index}.png templates/contents/thumbnails/{category}/{output_filename}.png
-
-# 썸네일 확인
-test -f templates/contents/thumbnails/{category}/{output_filename}.png && echo "Thumbnail OK" || echo "ERROR!"
-```
-
-#### 시스템 의존성
-
-| 방법 | 필요 도구 |
-|------|----------|
-| 방법 A | LibreOffice (`soffice`), Poppler (`pdftoppm`) |
-| 방법 B | Pillow만 필요 (LibreOffice 불필요) |
-
-#### 오류 시 대응
-
-```yaml
-# LibreOffice 미설치 시 → 방법 B 사용 (웹페이지 이미지 다운로드 후)
-status: error
-error_message: "LibreOffice not found. Use --from-images mode with downloaded images."
-```
-
-### 9. 결과 반환
+### 8. 결과 반환
 
 작업 완료 후 다음 형식으로 결과 반환:
 
 ```yaml
 status: success | error
-yaml_path: templates/contents/templates/{category}/{output_filename}.yaml
-thumbnail_path: templates/contents/thumbnails/{category}/{output_filename}.png
+yaml_path: templates/contents/{category}/{output_filename}/template.yaml
+html_path: templates/contents/{category}/{output_filename}/template.html
+example_path: templates/contents/{category}/{output_filename}/example.html
 shapes_count: {추출된 도형 수}
 use_for_count: {use_for 항목 수, 최소 5개}
 keywords_count: {keywords 항목 수, 최소 5개}
@@ -346,21 +401,21 @@ error_message: {에러 시 메시지}
 ## Guidelines
 
 1. **Zone 필터링 필수**: 타이틀/푸터 영역 동적 감지 후 Content Zone 내 도형만 추출
-2. **정확한 좌표 계산**: EMU → % 변환 공식을 정확히 따를 것
-3. **원본 비율 필수**: 모든 도형에 `original_aspect_ratio` 기록
-4. **폰트 크기 필수**: 모든 텍스트에 `original_font_size_pt` 기록
-5. **아이콘 크기 필수**: 아이콘에 `size` 또는 `size_ratio` 기록
-6. **시맨틱 색상 사용**: RGB 값 대신 시맨틱 색상명 사용
-7. **썸네일 필수**: YAML 생성 후 반드시 썸네일 생성
-8. **카테고리 폴더 필수**: 반드시 `{category}/` 폴더에 저장
-9. **use_for 상세 작성**: 최소 5개, 한글로 구체적인 사용 상황 기술
-10. **keywords 상세 작성**: 최소 5개, 한글 키워드로 검색 최적화
+2. **정확한 좌표 계산**: EMU → px/% 변환 공식을 정확히 따를 것
+3. **절대값 + 비율 둘 다**: geometry에 px와 %를 모두 기록
+4. **시맨틱 색상 + HEX**: color와 color_hex를 모두 기록
+5. **폰트 크기 필수**: 모든 텍스트에 font.size와 size_ratio 기록
+6. **3개 파일 필수**: template.yaml, template.html, example.html 모두 생성
+7. **카테고리 폴더 필수**: `{category}/{output_filename}/` 구조로 저장
+8. **use_for 상세 작성**: 최소 5개, 한글로 구체적인 사용 상황 기술
+9. **keywords 상세 작성**: 최소 5개, 한글 키워드로 검색 최적화
+10. **출처 정보 필수**: meta.source에 파일명, 슬라이드 번호 기록
 
 ### use_for 작성 가이드
 
 ```yaml
 # GOOD - 구체적인 사용 상황
-use_for:
+use_when:
   - "4단계 프로세스 흐름 설명"
   - "시간 순서대로 진행되는 절차 표시"
   - "단계별 업무 진행 과정 시각화"
@@ -368,7 +423,7 @@ use_for:
   - "순차적 업무 프로세스 설명"
 
 # BAD - 너무 추상적
-use_for:
+use_when:
   - "프로세스"
   - "흐름"
 ```

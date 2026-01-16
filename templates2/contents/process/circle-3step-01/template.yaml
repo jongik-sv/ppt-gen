@@ -1,0 +1,429 @@
+# 원형 3단계 프로세스 템플릿 v2.0
+# 원본: ppt-sample/깔끔이-딥그린.pptx:14
+# 추출일: 2026-01-16
+
+content_template:
+  id: circle-3step-01
+  name: "원형 3단계 프로세스"
+  version: "2.0"
+  source: "ppt-sample/깔끔이-딥그린.pptx"
+  source_slide_index: 13  # 0-based: 14번째 슬라이드
+  extracted_at: "2026-01-16T00:00:00Z"
+
+design_meta:
+  quality_score: 9.2
+  design_intent: "circle-3step"
+  visual_balance: "symmetric"
+  information_density: "medium"
+  color_scheme: "pastel-teal"
+
+canvas:
+  reference_width: 1920
+  reference_height: 1080
+  aspect_ratio: "16:9"
+  content_area:
+    top: "20%"
+    bottom: "50%"
+
+shapes:
+  - id: "shape-circle-1"
+    name: "Circle 1"
+    type: "ellipse"
+    z_index: 1
+    geometry:
+      x: "8.1%"
+      y: "28.4%"
+      cx: "20.3%"
+      cy: "36.0%"
+      rotation: 0
+      original_aspect_ratio: 1.0
+    style:
+      fill:
+        type: "solid"
+        color: "#67B7B5"
+        opacity: 1.0
+      stroke:
+        color: "#999999"
+        width: "1pt"
+      shadow:
+        enabled: true
+        blur: "4px"
+        offset_x: "3px"
+        offset_y: "3px"
+        opacity: 0.4
+      rounded_corners: 0
+    content: []
+
+  - id: "shape-circle-2"
+    name: "Circle 2"
+    type: "ellipse"
+    z_index: 1
+    geometry:
+      x: "39.4%"
+      y: "28.4%"
+      cx: "20.3%"
+      cy: "36.0%"
+      rotation: 0
+      original_aspect_ratio: 1.0
+    style:
+      fill:
+        type: "solid"
+        color: "#D0D5AF"
+        opacity: 1.0
+      stroke:
+        color: "#999999"
+        width: "1pt"
+      shadow:
+        enabled: true
+        blur: "4px"
+        offset_x: "3px"
+        offset_y: "3px"
+        opacity: 0.4
+      rounded_corners: 0
+    content: []
+
+  - id: "shape-circle-3"
+    name: "Circle 3"
+    type: "ellipse"
+    z_index: 1
+    geometry:
+      x: "70.6%"
+      y: "28.4%"
+      cx: "20.3%"
+      cy: "36.0%"
+      rotation: 0
+      original_aspect_ratio: 1.0
+    style:
+      fill:
+        type: "solid"
+        color: "#99C7BF"
+        opacity: 1.0
+      stroke:
+        color: "#999999"
+        width: "1pt"
+      shadow:
+        enabled: true
+        blur: "4px"
+        offset_x: "3px"
+        offset_y: "3px"
+        opacity: 0.4
+      rounded_corners: 0
+    content: []
+
+  - id: "shape-arrow-1-2"
+    name: "Arrow Connector 1-2"
+    type: "connector"
+    z_index: 0
+    geometry:
+      x: "29.9%"
+      y: "46.7%"
+      cx: "9.6%"
+      cy: "0%"
+      rotation: 0
+    style:
+      stroke:
+        color: "#999999"
+        width: "1pt"
+        style: "dashed"
+      arrow:
+        type: "right"
+        position: "end"
+
+  - id: "shape-arrow-2-3"
+    name: "Arrow Connector 2-3"
+    type: "connector"
+    z_index: 0
+    geometry:
+      x: "61.4%"
+      y: "46.7%"
+      cx: "9.6%"
+      cy: "0%"
+      rotation: 0
+    style:
+      stroke:
+        color: "#999999"
+        width: "1pt"
+        style: "dashed"
+      arrow:
+        type: "right"
+        position: "end"
+
+  - id: "shape-title-1"
+    name: "Title 1"
+    type: "textbox"
+    z_index: 2
+    geometry:
+      x: "8.1%"
+      y: "69.5%"
+      cx: "20.3%"
+      cy: "3.1%"
+      rotation: 0
+    style:
+      fill:
+        type: "none"
+    text:
+      has_text: true
+      placeholder_type: "BODY"
+      alignment: "center"
+      font_size_ratio: 0.015
+      original_font_size_pt: 16
+      font_weight: "normal"
+      font_color: "#153325"
+    content:
+      template_placeholder: "items[0].title"
+
+  - id: "shape-description-1"
+    name: "Description 1"
+    type: "textbox"
+    z_index: 2
+    geometry:
+      x: "8.1%"
+      y: "74.1%"
+      cx: "20.3%"
+      cy: "10.0%"
+      rotation: 0
+    style:
+      fill:
+        type: "none"
+    text:
+      has_text: true
+      placeholder_type: "BODY"
+      alignment: "center"
+      font_size_ratio: 0.010
+      original_font_size_pt: 11
+      font_weight: "normal"
+      font_color: "#153325"
+      line_height: 1.5
+    content:
+      template_placeholder: "items[0].description"
+
+  - id: "shape-title-2"
+    name: "Title 2"
+    type: "textbox"
+    z_index: 2
+    geometry:
+      x: "39.4%"
+      y: "69.8%"
+      cx: "20.3%"
+      cy: "3.1%"
+      rotation: 0
+    style:
+      fill:
+        type: "none"
+    text:
+      has_text: true
+      placeholder_type: "BODY"
+      alignment: "center"
+      font_size_ratio: 0.015
+      original_font_size_pt: 16
+      font_weight: "normal"
+      font_color: "#153325"
+    content:
+      template_placeholder: "items[1].title"
+
+  - id: "shape-description-2"
+    name: "Description 2"
+    type: "textbox"
+    z_index: 2
+    geometry:
+      x: "39.4%"
+      y: "74.4%"
+      cx: "20.3%"
+      cy: "10.0%"
+      rotation: 0
+    style:
+      fill:
+        type: "none"
+    text:
+      has_text: true
+      placeholder_type: "BODY"
+      alignment: "center"
+      font_size_ratio: 0.010
+      original_font_size_pt: 11
+      font_weight: "normal"
+      font_color: "#153325"
+      line_height: 1.5
+    content:
+      template_placeholder: "items[1].description"
+
+  - id: "shape-title-3"
+    name: "Title 3"
+    type: "textbox"
+    z_index: 2
+    geometry:
+      x: "70.6%"
+      y: "69.8%"
+      cx: "20.3%"
+      cy: "3.1%"
+      rotation: 0
+    style:
+      fill:
+        type: "none"
+    text:
+      has_text: true
+      placeholder_type: "BODY"
+      alignment: "center"
+      font_size_ratio: 0.015
+      original_font_size_pt: 16
+      font_weight: "normal"
+      font_color: "#153325"
+    content:
+      template_placeholder: "items[2].title"
+
+  - id: "shape-description-3"
+    name: "Description 3"
+    type: "textbox"
+    z_index: 2
+    geometry:
+      x: "70.6%"
+      y: "74.4%"
+      cx: "20.3%"
+      cy: "10.0%"
+      rotation: 0
+    style:
+      fill:
+        type: "none"
+    text:
+      has_text: true
+      placeholder_type: "BODY"
+      alignment: "center"
+      font_size_ratio: 0.010
+      original_font_size_pt: 11
+      font_weight: "normal"
+      font_color: "#153325"
+      line_height: 1.5
+    content:
+      template_placeholder: "items[2].description"
+
+icons:
+  - id: "icon-1"
+    type: "picture"
+    position:
+      x: "14.5%"
+      y: "39.8%"
+    size:
+      width: "10.5%"
+      height: "8.5%"
+    placeholder: "items[0].icon"
+    content_template_ref: "사람들과 함께 사이클링"
+
+  - id: "icon-2"
+    type: "picture"
+    position:
+      x: "45.3%"
+      y: "38.6%"
+    size:
+      width: "10.5%"
+      height: "8.5%"
+    placeholder: "items[1].icon"
+    content_template_ref: "디스크자키 남성"
+
+  - id: "icon-3"
+    type: "picture"
+    position:
+      x: "77.0%"
+      y: "40.0%"
+    size:
+      width: "10.5%"
+      height: "8.5%"
+    placeholder: "items[2].icon"
+    content_template_ref: "엘리베이터"
+
+gaps:
+  global:
+    column_gap: "31.3%"
+    row_gap: "25.0%"
+  between_shapes:
+    - from: "shape-circle-1"
+      to: "shape-circle-2"
+      distance: "31.3%"
+    - from: "shape-circle-2"
+      to: "shape-circle-3"
+      distance: "31.3%"
+
+spatial_relationships:
+  - type: "vertical_alignment"
+    shapes: ["shape-circle-1", "shape-circle-2", "shape-circle-3"]
+    alignment: "center"
+  - type: "icon_inside"
+    container: "shape-circle-1"
+    content: "icon-1"
+  - type: "icon_inside"
+    container: "shape-circle-2"
+    content: "icon-2"
+  - type: "icon_inside"
+    container: "shape-circle-3"
+    content: "icon-3"
+  - type: "text_below"
+    text_shape: "shape-title-1"
+    reference: "shape-circle-1"
+    offset: "23.1%"
+  - type: "text_below"
+    text_shape: "shape-description-1"
+    reference: "shape-title-1"
+    offset: "4.8%"
+
+groups:
+  - id: "group-1"
+    name: "Step 1"
+    shapes: ["shape-circle-1", "icon-1", "shape-title-1", "shape-description-1"]
+  - id: "group-2"
+    name: "Step 2"
+    shapes: ["shape-circle-2", "icon-2", "shape-title-2", "shape-description-2"]
+  - id: "group-3"
+    name: "Step 3"
+    shapes: ["shape-circle-3", "icon-3", "shape-title-3", "shape-description-3"]
+  - id: "group-connectors"
+    name: "Arrows"
+    shapes: ["shape-arrow-1-2", "shape-arrow-2-3"]
+
+thumbnail: "thumbnails/process/circle-3step-01.png"
+
+placeholders:
+  items:
+    type: "array"
+    min_items: 3
+    max_items: 3
+    item_schema:
+      title:
+        type: "string"
+        required: true
+        description: "단계의 제목"
+        max_length: 30
+      description:
+        type: "string"
+        required: true
+        description: "단계의 설명"
+        max_length: 200
+      icon:
+        type: "image"
+        required: false
+        description: "단계의 아이콘 (선택사항)"
+        recommended_size: "200x200px"
+
+use_for:
+  - "3단계 순차적 프로세스 시각화"
+  - "단계별 업무 진행 과정 표시"
+  - "순환 프로세스 흐름도 설명"
+  - "원형 다이어그램을 활용한 방법론 제시"
+  - "세 가지 주요 단계를 강조하는 프레젠테이션"
+
+keywords:
+  - "프로세스"
+  - "3단계"
+  - "원형"
+  - "순차"
+  - "화살표"
+  - "흐름도"
+  - "방법론"
+  - "단계별"
+  - "다이어그램"
+
+variants: []
+
+notes:
+  - "각 원은 같은 크기로 배치되어 있습니다"
+  - "아이콘은 원 중앙에 위치합니다"
+  - "화살표는 원을 연결하는 점진적 흐름을 나타냅니다"
+  - "텍스트는 원 아래에 배치되어 좋은 가독성을 제공합니다"
+  - "색상은 파스텔 톤으로 부드러운 느낌을 줍니다"

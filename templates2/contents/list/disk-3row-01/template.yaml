@@ -1,0 +1,146 @@
+content_template:
+  id: disk-3row-01
+  name: "3행 디스크 아이콘 리스트"
+  version: "1.0"
+  source: "ppt-sample/깔끔이-딥그린.pptx"
+  source_slide_index: 11  # 0-based index
+  description: "자기 디스크 아이콘과 연결선을 사용한 3행 리스트 레이아웃"
+
+design_meta:
+  design_intent: "disk-list-3row"
+  category: "list"
+  visual_balance: "asymmetric"
+  information_density: "medium"
+  style: "modern"
+  color_scheme: "deep_green"
+
+canvas:
+  reference_width: 1920
+  reference_height: 1080
+  aspect_ratio: "16:9"
+
+content_zones:
+  header:
+    y_min: 0
+    y_max: 20
+    description: "제목 및 부제목 영역"
+  content:
+    y_min: 20
+    y_max: 90
+    description: "3행 구조의 콘텐츠 영역"
+  footer:
+    y_min: 90
+    y_max: 100
+    description: "페이지 번호 및 저작권"
+
+structure:
+  layout_type: "3-row-list"
+  rows_count: 3
+
+  row_structure:
+    left_column:
+      icon_type: "magnetic-disk"
+      icon_width_percent: 7.1
+      has_title: true
+      title_font_size_pt: 16
+    connector:
+      type: "dashed-arrow"
+      line_style: "dashed"
+      has_arrows: true
+    right_column:
+      box_type: "rectangle"
+      box_width_percent: 42.2
+      has_description: true
+      description_font_size_pt: 12
+      text_alignment: "left"
+
+colors:
+  palette:
+    - name: "disk_1_light"
+      rgb: "#C4D6D0"
+      usage: "First disk icon (light)"
+    - name: "disk_2_medium"
+      rgb: "#83A99B"
+      usage: "Second disk icon (medium)"
+    - name: "disk_3_dark"
+      rgb: "#479374"
+      usage: "Third disk icon (dark)"
+    - name: "text_dark"
+      rgb: "#153325"
+      usage: "Body text and titles"
+    - name: "border_1"
+      rgb: "#153325"
+      usage: "First row border (dark)"
+    - name: "border_2"
+      rgb: "#67B7B5"
+      usage: "Second row border (teal)"
+    - name: "border_3"
+      rgb: "#A1BFB4"
+      usage: "Third row border (light)"
+
+fonts:
+  title:
+    family: "카페24 써라운드"
+    size_pt: 16
+    weight: "normal"
+    color: "#FFFFFF"
+  description:
+    family: "나눔바른펜"
+    size_pt: 12
+    weight: "normal"
+    color: "#153325"
+    line_height: 1.5
+
+spacing:
+  row_gap: 18.0
+  left_to_connector: 2.5
+  connector_to_right: 2.5
+  content_margin_left: 3.0
+  content_margin_right: 3.0
+
+dimensions:
+  row_1:
+    y_percent: 31.3
+    height_percent: 18.0
+  row_2:
+    y_percent: 49.5
+    height_percent: 18.0
+  row_3:
+    y_percent: 71.5
+    height_percent: 18.0
+
+placeholders:
+  items:
+    - id: "item_1"
+      title: "첫 번째 항목 제목"
+      description: "첫 번째 항목에 대한 설명을 입력하세요."
+    - id: "item_2"
+      title: "두 번째 항목 제목"
+      description: "두 번째 항목에 대한 설명을 입력하세요."
+    - id: "item_3"
+      title: "세 번째 항목 제목"
+      description: "세 번째 항목에 대한 설명을 입력하세요."
+
+rendering:
+  method: "html"
+  quality: "medium"
+  editability: "full"
+
+metadata:
+  use_for:
+    - "3단계 순차 프로세스 설명"
+    - "단계별 업무 진행 과정 시각화"
+    - "좌우 대칭 레이아웃의 리스트 표현"
+    - "아이콘 기반 계층적 정보 구조"
+    - "진행 단계 또는 순서가 있는 항목 나열"
+  keywords:
+    - "디스크"
+    - "아이콘"
+    - "리스트"
+    - "3행"
+    - "프로세스"
+    - "순차"
+    - "단계"
+    - "화살표"
+    - "연결선"
+    - "좌우배치"

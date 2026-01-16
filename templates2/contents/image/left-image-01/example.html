@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌측 이미지 + 우측 텍스트 예제</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            background: white;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            padding: 320px 60px;
+            height: 100%;
+            align-items: center;
+            background: white;
+        }
+
+        .image-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .image-section img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .text-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 24px;
+        }
+
+        .title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #153325;
+            line-height: 1.3;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .description {
+            font-size: 12pt;
+            color: #153325;
+            line-height: 1.5;
+            text-align: left;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 240px 40px;
+            }
+
+            .title {
+                font-size: 20pt;
+            }
+
+            .description {
+                font-size: 11pt;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-section">
+            <div style="
+                width: 300px;
+                height: 300px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+            ">
+                이미지 영역
+            </div>
+        </div>
+        <div class="text-section">
+            <h2 class="title">영화 미비포유의 줄거리</h2>
+            <p class="description">
+                이별을 준비하는 마지막에 나타난 짜증나는 여자 내 평생 최고의 6개월을 선물했다 6년 동안이나 일하던 카페가 문을 닫는 바람에 백수가 된 루이자(에밀리아 클라크)는 새 직장을 찾던 중 촉망 받던 젊은 사업가였던 전신마비 환자 윌(샘 클라플린)의 6개월 임시 간병인이 된다. 루이자의 우스꽝스러운 옷, 썰렁한 농담들, 속마음을 그대로 드러내는 얼굴 표정이 신경 쓰이는 윌. 말만 하면 멍청이 보듯 두 살짜리처럼 취급하고 개망나니처럼 구는 윌이 치사하기만 한 루이자. 그렇게 둘은 서로의 인생을 향해 차츰 걸어 들어가는데... – 네이버영화
+            </p>
+        </div>
+    </div>
+</body>
+</html>

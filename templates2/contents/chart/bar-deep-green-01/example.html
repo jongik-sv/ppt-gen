@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Chart - Deep Green Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background: #f5f5f5;
+            font-family: "서평원 꺾깎체 TTF", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1400px;
+            margin: 20px auto;
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #22523B;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .chart-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+
+        .chart-container {
+            flex: 1;
+            position: relative;
+            min-height: 400px;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .controls {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .control-group input,
+        .control-group textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .control-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        button {
+            background: #22523B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #1a3d2b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .info {
+            background: #f0f5f3;
+            border-left: 4px solid #43A375;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .color-sample {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>경영지원팀 2분기 성과지표</h1>
+            <p>세로 막대 차트 - 딥그린 스타일 예제</p>
+        </div>
+
+        <!-- 차트 -->
+        <div class="chart-section">
+            <div class="chart-container">
+                <canvas id="chartCanvas"></canvas>
+            </div>
+        </div>
+
+        <!-- 제어 패널 -->
+        <div class="controls">
+            <h3 style="color: #22523B; margin-bottom: 15px;">대화형 제어판</h3>
+
+            <div class="button-group">
+                <button onclick="loadExample1()">예제 1: 기본값</button>
+                <button onclick="loadExample2()">예제 2: 높은 성과</button>
+                <button onclick="loadExample3()">예제 3: 불균형</button>
+                <button onclick="resetChart()">초기화</button>
+            </div>
+
+            <div class="control-group" style="margin-top: 20px;">
+                <label>제목</label>
+                <input type="text" id="titleInput" value="경영지원팀 2분기 성과지표" onchange="updateTitle()">
+            </div>
+
+            <div class="control-group">
+                <label>카테고리 (쉼표로 구분)</label>
+                <input type="text" id="categoriesInput" value="카테고리 1, 카테고리 2, 카테고리 3, 카테고리 4" onchange="updateCategories()">
+            </div>
+
+            <div class="control-group">
+                <label>데이터 (JSON 형식)</label>
+                <textarea id="dataInput">[
+  { "name": "계열 1", "data": [4.3, 2.5, 3.5, 4.5], "color": "#22523B" },
+  { "name": "계열 2", "data": [2.4, 4.4, 1.8, 2.8], "color": "#43A375" },
+  { "name": "계열 3", "data": [2.0, 2.0, 3.0, 5.0], "color": "#A1BFB4" }
+]</textarea>
+            </div>
+
+            <button onclick="updateFromJSON()">JSON으로 업데이트</button>
+
+            <div class="info">
+                <strong>색상 팔레트:</strong><br>
+                <span class="color-sample" style="background: #22523B;"></span> 계열 1 (짙은 녹색)<br>
+                <span class="color-sample" style="background: #43A375;"></span> 계열 2 (중간 녹색)<br>
+                <span class="color-sample" style="background: #A1BFB4;"></span> 계열 3 (밝은 녹색)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chart = null;
+
+        // 차트 초기화
+        function initChart(config) {
+            const ctx = document.getElementById('chartCanvas').getContext('2d');
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(ctx, config);
+        }
+
+        // 기본 차트 설정
+        function getBaseChartConfig() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: ['카테고리 1', '카테고리 2', '카테고리 3', '카테고리 4'],
+                    datasets: [
+                        {
+                            label: '계열 1',
+                            data: [4.3, 2.5, 3.5, 4.5],
+                            backgroundColor: '#22523B',
+                            borderWidth: 0,
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.9
+                        },
+                        {
+                            label: '계열 2',
+                            data: [2.4, 4.4, 1.8, 2.8],
+                            backgroundColor: '#43A375',
+                            borderWidth: 0,
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.9
+                        },
+                        {
+                            label: '계열 3',
+                            data: [2.0, 2.0, 3.0, 5.0],
+                            backgroundColor: '#A1BFB4',
+                            borderWidth: 0,
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.9
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 12,
+                                    family: "서평원 꺾깎체 TTF"
+                                },
+                                color: '#333',
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: '경영지원팀 2분기 성과지표',
+                            font: {
+                                size: 18,
+                                weight: 'normal',
+                                family: "서평원 꺾깎체 TTF"
+                            },
+                            color: '#22523B',
+                            padding: {
+                                bottom: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.x.toFixed(1);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            grid: {
+                                display: true,
+                                color: '#f0f0f0',
+                                lineWidth: 1
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    family: "서평원 꺾깎체 TTF"
+                                },
+                                color: '#153325'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    family: "서평원 꺾깎체 TTF"
+                                },
+                                color: '#153325'
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        // 예제 데이터 로드
+        function loadExample1() {
+            const config = getBaseChartConfig();
+            initChart(config);
+            document.getElementById('titleInput').value = '경영지원팀 2분기 성과지표';
+            document.getElementById('categoriesInput').value = '카테고리 1, 카테고리 2, 카테고리 3, 카테고리 4';
+        }
+
+        function loadExample2() {
+            const config = getBaseChartConfig();
+            config.data.datasets[0].data = [5.0, 4.8, 4.5, 4.9];
+            config.data.datasets[1].data = [4.5, 4.8, 4.2, 4.6];
+            config.data.datasets[2].data = [4.0, 4.2, 4.0, 4.5];
+            config.options.plugins.title.text = '2026년 분기별 높은 성과';
+            initChart(config);
+            document.getElementById('titleInput').value = '2026년 분기별 높은 성과';
+        }
+
+        function loadExample3() {
+            const config = getBaseChartConfig();
+            config.data.datasets[0].data = [1.0, 5.0, 2.5, 4.8];
+            config.data.datasets[1].data = [5.0, 1.5, 4.5, 1.2];
+            config.data.datasets[2].data = [3.0, 3.5, 1.0, 4.8];
+            config.options.plugins.title.text = '부서별 불균형한 성과';
+            initChart(config);
+            document.getElementById('titleInput').value = '부서별 불균형한 성과';
+        }
+
+        function resetChart() {
+            loadExample1();
+        }
+
+        function updateTitle() {
+            const title = document.getElementById('titleInput').value;
+            if (chart) {
+                chart.options.plugins.title.text = title;
+                chart.update();
+            }
+        }
+
+        function updateCategories() {
+            const categoriesStr = document.getElementById('categoriesInput').value;
+            const categories = categoriesStr.split(',').map(cat => cat.trim());
+
+            if (chart && categories.length > 0) {
+                chart.data.labels = categories;
+                chart.update();
+            }
+        }
+
+        function updateFromJSON() {
+            try {
+                const jsonStr = document.getElementById('dataInput').value;
+                const seriesArray = JSON.parse(jsonStr);
+
+                if (!chart) {
+                    const config = getBaseChartConfig();
+                    initChart(config);
+                }
+
+                // 데이터셋 업데이트
+                seriesArray.forEach((series, index) => {
+                    if (chart.data.datasets[index]) {
+                        chart.data.datasets[index].label = series.name;
+                        chart.data.datasets[index].data = series.data;
+                        chart.data.datasets[index].backgroundColor = series.color;
+                    }
+                });
+
+                chart.update();
+                alert('차트가 업데이트되었습니다!');
+            } catch (error) {
+                alert('JSON 형식 오류: ' + error.message);
+            }
+        }
+
+        // 페이지 로드 시 차트 초기화
+        window.addEventListener('load', function() {
+            loadExample1();
+        });
+    </script>
+</body>
+</html>
